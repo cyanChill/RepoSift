@@ -18,6 +18,7 @@ export default function AuthLayout({
           src="/assets/auth/background.svg"
           alt=""
           fill
+          priority
           className="absolute left-0 top-0 h-full w-full object-cover"
         />
       </aside>
