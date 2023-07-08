@@ -1,6 +1,11 @@
-import Image from 'next/image'
+"use client";
+import Image from "next/image";
+import Link from "next/link";
+import { useSession, signOut } from "next-auth/react";
 
 export default function Home() {
+  const { data: session, status } = useSession();
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
@@ -15,7 +20,7 @@ export default function Home() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            By{' '}
+            By{" "}
             <Image
               src="/vercel.svg"
               alt="Vercel Logo"
@@ -39,6 +44,25 @@ export default function Home() {
         />
       </div>
 
+      <div>
+        {status !== "loading" && !session && (
+          <Link
+            href="/join"
+            className="rounded-lg border border-gray-200 bg-zinc-800/30 p-4"
+          >
+            Join RepoSift
+          </Link>
+        )}
+        {status !== "loading" && session && (
+          <button
+            onClick={() => void signOut({ callbackUrl: "/" })}
+            className="rounded-lg border border-gray-200 bg-zinc-800/30 p-4"
+          >
+            Sign Out
+          </button>
+        )}
+      </div>
+
       <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
         <a
           href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
@@ -47,7 +71,7 @@ export default function Home() {
           rel="noopener noreferrer"
         >
           <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
+            Docs{" "}
             <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
               -&gt;
             </span>
@@ -64,7 +88,7 @@ export default function Home() {
           rel="noopener noreferrer"
         >
           <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
+            Learn{" "}
             <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
               -&gt;
             </span>
@@ -81,7 +105,7 @@ export default function Home() {
           rel="noopener noreferrer"
         >
           <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
+            Templates{" "}
             <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
               -&gt;
             </span>
@@ -98,7 +122,7 @@ export default function Home() {
           rel="noopener noreferrer"
         >
           <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
+            Deploy{" "}
             <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
               -&gt;
             </span>
@@ -109,5 +133,5 @@ export default function Home() {
         </a>
       </div>
     </main>
-  )
+  );
 }
