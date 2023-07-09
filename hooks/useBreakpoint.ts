@@ -18,7 +18,7 @@ function subscribe(callback: () => void) {
  * @param breakpoint Integer in "px" representing where we want to detect when our window hits or go beyond it.
  * @param operator Defaults to the "lt" (<) operator - represents how we want to detect when we hit the breakpoint.
  * @returns A boolean stating when we hit or go beyond our breakpoint.
- * 
+ *
  */
 const useBreakpoint = (
   breakpoint: number,
@@ -35,7 +35,7 @@ const useBreakpoint = (
       case "lte":
         return window.innerWidth <= breakpoint;
       case "eq":
-        return (window.innerWidth = breakpoint);
+        return window.innerWidth === breakpoint;
       default:
         throw new Error("Invalid Operator");
     }
@@ -55,7 +55,7 @@ const useBreakpoint = (
  * @description Tracks when the inner width of our window is less than MOBILE_BREAKPOINT.
  *
  * @returns A boolean stating when our window size is less than our MOBILE_BREAKPOINT.
- * 
+ *
  */
 const MOBILE_BREAKPOINT = 768; // In "px"
 const useIsMobile = () => {
