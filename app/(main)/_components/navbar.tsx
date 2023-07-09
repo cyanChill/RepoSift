@@ -2,19 +2,20 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect, useRef, Fragment } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { signOut } from "next-auth/react";
 import { Menu, Transition } from "@headlessui/react";
 import { AiFillCaretDown } from "react-icons/ai";
 
 import useAuth from "@/hooks/useAuth";
 import { useIsMobile } from "@/hooks/useBreakpoint";
+import { useExitOutRef } from "@/hooks/useExitOutRef";
 
 export default function Navbar() {
-  const mobileNav = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const isMobile = useIsMobile();
+  const [ref] = useExitOutRef<HTMLDivElement>(() => setIsOpen(false));
 
   useEffect(() => {
     setIsOpen(false);
@@ -42,7 +43,7 @@ export default function Navbar() {
 
           <SignInBtn />
 
-          <div ref={mobileNav}>
+          <div ref={ref}>
             <button
               className="shrink-0 py-4 pr-2 md:hidden"
               onClick={() => setIsOpen((prev) => !prev)}
