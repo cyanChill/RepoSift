@@ -27,10 +27,7 @@ const ProviderBtn = ({ onClick, className, children }: ProviderBtnProps) => {
   return (
     <button
       onClick={onClick}
-      className={cn(
-        "w-full rounded-md border p-4 py-2 text-center shadow-white transition duration-300 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-full",
-        className
-      )}
+      className={cn("btn w-full text-center", className)}
     >
       {children}
     </button>

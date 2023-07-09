@@ -1,9 +1,11 @@
 import Provider from "@/components/Provider";
+import Navbar from "./_components/navbar";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <body className="bg-slate-950 text-white">
+    <body className="bg-bkg text-black">
       <Provider>
+        <Navbar />
         <div>{children}</div>
       </Provider>
     </body>

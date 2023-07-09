@@ -2,6 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .btn {
+    @apply rounded-md border-2 px-4 py-2 shadow-white transition duration-300 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-full;
+  }
+  .btn-strip {
+    @apply hover:translate-0 rounded-none border-0 hover:shadow-none;
+  }
+
+  .link-underline {
+    @apply relative before:absolute before:bottom-0 before:h-0.5 before:w-full before:origin-left before:scale-0 before:bg-black before:transition before:duration-300;
+  }
+  .link-underline-active {
+    @apply before:scale-100;
+  }
+  .hocus-underline {
+    @apply relative before:absolute before:bottom-0 before:h-0.5 before:w-full before:origin-left before:scale-0 before:bg-black before:transition before:duration-300 hocus:before:scale-100;
+  }
+
+  .just-black {
+    @apply border-black bg-black text-black shadow-black;
+  }
+
+  .translate-0 {
+    @apply translate-x-0 translate-y-0;
+  }
+}
+
+:root {
+  --max-app-width: 80rem;
+  --nav-z-index: 100;
+  --dynamic-x-pad: max((100% - 71.25rem)/2, 4rem);
+}
+
 html,
 body {
   height: 100%;
