@@ -23,8 +23,8 @@ export default function Navbar() {
 
   return (
     <div className="sticky top-0 z-nav w-full border-y-3 border-black bg-orange-400">
-      <div className="relative mx-auto flex max-w-appContent items-center justify-between gap-1 bg-orange-400 text-lg font-medium md:text-xl">
-        <Link href="/" className="ml-2">
+      <div className="relative mx-auto flex max-w-appContent items-center gap-3 bg-orange-400 text-lg font-medium md:text-xl">
+        <Link href="/" className="ml-2 mr-auto">
           <Image
             src="/assets/icons/logo-full.svg"
             alt=""
@@ -34,47 +34,45 @@ export default function Navbar() {
           />
         </Link>
 
-        <div className="flex items-center gap-3">
-          {!isMobile && (
-            <nav className="hidden self-stretch md:flex md:gap-6">
-              <NavOptions />
-            </nav>
+        {!isMobile && (
+          <nav className="hidden self-stretch md:flex md:gap-6">
+            <NavOptions />
+          </nav>
+        )}
+
+        <SignInBtn />
+
+        <div ref={ref}>
+          <button
+            className="shrink-0 py-4 pr-2 md:hidden"
+            onClick={() => setIsOpen((prev) => !prev)}
+          >
+            <Image
+              src={`/assets/icons/${isOpen ? "close.svg" : "menu-bars.svg"}`}
+              alt=""
+              width="24"
+              height="24"
+              className="h-6 w-6"
+            />
+          </button>
+
+          {isMobile && (
+            <div className="absolute bottom-0 left-0 z-[-1] w-full translate-y-full">
+              <Transition
+                show={isOpen}
+                enter="transition ease-out duration-100"
+                enterFrom="transform opacity-0 scale-95 -translate-y-1/4"
+                enterTo="transform opacity-100 scale-100 translate-y-0"
+                leave="transition ease-in duration-75"
+                leaveFrom="transform opacity-100 scale-100 translate-y-0"
+                leaveTo="transform opacity-0 scale-95 -translate-y-1/4"
+              >
+                <nav className="flex origin-top flex-col gap-4 border-y-3 border-black bg-white p-8 text-2xl">
+                  <NavOptions />
+                </nav>
+              </Transition>
+            </div>
           )}
-
-          <SignInBtn />
-
-          <div ref={ref}>
-            <button
-              className="shrink-0 py-4 pr-2 md:hidden"
-              onClick={() => setIsOpen((prev) => !prev)}
-            >
-              <Image
-                src={`/assets/icons/${isOpen ? "close.svg" : "menu-bars.svg"}`}
-                alt=""
-                width="24"
-                height="24"
-                className="h-6 w-6"
-              />
-            </button>
-
-            {isMobile && (
-              <div className="absolute bottom-0 left-0 z-[-1] w-full translate-y-full">
-                <Transition
-                  show={isOpen}
-                  enter="transition ease-out duration-100"
-                  enterFrom="transform opacity-0 scale-95 -translate-y-1/4"
-                  enterTo="transform opacity-100 scale-100 translate-y-0"
-                  leave="transition ease-in duration-75"
-                  leaveFrom="transform opacity-100 scale-100 translate-y-0"
-                  leaveTo="transform opacity-0 scale-95 -translate-y-1/4"
-                >
-                  <nav className="flex origin-top flex-col gap-4 border-y-3 border-black bg-white p-8 text-2xl">
-                    <NavOptions />
-                  </nav>
-                </Transition>
-              </div>
-            )}
-          </div>
         </div>
       </div>
     </div>
