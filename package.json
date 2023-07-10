@@ -13,7 +13,7 @@
     "@planetscale/database": "^1.8.0",
     "clsx": "^1.2.1",
     "drizzle-orm": "^0.27.0",
-    "next": "13.4.8",
+    "next": "13.4.9",
     "next-auth": "^4.22.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
