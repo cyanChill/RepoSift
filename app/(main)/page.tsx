@@ -38,12 +38,12 @@ export default function HomePage() {
                     help people like YOU
                   </span>{" "}
                   with improved filtering capabilities compared to GitHub&apos;s
-                  default searc.
+                  default search.
                 </p>
                 <p className="mt-2">
                   Alternatively, utilize our &quot;simple search&quot; to find
                   repositories directly from providers like GitHub (with more
-                  limited capabiltiies).
+                  limited capabilities).
                 </p>
               </div>
               <div>

@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { authOptions } from "../../api/auth/[...nextauth]/route";
 import { LoginProviders } from "./_components/login-providers";
 
-export default async function Page() {
+export default async function JoinPage() {
   const session = await getServerSession(authOptions);
 
   if (session) {
