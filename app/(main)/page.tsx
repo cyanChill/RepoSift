@@ -14,7 +14,13 @@ export default function HomePage() {
             <Browser.TrafficLights size={20} withAction={false} />
           </Browser.Header>
           <Browser.Content className="grid grid-cols-[max-content_auto] items-center gap-4 px-4 py-4 md:px-8">
-            <Image src="/assets/icons/logo.svg" alt="" width={50} height={50} />
+            <Image
+              src="/assets/icons/logo.svg"
+              alt=""
+              width={50}
+              height={50}
+              className="h-8 w-8 md:h-12 md:w-12"
+            />
             <Browser.SearchBar
               style={
                 {
