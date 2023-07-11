@@ -17,7 +17,7 @@ module.exports = {
         3: "3px",
       },
       boxShadow: {
-        full: "4px 4px 0 0 var(--tw-shadow-color)",
+        full: "var(--bs-offset-x) var(--bs-offset-y) 0 0 var(--tw-shadow-color)",
       },
       colors: {
         bkg: "#e9e2db",

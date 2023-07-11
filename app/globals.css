@@ -27,12 +27,20 @@
   .translate-0 {
     @apply translate-x-0 translate-y-0;
   }
+
+  .d-full {
+    @apply h-full w-full;
+  }
 }
 
 :root {
   --max-app-width: 80rem;
   --nav-z-index: 100;
+
   --dynamic-x-pad: max((100% - 71.25rem)/2, 4rem);
+
+  --bs-offset-x: 4px;
+  --bs-offset-y: 4px;
 }
 
 html,
