@@ -32,13 +32,14 @@ const Browser = ({ className, style, children }: CSSNChild) => {
 };
 
 // Header portion of <Browser />
-const Header = ({ className, children }: CSSNChild) => {
+const Header = ({ className, style, children }: CSSNChild) => {
   return (
     <div
       className={cn(
         "grid auto-cols-auto grid-flow-col grid-cols-[max-content_1fr] items-center gap-x-4 border-b-2 border-black bg-white p-2",
         className
       )}
+      style={style}
     >
       {children}
     </div>
@@ -123,13 +124,14 @@ const TrafficLights = ({
 };
 
 // Sits in the 2nd slot of <Header /> grid layout
-const SearchBar = ({ className, children }: CSSNChild) => {
+const SearchBar = ({ className, style, children }: CSSNChild) => {
   return (
     <div
       className={cn(
         "col-start-2 w-full max-w-lg justify-self-center rounded-md border-2 border-black bg-white px-2 py-1",
         className
       )}
+      style={style}
     >
       {children}
     </div>

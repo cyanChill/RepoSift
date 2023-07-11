@@ -1,75 +1,65 @@
-export default function Home() {
+import Image from "next/image";
+import { FaMagnifyingGlass } from "react-icons/fa6";
+import type { CSSProperties } from "react";
+
+import Browser from "@/components/Browser";
+
+export default function HomePage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+    <>
+      {/* 1st Section */}
+      <div className="bg-blue-500 p-5 md:p-20">
+        <Browser className="mx-auto max-w-appContent">
+          <Browser.Header className="p-4">
+            <Browser.TrafficLights size={20} withAction={false} />
+          </Browser.Header>
+          <Browser.Content className="grid grid-cols-[max-content_auto] items-center gap-4 px-4 py-4 md:px-8">
+            <Image src="/assets/icons/logo.svg" alt="" width={50} height={50} />
+            <Browser.SearchBar
+              style={
+                {
+                  "--bs-offset-x": "4px",
+                  "--bs-offset-y": "4px",
+                } as CSSProperties
+              }
+              className="flex max-w-xl items-center justify-between justify-self-start rounded-full px-4 shadow-full md:text-3xl"
+            >
+              <p>How to find useful repositories?</p>
+              <FaMagnifyingGlass />
+            </Browser.SearchBar>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+            <div className="col-start-2 my-8 flex flex-col gap-8">
+              <div>
+                <h2 className="text-2xl font-medium">Search</h2>
+                <p className="mt-2">
+                  Go through our database of{" "}
+                  <span className="font-semibold">
+                    indexed and labeled repositories provided by developers to
+                    help people like YOU
+                  </span>{" "}
+                  with improved filtering capabilities compared to GitHub&apos;s
+                  default searc.
+                </p>
+                <p className="mt-2">
+                  Alternatively, utilize our &quot;simple search&quot; to find
+                  repositories directly from providers like GitHub (with more
+                  limited capabiltiies).
+                </p>
+              </div>
+              <div>
+                <h2 className="text-2xl font-medium">Contribute</h2>
+                <p className="mt-2">
+                  Help other developers by{" "}
+                  <span className="font-semibold">
+                    suggesting labels and indexing repositories for our database
+                  </span>{" "}
+                  that you find interesting, useful, or inspiring to others.
+                </p>
+              </div>
+            </div>
+          </Browser.Content>
+        </Browser>
       </div>
-    </main>
+    </>
   );
 }
