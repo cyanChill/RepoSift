@@ -4,7 +4,7 @@
 
 @layer components {
   .btn {
-    @apply rounded-md border-2 px-4 py-2 shadow-white transition duration-300 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-full;
+    @apply rounded-md border-2 px-4 py-2 text-center shadow-white transition duration-300 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-full;
   }
   .btn-strip {
     @apply hover:translate-0 rounded-none border-0 hover:shadow-none;
