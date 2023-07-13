@@ -8,8 +8,8 @@ export default function Footer() {
   const { isAuth } = useAuth();
 
   return (
-    <footer className="mt-auto bg-black text-white">
-      <div className="mx-auto grid max-w-appContent gap-y-8 px-8 py-12 md:grid-cols-[70%_auto]">
+    <footer className="flex grow bg-black text-white">
+      <div className="mx-auto grid h-min w-full max-w-appContent gap-y-8 px-8 py-12 md:grid-cols-[70%_auto]">
         <Link
           href="/"
           className="w-fit text-4xl font-semibold uppercase md:col-span-2"
