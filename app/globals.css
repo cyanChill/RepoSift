@@ -59,6 +59,7 @@
   --bs-offset-y: 4px;
 
   --marqueeX-anim-duration: 30s;
+  --rotate-anim-duration: 50s;
 }
 
 html,

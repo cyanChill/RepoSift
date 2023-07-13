@@ -37,11 +37,22 @@ module.exports = {
       },
       animation: {
         marqueeX: "marqueeX var(--marqueeX-anim-duration) linear infinite",
+        rotate: "rotate var(--rotate-anim-duration) linear infinite",
       },
       keyframes: {
         marqueeX: {
           "0%": { transform: "translateX(100vw)" },
           "100%": { transform: "translateX(-100%)" },
+        },
+        rotate: {
+          "0%": {
+            transform: "rotate(0deg)",
+            translate: "var(--tw-translate-x) var(--tw-translate-y)",
+          },
+          "100%": {
+            transform: "rotate(360deg)",
+            translate: "var(--tw-translate-x) var(--tw-translate-y)",
+          },
         },
       },
     },

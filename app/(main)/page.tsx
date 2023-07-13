@@ -183,7 +183,7 @@ export default function HomePage() {
           alt=""
           width={360}
           height={360}
-          className="absolute left-0 top-0 h-auto w-[50vw] min-w-[360px] -translate-x-1/2 -translate-y-1/2"
+          className="absolute left-0 top-0 h-auto w-[50vw] min-w-[360px] origin-center -translate-x-1/2 -translate-y-1/2 animate-rotate"
         />
         <div className="flex max-w-appContent flex-col items-center justify-center px-4 py-48 md:px-10 md:py-64">
           <p className="mb-8 max-w-[14ch] text-center text-4xl font-semibold text-white md:text-7xl">
@@ -201,7 +201,7 @@ export default function HomePage() {
           alt=""
           width={360}
           height={360}
-          className="absolute bottom-0 right-0 h-auto w-[50vw] min-w-[360px] translate-x-1/2 translate-y-1/2"
+          className="absolute bottom-0 right-0 h-auto w-[50vw] min-w-[360px] origin-center translate-x-1/2 translate-y-1/2 animate-rotate"
         />
       </div>
     </main>
