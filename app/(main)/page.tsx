@@ -45,7 +45,12 @@ export default function HomePage() {
 
             <div className="col-start-2 my-8 flex flex-col gap-8">
               <div>
-                <h2 className="text-2xl font-medium">Search</h2>
+                <Link
+                  href="/indexed"
+                  className="text-2xl font-medium hover:underline"
+                >
+                  Search
+                </Link>
                 <p className="mt-2">
                   Go through our database of{" "}
                   <span className="font-semibold">
@@ -62,7 +67,12 @@ export default function HomePage() {
                 </p>
               </div>
               <div>
-                <h2 className="text-2xl font-medium">Contribute</h2>
+                <Link
+                  href="/contribute"
+                  className="text-2xl font-medium hover:underline"
+                >
+                  Contribute
+                </Link>
                 <p className="mt-2">
                   Help other developers by{" "}
                   <span className="font-semibold">
