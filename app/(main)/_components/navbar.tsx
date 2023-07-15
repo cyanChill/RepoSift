@@ -2,8 +2,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect, Fragment } from "react";
 import { signOut } from "next-auth/react";
+import { useState, useEffect, Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { AiFillCaretDown } from "react-icons/ai";
 
@@ -168,6 +168,7 @@ const SearchBtn = () => {
 };
 
 const SignInBtn = () => {
+  const pathname = usePathname();
   const { isLoading, isAuth } = useAuth();
 
   if (isLoading) return null;
@@ -176,14 +177,14 @@ const SignInBtn = () => {
     <>
       {isAuth ? (
         <button
-          onClick={() => void signOut({ callbackUrl: "/" })}
+          onClick={() => void signOut()}
           className="btn just-black md:btn-strip whitespace-pre bg-p-green-400 py-1 md:border-x-3 md:px-6 md:py-3 md:hover:bg-p-green-600"
         >
           Sign Out
         </button>
       ) : (
         <Link
-          href="/join"
+          href={`/join?callbackUrl=${encodeURIComponent(pathname)}`}
           className="btn just-black md:btn-strip bg-p-green-400 py-1 md:border-x-3 md:px-6 md:py-3 md:hover:bg-p-green-600"
         >
           Join
