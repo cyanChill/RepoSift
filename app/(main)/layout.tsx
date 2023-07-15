@@ -10,8 +10,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Provider>
         <Navbar />
         {children}
-        <Footer />
       </Provider>
+      <Footer />
     </body>
   );
 }

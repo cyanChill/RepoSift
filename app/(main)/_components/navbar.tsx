@@ -85,11 +85,11 @@ const NavOptions = () => {
   return (
     <>
       <SearchBtn />
+      <Link href="/contribute" className="hocus-underline my-auto w-min">
+        Contribute
+      </Link>
       {isAuth && (
         <>
-          <Link href="/contribute" className="hocus-underline my-auto w-min">
-            Contribute
-          </Link>
           <Link href="/profile" className="hocus-underline my-auto w-min">
             Profile
           </Link>

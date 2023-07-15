@@ -1,12 +1,7 @@
-"use client";
 import Link from "next/link";
 import { FaGithub } from "react-icons/fa6";
 
-import useAuth from "@/hooks/useAuth";
-
 export default function Footer() {
-  const { isAuth } = useAuth();
-
   return (
     <footer className="flex grow bg-black text-white">
       <div className="mx-auto grid h-min w-full max-w-appContent gap-y-8 px-8 py-12 md:grid-cols-[70%_auto]">
@@ -31,13 +26,11 @@ export default function Footer() {
               Indexed Search
             </Link>
           </li>
-          {isAuth && (
-            <li>
-              <Link href="/contribute" className="hover:underline">
-                Contribute
-              </Link>
-            </li>
-          )}
+          <li>
+            <Link href="/contribute" className="hover:underline">
+              Contribute
+            </Link>
+          </li>
         </ul>
 
         <a
