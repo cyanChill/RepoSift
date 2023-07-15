@@ -2,9 +2,10 @@ import Link from "next/link";
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
 
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+
 import type { PageProps } from "@/lib/types";
 import { firstStrParam } from "@/lib/utils";
-import { authOptions } from "../../api/auth/[...nextauth]/route";
 import { LoginProviders } from "./_components/login-providers";
 
 export default async function JoinPage({ searchParams }: PageProps) {
