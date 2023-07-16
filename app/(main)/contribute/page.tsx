@@ -10,6 +10,8 @@ export default async function ContributePage() {
     redirect("/join?callbackUrl=/contribute");
   }
 
+  console.log(session);
+
   return (
     <main className="w-full max-w-appContent">
       <h1>Contribute to RepoSift</h1>
