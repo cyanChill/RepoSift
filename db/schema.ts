@@ -1,4 +1,5 @@
-import { type InferModel } from "drizzle-orm";
+/* https://github.com/drizzle-team/drizzle-orm/tree/main/drizzle-orm/src/mysql-core */
+import type { InferModel } from "drizzle-orm";
 import {
   primaryKey,
   int,
@@ -11,26 +12,22 @@ import {
   uniqueIndex,
 } from "drizzle-orm/mysql-core";
 
-/* https://github.com/drizzle-team/drizzle-orm/tree/main/drizzle-orm/src/mysql-core */
+/*
+  -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+                              Next-Auth Tables
+  -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+*/
 export const users = mysqlTable(
   "users",
   {
     id: varchar("id", { length: 256 }).primaryKey().notNull(),
-    handle: varchar("handle", { length: 40 }).notNull().unique(),
-    role: mysqlEnum("role", [
-      "user",
-      "banned",
-      "bot",
-      "admin",
-      "owner",
-    ]).default("user"),
-    preferred_img: mysqlEnum("preferred_img", [
-      "github",
-      "gitlab",
-      "bitbucket",
-    ]).notNull(),
-    ban_reason: text("ban_reason"),
-    handle_updated_at: timestamp("handle_updated_at").onUpdateNow().notNull(),
+    handle: varchar("handle", { length: 40 }).unique().notNull(),
+    role: mysqlEnum("role", ["user", "banned", "bot", "admin", "owner"])
+      .default("user")
+      .notNull(),
+    imgSrc: mysqlEnum("imgSrc", ["github", "gitlab", "bitbucket"]).notNull(),
+    banReason: text("banReason"),
+    handleUpdatedAt: timestamp("handleUpdatedAt").onUpdateNow().notNull(),
   },
   (table) => {
     return {
@@ -40,29 +37,44 @@ export const users = mysqlTable(
 );
 export type User = InferModel<typeof users>;
 
-export const accounts = mysqlTable(
-  "accounts",
+// A "LinkedAccount" entry should be created right after we create a "User" entry.
+export const linkedAccounts = mysqlTable(
+  "linkedAccounts",
   {
     id: varchar("id", { length: 256 }).notNull(),
-    userId: varchar("userId", { length: 256 }).notNull(),
+    type: mysqlEnum("type", ["github", "gitlab", "bitbucket"]).notNull(),
     username: varchar("username", { length: 256 }).notNull(),
     image: varchar("image", { length: 256 }),
-    created_at: timestamp("created_at").notNull(),
-    type: text("type"),
-    provider: varchar("provider", { length: 256 }).notNull(),
-    providerAccountId: varchar("providerAccountId", { length: 256 }).notNull(),
-    access_token: text("access_token"),
-    expires_at: int("expires_at"),
-    id_token: text("id_token"),
-    refresh_token: text("refresh_token"),
-    scope: varchar("scope", { length: 256 }),
-    token_type: varchar("token_type", { length: 256 }),
-    session_state: text("session_state"),
-    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+    createdAt: timestamp("createdAt").notNull(),
+    userId: varchar("userId", { length: 256 }).notNull(),
   },
   (table) => {
     return {
-      pk: primaryKey(table.id, table.provider),
+      pk: primaryKey(table.id, table.type),
+      userIdIndex: index("linkedAccounts__userId__idx").on(table.userId),
+    };
+  }
+);
+export type LinkedAccount = InferModel<typeof linkedAccounts>;
+
+export const accounts = mysqlTable(
+  "accounts",
+  {
+    id: varchar("id", { length: 256 }).primaryKey().notNull(),
+    userId: varchar("userId", { length: 256 }).notNull(),
+    type: varchar("type", { length: 256 }).notNull(),
+    provider: varchar("provider", { length: 256 }).notNull(),
+    providerAccountId: varchar("providerAccountId", { length: 256 }).notNull(),
+    refresh_token: text("refresh_token"),
+    access_token: text("access_token"),
+    expires_at: int("expires_at"),
+    token_type: varchar("token_type", { length: 256 }),
+    scope: varchar("scope", { length: 256 }),
+    id_token: text("id_token"),
+    session_state: text("session_state").notNull(),
+  },
+  (table) => {
+    return {
       providerProviderAccountIdIndex: uniqueIndex(
         "accounts__provider__providerAccountId__idx"
       ).on(table.provider, table.providerAccountId),
