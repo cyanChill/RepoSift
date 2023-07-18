@@ -1,5 +1,5 @@
 /* https://github.com/drizzle-team/drizzle-orm/tree/main/drizzle-orm/src/mysql-core */
-import type { InferModel } from "drizzle-orm";
+import { relations, type InferModel } from "drizzle-orm";
 import {
   primaryKey,
   int,
@@ -21,7 +21,7 @@ export const users = mysqlTable(
   "users",
   {
     id: varchar("id", { length: 256 }).primaryKey().notNull(),
-    handle: varchar("handle", { length: 40 }).unique().notNull(),
+    handle: varchar("handle", { length: 64 }).unique().notNull(),
     role: mysqlEnum("role", ["user", "banned", "bot", "admin", "owner"])
       .default("user")
       .notNull(),
@@ -29,13 +29,17 @@ export const users = mysqlTable(
     banReason: text("banReason"),
     handleUpdatedAt: timestamp("handleUpdatedAt").onUpdateNow().notNull(),
   },
-  (table) => {
-    return {
-      handleIndex: uniqueIndex("users__handle__idx").on(table.handle),
-    };
-  }
+  (table) => ({
+    handleIndex: uniqueIndex("users__handle__idx").on(table.handle),
+  })
 );
 export type User = InferModel<typeof users>;
+export const userRelations = relations(users, ({ many }) => ({
+  linkedAccounts: many(linkedAccounts),
+  accounts: many(accounts),
+  sessions: many(sessions),
+}));
+export type UserWithLinkedAccounts = User & { linkedAccounts: LinkedAccount[] };
 
 // A "LinkedAccount" entry should be created right after we create a "User" entry.
 export const linkedAccounts = mysqlTable(
@@ -48,14 +52,18 @@ export const linkedAccounts = mysqlTable(
     createdAt: timestamp("createdAt").notNull(),
     userId: varchar("userId", { length: 256 }).notNull(),
   },
-  (table) => {
-    return {
-      pk: primaryKey(table.id, table.type),
-      userIdIndex: index("linkedAccounts__userId__idx").on(table.userId),
-    };
-  }
+  (table) => ({
+    pk: primaryKey(table.id, table.type),
+    userIdIndex: index("linkedAccounts__userId__idx").on(table.userId),
+  })
 );
 export type LinkedAccount = InferModel<typeof linkedAccounts>;
+export const linkedAccountRelations = relations(linkedAccounts, ({ one }) => ({
+  user: one(users, {
+    fields: [linkedAccounts.userId],
+    references: [users.id],
+  }),
+}));
 
 export const accounts = mysqlTable(
   "accounts",
@@ -65,24 +73,27 @@ export const accounts = mysqlTable(
     type: varchar("type", { length: 256 }).notNull(),
     provider: varchar("provider", { length: 256 }).notNull(),
     providerAccountId: varchar("providerAccountId", { length: 256 }).notNull(),
-    refresh_token: text("refresh_token"),
     access_token: text("access_token"),
-    expires_at: int("expires_at"),
     token_type: varchar("token_type", { length: 256 }),
     scope: varchar("scope", { length: 256 }),
+    refresh_token: text("refresh_token"),
+    expires_at: int("expires_at"),
     id_token: text("id_token"),
-    session_state: text("session_state").notNull(),
   },
-  (table) => {
-    return {
-      providerProviderAccountIdIndex: uniqueIndex(
-        "accounts__provider__providerAccountId__idx"
-      ).on(table.provider, table.providerAccountId),
-      userIdIndex: index("accounts__userId__idx").on(table.userId),
-    };
-  }
+  (table) => ({
+    providerProviderAccountIdIndex: uniqueIndex(
+      "accounts__provider__providerAccountId__idx"
+    ).on(table.provider, table.providerAccountId),
+    userIdIndex: index("accounts__userId__idx").on(table.userId),
+  })
 );
 export type Account = InferModel<typeof accounts>;
+export const accountRelations = relations(accounts, ({ one }) => ({
+  user: one(users, {
+    fields: [accounts.userId],
+    references: [users.id],
+  }),
+}));
 
 export const sessions = mysqlTable(
   "sessions",
@@ -92,30 +103,17 @@ export const sessions = mysqlTable(
     sessionToken: varchar("sessionToken", { length: 256 }).notNull(),
     userId: varchar("userId", { length: 256 }).notNull(),
   },
-  (table) => {
-    return {
-      sessionTokenIndex: uniqueIndex("sessions__sessionToken__idx").on(
-        table.sessionToken
-      ),
-      userIdIndex: index("sessions__userId_idx").on(table.userId),
-    };
-  }
+  (table) => ({
+    sessionTokenIndex: uniqueIndex("sessions__sessionToken__idx").on(
+      table.sessionToken
+    ),
+    userIdIndex: index("sessions__userId_idx").on(table.userId),
+  })
 );
 export type Session = InferModel<typeof sessions>;
-
-export const verificationTokens = mysqlTable(
-  "verificationTokens",
-  {
-    identifier: varchar("identifier", { length: 256 }).primaryKey().notNull(),
-    token: varchar("token", { length: 256 }).notNull(),
-    expires: timestamp("expires").notNull(),
-  },
-  (table) => {
-    return {
-      tokenIndex: uniqueIndex("verification_tokens__token__idx").on(
-        table.token
-      ),
-    };
-  }
-);
-export type VerificationToken = InferModel<typeof verificationTokens>;
+export const sessionRelations = relations(sessions, ({ one }) => ({
+  user: one(users, {
+    fields: [sessions.userId],
+    references: [users.id],
+  }),
+}));

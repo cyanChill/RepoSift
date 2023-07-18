@@ -3,9 +3,12 @@ import type { AuthOptions } from "next-auth";
 import GithubProvider, { type GithubProfile } from "next-auth/providers/github";
 // import GitLabProvider, { type GitLabProfile } from "next-auth/providers/gitlab";
 
+import { db } from "@/db";
 import { ENV } from "@/lib/env-server";
+import { DrizzleAdapter } from "./drizzle-adapter";
 
 export const authOptions: AuthOptions = {
+  adapter: DrizzleAdapter(db),
   providers: [
     // https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/github.ts
     GithubProvider({
@@ -14,6 +17,7 @@ export const authOptions: AuthOptions = {
       profile: (profile: GithubProfile) => {
         return {
           id: profile.id.toString(),
+          _id: profile.id.toString(),
           username: profile.login,
           image: profile.avatar_url,
           created_at: profile.created_at,
@@ -28,6 +32,7 @@ export const authOptions: AuthOptions = {
     //   profile: (profile: GitLabProfile) => {
     //     return {
     //       id: profile.id.toString(),
+    //       _id: profile.id.toString(),
     //       username: profile.username,
     //       image: profile.avatar_url,
     //       created_at: profile.created_at,
@@ -37,24 +42,11 @@ export const authOptions: AuthOptions = {
     // }),
   ],
   callbacks: {
-    jwt: ({ token, user }) => {
-      if (user) token.profile = user;
-      return token;
-    },
-    session: ({ session, token }) => {
-      if (token && token.profile) session.user = token.profile;
+    session: ({ session, user }) => {
+      // @ts-ignore: User returned from Drizzle Adapter is of correct form.
+      //             Just need to figure out how to fix the Adapter type.
+      if (user) session.user = user;
       return session;
-    },
-  },
-  // https://next-auth.js.org/configuration/events
-  events: {
-    createUser: async (message) => {
-      // Can be used to create a User object in our database
-      // console.log("\n[Create User]\n");
-      // console.log(message);
-    },
-    signIn: async (message) => {
-      // console.log(message);
     },
   },
   pages: {

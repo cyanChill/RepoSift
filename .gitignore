@@ -37,6 +37,7 @@ next-env.d.ts
 
 # TODO File
 TODO.md
+TODO-DONE.md
 
 # Drizzle
 /migrations-folder
