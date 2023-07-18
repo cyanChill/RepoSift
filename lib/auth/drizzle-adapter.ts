@@ -5,18 +5,30 @@ import type { Adapter } from "next-auth/adapters";
 
 import type { DrizzleSchema } from "@/db";
 import { users, linkedAccounts, accounts, sessions } from "@/db/schema";
-import type { User, LinkedAccount, Account } from "@/db/schema";
+import type {
+  User,
+  LinkedAccount,
+  Account,
+  UserWithLinkedAccounts,
+  Session,
+} from "@/db/schema";
 import { type AuthProviders } from "../types";
 
 /*
-  FIXME: Need to figure out how to update the Adapter type.
+  FIXME: Need to figure out how to change the Adapter type to reflect our
+         custom user.
 */
+
+type UserFuncsReturnType = Promise<UserWithLinkedAccounts | null>;
+
 export function DrizzleAdapter(
   db: PlanetScaleDatabase<DrizzleSchema>
 ): Adapter {
   return {
     /* Runs when we "getUserByAccount()" fails to return something. */
-    async createUser(data) {
+    // @ts-ignore: Returns our implementation of the User model which
+    //             intentially looks different compared to the input.
+    async createUser(data): Promise<UserWithLinkedAccounts> {
       /*
         Using a transaction as we want to prevent people from creating
         an account that's been linked to someone else's account.
@@ -28,7 +40,7 @@ export function DrizzleAdapter(
       console.log("\n[createUser()] data:", data, "\n");
 
       const id = createId();
-      const uniqueHandle = `${data.username}-${id}`;
+      const uniqueHandle = `${data.username ?? ""}-${id}`;
 
       await db.transaction(async (tx) => {
         // Create the main user account
@@ -45,7 +57,7 @@ export function DrizzleAdapter(
           type: data.type,
           username: data.username,
           image: data.image,
-          createdAt: new Date(data.created_at),
+          createdAt: new Date(data.created_at ?? ""),
           userId: id,
         } as LinkedAccount);
       });
@@ -58,7 +70,8 @@ export function DrizzleAdapter(
       return user;
     },
 
-    async getUser(id) {
+    // @ts-ignore: Returns our implementation of the User model.
+    async getUser(id): UserFuncsReturnType {
       console.log("\n[getUser()] id:", id, "\n");
 
       const user = await db.query.users.findFirst({
@@ -75,7 +88,11 @@ export function DrizzleAdapter(
     },
 
     /* ✅ Runs when we log in. */
-    async getUserByAccount({ providerAccountId, provider }) {
+    // @ts-ignore: Returns our implementation of the User model.
+    async getUserByAccount({
+      providerAccountId,
+      provider,
+    }): UserFuncsReturnType {
       console.log(
         "\n[getUserByAccount()] providerAccountId, provider:",
         providerAccountId,
@@ -98,7 +115,8 @@ export function DrizzleAdapter(
       return user ?? null;
     },
 
-    async updateUser(userData) {
+    // @ts-ignore: Returns our implementation of the User model.
+    async updateUser(userData): UserFuncsReturnType {
       console.log("\n[updateUser()] userData:", userData, "\n");
 
       if (!userData.id) throw new Error("User not found!");
@@ -183,7 +201,10 @@ export function DrizzleAdapter(
     },
 
     /* ✅ Runs whenever we open the tab with our site. */
-    async getSessionAndUser(sessionToken) {
+    // @ts-ignore: Returns our implementation of the User model.
+    async getSessionAndUser(
+      sessionToken
+    ): Promise<{ session: Session; user: UserWithLinkedAccounts } | null> {
       console.log("\n[getSessionAndUser()] sessionToken:", sessionToken, "\n");
 
       const session = await db.query.sessions.findFirst({
