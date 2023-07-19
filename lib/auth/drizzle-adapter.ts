@@ -155,7 +155,7 @@ export function DrizzleAdapter(
       } as Account);
     },
 
-    /* ❗ Unimplemented Method as of Bext-Auth v4.22.1 ❗ */
+    /* ❗ Unimplemented Method as of Next-Auth v4.22.1 ❗ */
     async unlinkAccount({ providerAccountId, provider }) {
       console.log(
         "\n[unlinkAccount()] providerAccountId, provider:",
