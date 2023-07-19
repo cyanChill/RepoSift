@@ -47,6 +47,14 @@
   .split-section-content {
     @apply w-full max-w-appContent-1/3;
   }
+
+  .form-label {
+    @apply w-full max-w-max text-base font-semibold;
+  }
+
+  .form-input {
+    @apply just-black border-2 bg-white px-2 py-1 text-lg font-medium shadow-full focus:outline-none focus:ring focus:ring-blue-500;
+  }
 }
 
 :root {

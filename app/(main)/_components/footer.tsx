@@ -37,7 +37,7 @@ export default function Footer() {
           href="https://github.com/cyanChill/RepoSift"
           target="_blank"
           referrerPolicy="no-referrer"
-          className="flex items-center hover:underline"
+          className="flex w-fit items-center hover:underline"
         >
           <FaGithub className="mr-2" /> &copy; cyanChill, 2023
         </a>

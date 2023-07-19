@@ -23,6 +23,7 @@ module.exports = {
       colors: {
         bkg: "#e9e2db",
         "p-green": { 400: "#a2d6a4", 600: "#6cae7b", 900: "#396f45" },
+        turquoise: "#3cc7be",
       },
       maxWidth: {
         appContent: "var(--max-app-width)", // max-w-7xl: 1280px
