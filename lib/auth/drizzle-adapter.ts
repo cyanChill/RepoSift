@@ -12,7 +12,7 @@ import type {
   UserWithLinkedAccounts,
   Session,
 } from "@/db/schema";
-import { type AuthProviders } from "../types";
+import type { AuthProviders } from "../zod/types";
 
 /*
   FIXME: Need to figure out how to change the Adapter type to reflect our
