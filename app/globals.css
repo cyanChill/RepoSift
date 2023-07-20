@@ -4,7 +4,7 @@
 
 @layer components {
   .btn {
-    @apply rounded-md border-2 px-4 py-2 text-center shadow-white transition duration-300 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-full;
+    @apply rounded-md border-2 px-4 py-2 text-center shadow-white transition duration-300 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-full focus:outline-none focus:ring focus:ring-blue-500;
   }
   .btn-strip {
     @apply hover:translate-0 rounded-none border-0 hover:shadow-none;
@@ -49,11 +49,15 @@
   }
 
   .form-label {
-    @apply w-full max-w-max text-base font-semibold;
+    @apply w-full max-w-max text-sm font-semibold md:text-base;
   }
 
   .form-input {
-    @apply just-black border-2 bg-white px-2 py-1 text-lg font-medium shadow-full focus:outline-none focus:ring focus:ring-blue-500;
+    @apply just-black border-2 bg-white px-2 py-1 font-medium shadow-full focus:outline-none focus:ring focus:ring-blue-500 md:text-lg;
+  }
+
+  .newFocus {
+    @apply focus:outline-none focus:ring focus:ring-blue-500;
   }
 }
 
