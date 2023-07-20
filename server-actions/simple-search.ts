@@ -1,19 +1,21 @@
 "use server";
 
 import { ENV } from "@/lib/env-server";
-import { randInt } from "@/lib/utils";
+import { randInt, formDataToObj } from "@/lib/utils";
 import type { GitHubRepo } from "@/lib/zod/schema";
 import { GitHubRepoSearchResult, SimpleSearchSchema } from "@/lib/zod/schema";
 
 export async function simpleSearch(formData: FormData): Promise<GitHubRepo[]> {
+  console.log(formDataToObj(formData));
+
   /* Validate input data */
-  const schemaRes = SimpleSearchSchema.safeParse(formData);
+  const schemaRes = SimpleSearchSchema.safeParse(formDataToObj(formData));
   if (!schemaRes.success) {
     const { errors } = schemaRes.error;
     // FIXME: Can alternatively return the errors depending on how we want to
     //        implement this.
     console.log(errors);
-    throw new Error("Invalid Inputs");
+    throw new Error("Invalid inputs.");
   }
 
   const { provider, languages, minStars = 0, maxStars, limit } = schemaRes.data;
@@ -44,19 +46,18 @@ export async function simpleSearch(formData: FormData): Promise<GitHubRepo[]> {
     },
   });
   const data: unknown = await res.json();
-  const dataRes = GitHubRepoSearchResult.safeParse(data);
-  if (!dataRes.success) {
-    const { errors } = dataRes.error;
+  const dataParsed = GitHubRepoSearchResult.safeParse(data);
+  if (!dataParsed.success) {
+    const { errors } = dataParsed.error;
     // FIXME: Can alternatively return the errors depending on how we want to
     //        implement this.
     console.log(errors);
     console.log(data); // See what was returned instead
     throw new Error("Something unexpected happened.");
   }
-  const { total_count, items } = dataRes.data;
+  const { total_count, items } = dataParsed.data;
 
   console.log("[simpleSearch()] Total Results Found:", total_count);
-  console.log("[simpleSearch()] Results:", items);
 
   return items;
 }

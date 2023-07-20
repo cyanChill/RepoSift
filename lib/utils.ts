@@ -14,3 +14,7 @@ export function firstStrParam(val: string | string[] | undefined) {
 export function randInt(min: number, max: number) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
+
+export function formDataToObj(data: FormData) {
+  return Object.fromEntries(data);
+}

@@ -88,7 +88,14 @@ export const MultiText = ({ name, label, max, className }: MultiTextProps) => {
       <label htmlFor={name} className={cn("form-label", className)}>
         {label} {max && <span className="ml-2 font-normal">(max {max})</span>}
       </label>
-      <input id={name} name={name} type="text" value={vals} readOnly hidden />
+      <input
+        id={name}
+        name={name}
+        type="text"
+        value={JSON.stringify(vals)}
+        readOnly
+        hidden
+      />
 
       <div className="mb-2 flex h-9 items-center md:h-10">
         <input

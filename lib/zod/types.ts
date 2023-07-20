@@ -3,7 +3,7 @@ import { z } from "zod";
 export const PROVIDERS_ENUM = z.enum(["github", "gitlab", "bitbucket"]);
 export type AuthProviders = z.infer<typeof PROVIDERS_ENUM>;
 
-export const OPT_NONNEG_INT = z
+export const OPT_NONNEG_INT = z.coerce
   .number()
   .int()
   .min(0, { message: "⚠️ Must be a non-negative integer." })
