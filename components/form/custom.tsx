@@ -75,7 +75,7 @@ export const MultiText = ({ name, label, max, className }: MultiTextProps) => {
       return;
     }
     const newVal = inputRef.current.value.trim();
-    if (newVal.length > 0) setVals((prev) => [...prev, newVal]);
+    if (newVal.length > 0) setVals((prev) => [...new Set([...prev, newVal])]);
     inputRef.current.value = "";
   };
 
