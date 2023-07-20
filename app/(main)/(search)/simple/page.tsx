@@ -7,8 +7,6 @@ export const metadata = {
 export default function SimpleSearchPage() {
   return (
     <main className="mx-auto w-full max-w-appContent">
-      <h1>Simple Search</h1>
-
       <SSClientPage />
     </main>
   );

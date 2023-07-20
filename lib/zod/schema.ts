@@ -50,7 +50,9 @@ export const SimpleSearchSchema = z
   })
   .refine(
     ({ minStars, maxStars }) => {
-      if (minStars && maxStars) return maxStars > minStars;
+      if (typeof minStars === "number" && typeof maxStars === "number") {
+        return maxStars > minStars;
+      }
       return true;
     },
     { message: "⚠️ Max stars must be greater than min stars." }

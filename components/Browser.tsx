@@ -14,7 +14,7 @@ const Browser = ({ className, style, children }: CSSNChild) => {
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-lg border-2 border-black bg-gray-200 shadow-full",
+        "flex flex-col overflow-hidden rounded-lg border-2 border-black bg-gray-200 shadow-full",
         className
       )}
       style={
@@ -53,6 +53,7 @@ type TLAction = {
   redAction: () => void;
   yellowAction: () => void;
   greenAction: () => void;
+  disabled?: boolean;
 };
 type TLProps = {
   size?: number;
@@ -64,14 +65,20 @@ const TrafficLights = ({
   withSymbols = false,
   ...rest
 }: TLProps) => {
-  const redChild = withSymbols ? <FaXmark className="d-full" /> : null;
-  const yellowChild = withSymbols ? <FaChevronLeft className="d-full" /> : null;
-  const greenChild = withSymbols ? <FaChevronRight className="d-full" /> : null;
+  const redChild = withSymbols ? (
+    <FaXmark className="d-full pointer-events-none" />
+  ) : null;
+  const yellowChild = withSymbols ? (
+    <FaChevronLeft className="d-full pointer-events-none" />
+  ) : null;
+  const greenChild = withSymbols ? (
+    <FaChevronRight className="d-full pointer-events-none" />
+  ) : null;
 
   const btnClass =
-    "flex h-[var(--size)] w-[var(--size)] items-center justify-center rounded-full border border-black p-1";
+    "flex h-[var(--size)] w-[var(--size)] items-center justify-center rounded-full border border-black p-1 shadow-full";
   const btnAnimClass =
-    "transition duration-300 hover:shadow-full hover:-translate-x-0.5 hover:-translate-y-0.5";
+    "bg-opacity-75 transition duration-300 enabled:hover:bg-opacity-100 disabled:bg-opacity-50 disabled:text-opacity-75";
 
   return (
     <div
@@ -90,33 +97,30 @@ const TrafficLights = ({
           <button
             className={cn(btnClass, btnAnimClass, "bg-red-500")}
             onClick={rest.redAction}
+            disabled={rest.disabled || false}
           >
             {redChild}
           </button>
           <button
             className={cn(btnClass, btnAnimClass, "bg-yellow-500")}
             onClick={rest.yellowAction}
+            disabled={rest.disabled || false}
           >
             {yellowChild}
           </button>
           <button
             className={cn(btnClass, btnAnimClass, "bg-green-500")}
             onClick={rest.greenAction}
+            disabled={rest.disabled || false}
           >
             {greenChild}
           </button>
         </>
       ) : (
         <>
-          <span className={cn(btnClass, "bg-red-500 shadow-full")}>
-            {redChild}
-          </span>
-          <span className={cn(btnClass, "bg-yellow-500 shadow-full")}>
-            {yellowChild}
-          </span>
-          <span className={cn(btnClass, "bg-green-500 shadow-full")}>
-            {greenChild}
-          </span>
+          <span className={cn(btnClass, "bg-red-500")}>{redChild}</span>
+          <span className={cn(btnClass, "bg-yellow-500")}>{yellowChild}</span>
+          <span className={cn(btnClass, "bg-green-500")}>{greenChild}</span>
         </>
       )}
     </div>
@@ -141,7 +145,10 @@ const SearchBar = ({ className, style, children }: CSSNChild) => {
 // Component to help organize <Browser /> children
 const Content = ({ className, style, children }: CSSNChild) => {
   return (
-    <div className={className} style={style}>
+    <div
+      className={cn("flex h-full flex-col overflow-y-auto", className)}
+      style={style}
+    >
       {children}
     </div>
   );
