@@ -3,31 +3,23 @@
 @tailwind utilities;
 
 @layer components {
+  /* Form Styling */
+  .form-label {
+    @apply w-full max-w-max text-sm font-semibold md:text-base;
+  }
+
+  .form-input {
+    @apply just-black border-2 bg-white px-2 py-1 font-medium shadow-full focus:outline-none focus:ring focus:ring-blue-500 disabled:bg-gray-200 disabled:text-opacity-75 md:text-lg;
+  }
+
   .btn {
-    @apply rounded-md border-2 px-4 py-2 text-center shadow-white transition duration-300 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-full focus:outline-none focus:ring focus:ring-blue-500;
+    @apply rounded-md border-2 px-4 py-2 text-center shadow-white transition duration-300 focus:outline-none focus:ring focus:ring-blue-500 enabled:hover:-translate-x-1 enabled:hover:-translate-y-1 enabled:hover:shadow-full disabled:bg-opacity-50 disabled:text-opacity-75;
   }
   .btn-strip {
-    @apply hover:translate-0 rounded-none border-0 hover:shadow-none;
+    @apply enabled:hover:translate-0 rounded-none border-0 hover:shadow-none;
   }
 
-  .link-underline {
-    @apply relative before:absolute before:bottom-0 before:h-0.5 before:w-full before:origin-left before:scale-0 before:bg-black before:transition before:duration-300;
-  }
-  .link-underline-active {
-    @apply before:scale-100;
-  }
-  .hocus-underline {
-    @apply relative before:absolute before:bottom-0 before:h-0.5 before:w-full before:origin-left before:scale-0 before:bg-black before:transition before:duration-300 hocus:before:scale-100;
-  }
-
-  .just-black {
-    @apply border-black bg-black text-black shadow-black;
-  }
-
-  .translate-0 {
-    @apply translate-x-0 translate-y-0;
-  }
-
+  /* Layout Styling */
   .d-full {
     @apply h-full w-full;
   }
@@ -48,16 +40,30 @@
     @apply w-full max-w-appContent-1/3;
   }
 
-  .form-label {
-    @apply w-full max-w-max text-sm font-semibold md:text-base;
+  /* Utility Styling */
+  .just-black {
+    @apply border-black bg-black text-black shadow-black;
   }
 
-  .form-input {
-    @apply just-black border-2 bg-white px-2 py-1 font-medium shadow-full focus:outline-none focus:ring focus:ring-blue-500 md:text-lg;
+  .translate-0 {
+    @apply translate-x-0 translate-y-0;
   }
 
   .newFocus {
     @apply focus:outline-none focus:ring focus:ring-blue-500;
+  }
+
+  /* Visual Cues */
+  .link-underline {
+    @apply relative before:absolute before:bottom-0 before:h-0.5 before:w-full before:origin-left before:scale-0 before:bg-black before:transition before:duration-300;
+  }
+
+  .link-underline-active {
+    @apply before:scale-100;
+  }
+
+  .hocus-underline {
+    @apply relative before:absolute before:bottom-0 before:h-0.5 before:w-full before:origin-left before:scale-0 before:bg-black before:transition before:duration-300 hocus:before:scale-100;
   }
 }
 

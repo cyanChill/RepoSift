@@ -112,7 +112,7 @@ export const MultiText = ({ name, label, max, className }: MultiTextProps) => {
         />
         <button
           type="button"
-          className="form-input aspect-square h-full border-l-0 bg-yellow-400 font-semibold transition duration-300 hocus:bg-yellow-300"
+          className="form-input aspect-square h-full border-l-0 bg-yellow-400 font-semibold transition duration-300 enabled:hocus:bg-yellow-300"
           onClick={onAdd}
         >
           +
@@ -133,12 +133,12 @@ export const MultiText = ({ name, label, max, className }: MultiTextProps) => {
             type="button"
             className={cn(
               "newFocus just-black flex items-center gap-2 rounded-md border-2 px-2 py-0.5 text-sm font-medium shadow-full",
-              "bg-opacity-50 hocus:bg-opacity-100",
+              "bg-opacity-50 disabled:bg-opacity-25 disabled:text-opacity-75 enabled:hocus:bg-opacity-100",
               BG_COLORS[idx % BG_COLORS.length]
             )}
             onClick={() => removeSelf(val)}
           >
-            {val} <IoMdClose className="shrink-0" />
+            {val} <IoMdClose className="pointer-events-none shrink-0" />
           </button>
         ))}
       </div>
