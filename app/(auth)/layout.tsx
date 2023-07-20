@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import Image from "next/image";
 
 export const metadata = {
@@ -22,6 +23,7 @@ export default function AuthLayout({
           className="absolute left-0 top-0 h-full w-full object-cover"
         />
       </aside>
+      <Analytics />
     </body>
   );
 }

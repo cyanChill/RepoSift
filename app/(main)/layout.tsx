@@ -1,3 +1,5 @@
+import { Analytics } from "@vercel/analytics/react";
+
 import Provider from "@/components/Provider";
 import Navbar from "./_components/navbar";
 import Header from "./_components/header";
@@ -12,6 +14,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {children}
       </Provider>
       <Footer />
+      <Analytics />
     </body>
   );
 }
