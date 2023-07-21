@@ -119,8 +119,15 @@ export default function SSClientPage() {
               <p className="mb-1 font-medium md:mb-2 md:text-2xl">
                 Start Your Search
               </p>
-              <p className="text-sm">
+              <p className="mb-8 text-sm">
                 Enter some criterias and click {'"Search"'} to get some results.
+              </p>
+              <p className="text-sm font-medium">
+                <span className="font-bold underline">Note:</span> The{" "}
+                <span className="font-semibold">{"(<)"}</span> and{" "}
+                <span className="font-semibold">{"(>)"}</span> buttons in the
+                header above will allow you to navigate through your search
+                results.
               </p>
             </>
           )}
