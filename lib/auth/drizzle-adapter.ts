@@ -4,14 +4,19 @@ import type { PlanetScaleDatabase } from "drizzle-orm/planetscale-serverless";
 import type { Adapter } from "next-auth/adapters";
 
 import type { DrizzleSchema } from "@/db";
-import { users, linkedAccounts, accounts, sessions } from "@/db/schema";
+import {
+  users,
+  linkedAccounts,
+  accounts,
+  sessions,
+} from "@/db/schema/next-auth";
 import type {
   User,
   LinkedAccount,
   Account,
   UserWithLinkedAccounts,
   Session,
-} from "@/db/schema";
+} from "@/db/schema/next-auth";
 import type { AuthProviders } from "../zod/types";
 
 /*

@@ -6,7 +6,7 @@ An updated version of a project I've made recently, [GitInspire](https://github.
 
 Given we've populated our `.env` file, we need to generate the schema in SQL and push it to our PlanetScale database.
 
-1. First, we create a migration file containing SQL queries to generate our tables from our schema by running `npm run db:generate`.
+1. First, we create a migration file containing SQL queries to generate our tables from our schema by running `npm run db:generate`. This provides us with the SQL queries that reflect the changes made to the database.
 
    - This runs `npx drizzle-kit generate:mysql`.
    - We rerun this command whenever we make changes to our schema.

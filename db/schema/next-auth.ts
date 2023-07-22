@@ -12,6 +12,9 @@ import {
   uniqueIndex,
 } from "drizzle-orm/mysql-core";
 
+import { labels, repositories } from "./main";
+import type { Label, Repository } from "./main";
+
 /*
   -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
                               Next-Auth Tables
@@ -38,8 +41,14 @@ export const userRelations = relations(users, ({ many }) => ({
   linkedAccounts: many(linkedAccounts),
   accounts: many(accounts),
   sessions: many(sessions),
+  contributedLabels: many(labels),
+  contributedRepos: many(repositories),
 }));
 export type UserWithLinkedAccounts = User & { linkedAccounts: LinkedAccount[] };
+export type UserWithContributions = UserWithLinkedAccounts & {
+  contributedLabels: Label[];
+  contributedRepos: Repository[];
+};
 
 // A "LinkedAccount" entry should be created right after we create a "User" entry.
 export const linkedAccounts = mysqlTable(
@@ -59,10 +68,7 @@ export const linkedAccounts = mysqlTable(
 );
 export type LinkedAccount = InferModel<typeof linkedAccounts>;
 export const linkedAccountRelations = relations(linkedAccounts, ({ one }) => ({
-  user: one(users, {
-    fields: [linkedAccounts.userId],
-    references: [users.id],
-  }),
+  user: one(users, { fields: [linkedAccounts.userId], references: [users.id] }),
 }));
 
 export const accounts = mysqlTable(
@@ -89,10 +95,7 @@ export const accounts = mysqlTable(
 );
 export type Account = InferModel<typeof accounts>;
 export const accountRelations = relations(accounts, ({ one }) => ({
-  user: one(users, {
-    fields: [accounts.userId],
-    references: [users.id],
-  }),
+  user: one(users, { fields: [accounts.userId], references: [users.id] }),
 }));
 
 export const sessions = mysqlTable(
@@ -112,8 +115,5 @@ export const sessions = mysqlTable(
 );
 export type Session = InferModel<typeof sessions>;
 export const sessionRelations = relations(sessions, ({ one }) => ({
-  user: one(users, {
-    fields: [sessions.userId],
-    references: [users.id],
-  }),
+  user: one(users, { fields: [sessions.userId], references: [users.id] }),
 }));

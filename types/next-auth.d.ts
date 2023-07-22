@@ -1,6 +1,6 @@
 import NextAuth, { type DefaultSession } from "next-auth";
 
-import type { UserWithLinkedAccounts } from "@/db/schema";
+import type { UserWithLinkedAccounts } from "@/db/schema/next-auth";
 
 // https://next-auth.js.org/getting-started/typescript#module-augmentation
 declare module "next-auth" {
