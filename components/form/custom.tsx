@@ -7,11 +7,19 @@ import { cn } from "@/lib/utils";
 type MMRProps = {
   name: string;
   label: string;
+  initialMin?: number;
+  initialMax?: number;
   className?: string;
 };
 
 /** Form field names will be `min${name}` & `min${name}` */
-export const MinMaxRange = ({ name, label, className }: MMRProps) => {
+export const MinMaxRange = ({
+  name,
+  label,
+  initialMin,
+  initialMax,
+  className,
+}: MMRProps) => {
   return (
     <fieldset className="mb-4 flex flex-col">
       <legend className="form-label">{label}</legend>
@@ -26,6 +34,7 @@ export const MinMaxRange = ({ name, label, className }: MMRProps) => {
           type="number"
           min={0}
           step={1}
+          defaultValue={initialMin}
           className={cn("form-input w-full max-w-[6rem]", className)}
         />
 
@@ -40,6 +49,7 @@ export const MinMaxRange = ({ name, label, className }: MMRProps) => {
           type="number"
           min={0}
           step={1}
+          defaultValue={initialMax}
           className={cn("form-input w-full max-w-[6rem]", className)}
         />
       </div>
@@ -52,6 +62,7 @@ type MultiTextProps = {
   label: string;
   /** A positive integer. */
   max: number;
+  initialValues?: string[];
   className?: string;
 };
 
@@ -63,9 +74,15 @@ const BG_COLORS = [
   "bg-purple-300",
 ];
 
-export const MultiText = ({ name, label, max, className }: MultiTextProps) => {
+export const MultiText = ({
+  name,
+  label,
+  max,
+  initialValues,
+  className,
+}: MultiTextProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [vals, setVals] = useState<string[]>([]);
+  const [vals, setVals] = useState<string[]>(initialValues ?? []);
   useFormReset(() => setVals([]), "simple-search-form");
 
   const onAdd = () => {

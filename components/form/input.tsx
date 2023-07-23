@@ -36,10 +36,19 @@ type SelectProps = {
   name: string;
   label: string;
   options: Option[];
+  initialValue?: Option;
+  required?: boolean;
   className?: string;
 };
 
-export const Select = ({ name, label, options, className }: SelectProps) => {
+export const Select = ({
+  name,
+  label,
+  options,
+  initialValue,
+  required = false,
+  className,
+}: SelectProps) => {
   const [selectedOpt, setSelectedOpt] = useState<Option>(options[0]);
 
   return (
@@ -49,6 +58,7 @@ export const Select = ({ name, label, options, className }: SelectProps) => {
         className="relative mb-4 w-full max-w-max"
         value={selectedOpt}
         onChange={setSelectedOpt}
+        defaultValue={initialValue}
       >
         <input
           id={name}
@@ -57,6 +67,7 @@ export const Select = ({ name, label, options, className }: SelectProps) => {
           value={selectedOpt.value}
           readOnly
           hidden
+          required={required}
         />
         <Listbox.Label className="form-label">{label}</Listbox.Label>
         <Listbox.Button
