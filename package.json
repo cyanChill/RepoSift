@@ -26,7 +26,7 @@
     "react-dom": "18.2.0",
     "react-icons": "^4.10.1",
     "server-only": "^0.0.1",
-    "sharp": "^0.32.1",
+    "sharp": "^0.32.4",
     "tailwind-merge": "^1.13.2",
     "zact": "^0.0.2",
     "zod": "^3.21.4"
