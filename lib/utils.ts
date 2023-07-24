@@ -7,6 +7,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export const noop = () => {
+  return;
+};
+
 export function firstStrParam(val: string | string[] | undefined) {
   if (!val || typeof val === "string") return val;
   else return val[0];

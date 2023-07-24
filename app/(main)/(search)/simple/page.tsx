@@ -6,7 +6,7 @@ export const metadata = {
 
 export default function SimpleSearchPage() {
   return (
-    <main className="mx-auto w-full max-w-appContent">
+    <main className="mx-auto grid w-full max-w-appContent gap-8 p-3 py-5 md:grid-cols-2 md:py-20">
       <SSClientPage />
     </main>
   );

@@ -62,6 +62,7 @@ type MultiTextProps = {
   label: string;
   /** A positive integer. */
   max: number;
+  formId: string;
   initialValues?: string[];
   className?: string;
 };
@@ -78,12 +79,13 @@ export const MultiText = ({
   name,
   label,
   max,
+  formId,
   initialValues,
   className,
 }: MultiTextProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [vals, setVals] = useState<string[]>(initialValues ?? []);
-  useFormReset(() => setVals([]), "simple-search-form");
+  useFormReset(() => setVals([]), formId);
 
   const onAdd = () => {
     if (!inputRef.current) return;
