@@ -8,7 +8,7 @@ export default function Header() {
   if (pathname === "/") routeName = "RepoSift";
   if (pathname === "/simple") routeName = "Simple Search";
   if (pathname.startsWith("/indexed")) routeName = "Indexed Search";
-  if (pathname === "/contribute") routeName = "Contribute";
+  if (pathname.startsWith("/contribute")) routeName = "Contribute";
   if (pathname.startsWith("/u/@")) routeName = "Profile";
   if (pathname === "/misc") routeName = "Misc.";
 

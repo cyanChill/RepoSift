@@ -25,6 +25,9 @@ module.exports = {
         "p-green": { 400: "#a2d6a4", 600: "#6cae7b", 900: "#396f45" },
         turquoise: { 200: "#cefff9", 600: "#3cc7be" },
       },
+      width: {
+        appContent: "var(--max-app-width)",
+      },
       maxWidth: {
         appContent: "var(--max-app-width)", // max-w-7xl: 1280px
         "appContent-1/2": "calc(var(--max-app-width)/2)",
