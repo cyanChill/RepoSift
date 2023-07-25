@@ -45,7 +45,12 @@ export default function ResultsCard({
     return (
       <Browser className="h-full max-h-72 min-h-[12.5rem] bg-white">
         <Browser.Header className="bg-purple-200 px-4">
-          <Browser.TrafficLights size={16} withSymbols withAction={false} />
+          <Browser.TrafficLights
+            size={16}
+            withSymbols
+            withAction={false}
+            disabled={true}
+          />
           <Browser.SearchBar className="flex h-8 items-center text-base">
             {" "}
           </Browser.SearchBar>

@@ -53,16 +53,17 @@ type TLAction = {
   redAction: () => void;
   yellowAction: () => void;
   greenAction: () => void;
-  disabled?: boolean;
 };
 type TLProps = {
   size?: number;
   withSymbols?: boolean;
+  disabled?: boolean;
 } & (TLNoAction | TLAction);
 
 const TrafficLights = ({
   size = 16,
   withSymbols = false,
+  disabled = false,
   ...rest
 }: TLProps) => {
   const redChild = withSymbols ? (
@@ -97,30 +98,54 @@ const TrafficLights = ({
           <button
             className={cn(btnClass, btnAnimClass, "bg-red-500")}
             onClick={rest.redAction}
-            disabled={rest.disabled || false}
+            disabled={disabled}
           >
             {redChild}
           </button>
           <button
             className={cn(btnClass, btnAnimClass, "bg-yellow-500")}
             onClick={rest.yellowAction}
-            disabled={rest.disabled || false}
+            disabled={disabled}
           >
             {yellowChild}
           </button>
           <button
             className={cn(btnClass, btnAnimClass, "bg-green-500")}
             onClick={rest.greenAction}
-            disabled={rest.disabled || false}
+            disabled={disabled}
           >
             {greenChild}
           </button>
         </>
       ) : (
         <>
-          <span className={cn(btnClass, "bg-red-500")}>{redChild}</span>
-          <span className={cn(btnClass, "bg-yellow-500")}>{yellowChild}</span>
-          <span className={cn(btnClass, "bg-green-500")}>{greenChild}</span>
+          <span
+            className={cn(
+              btnClass,
+              { "bg-opacity-50 text-opacity-75": disabled },
+              "bg-red-500"
+            )}
+          >
+            {redChild}
+          </span>
+          <span
+            className={cn(
+              btnClass,
+              { "bg-opacity-50 text-opacity-75": disabled },
+              "bg-yellow-500"
+            )}
+          >
+            {yellowChild}
+          </span>
+          <span
+            className={cn(
+              btnClass,
+              { "bg-opacity-50 text-opacity-75": disabled },
+              "bg-green-500"
+            )}
+          >
+            {greenChild}
+          </span>
         </>
       )}
     </div>
