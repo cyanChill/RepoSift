@@ -2,13 +2,17 @@ import { getServerSession } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { isAfter, subMonths } from "date-fns";
 import type { IconType } from "react-icons/lib";
 import { IoPricetags } from "react-icons/io5";
 import { SiBookstack } from "react-icons/si";
 
 import { authOptions } from "@/lib/auth";
-import { cn, getOldestAge, getMonthDescriptor } from "@/lib/utils";
+import {
+  cn,
+  getOldestAge,
+  getMonthDescriptor,
+  didFailMonthConstraint,
+} from "@/lib/utils";
 
 export const metadata = {
   title: "RepoSift | Contribute",
@@ -40,7 +44,7 @@ export default async function ContributePage() {
         description="Help create a library of better labeled repositories to help users better find what they're looking for."
         btnText="Start Indexing"
         bgClr={{ icon: "bg-red-500", button: "bg-green-400" }}
-        currVal={oldestAge}
+        oldestAge={oldestAge}
         constraint={3}
       />
       <ContributeType
@@ -50,7 +54,7 @@ export default async function ContributePage() {
         description="Help others index repositories better by creating labels that can be tailored to the interest of others."
         btnText="Suggest a Label"
         bgClr={{ icon: "bg-sky-300", button: "bg-yellow-400" }}
-        currVal={oldestAge}
+        oldestAge={oldestAge}
         constraint={12}
       />
     </main>
@@ -64,7 +68,7 @@ type ContributeType = {
   description: string;
   btnText: string;
   bgClr: { icon: string; button: string };
-  currVal: Date;
+  oldestAge: Date;
   constraint: number; // Number of months required
 };
 
@@ -75,11 +79,11 @@ const ContributeType = ({
   description,
   btnText,
   bgClr,
-  currVal,
+  oldestAge,
   constraint,
 }: ContributeType) => {
-  // Constraint is failed if "currVal" > "Today - Constraint"
-  const disabled = isAfter(currVal, subMonths(Date.now(), constraint));
+  // Constraint is failed if "oldestAge" > "Today - Constraint"
+  const disabled = didFailMonthConstraint(constraint, oldestAge);
 
   return (
     <section className="just-black flex w-full flex-col border-2 bg-white p-4 shadow-full md:h-[500px] md:max-w-[425px] md:p-6 md:pb-12">

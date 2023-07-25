@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { isAfter, subMonths } from "date-fns";
 
 import type { LinkedAccount } from "@/db/schema/next-auth";
 import type { GenericObj } from "./types";
@@ -22,7 +23,7 @@ export const noop = () => {
 
 /**
  * @description Returns the 1st string value in URL search params.
- * @returns String or undefined.
+ * @returns A string or undefined.
  */
 export function firstStrParam(val: string | string[] | undefined) {
   if (!val || typeof val === "string") return val;
@@ -39,7 +40,7 @@ export function randInt(min: number, max: number) {
 
 /**
  * @description Test whether a value is falsy but not "0".
- * @returns Boolean.
+ * @returns A boolean.
  */
 export function isFalsyNotZero(val: unknown) {
   return !val && val !== 0;
@@ -55,7 +56,7 @@ export function formDataToObj(data: FormData) {
 
 /**
  * @description Remove the falsy values that aren't "0" from an object.
- * @returns Object without falsy values that aren't "0".
+ * @returns An object without falsy values that aren't "0".
  */
 export function removeEmptyProperties(data: GenericObj) {
   return Object.keys(data).reduce((acc, key) => {
@@ -75,7 +76,6 @@ export function getOldestAge(linkedAccs: LinkedAccount[]) {
 }
 
 type Descriptors = { one: string; other: string };
-
 /**
  * @description Create a description string based on the number of months in the form of "x months", "x years", or "x years and x months".
  * @returns A string.
@@ -96,4 +96,12 @@ export function getMonthDescriptor(numMonths: number) {
   if (y > 0) results.push(`${y} ${getPlural(y, years)}`);
   if (m > 0) results.push(`${m} ${getPlural(m, months)}`);
   return results.join(" and ");
+}
+
+/**
+ * @description Checks whether a date fails to be x months old from today.
+ * @returns A boolean.
+ */
+export function didFailMonthConstraint(months: number, date: Date) {
+  return isAfter(date, subMonths(Date.now(), months));
 }
