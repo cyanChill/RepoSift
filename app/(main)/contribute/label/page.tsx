@@ -21,8 +21,8 @@ export default async function ContributeLabelPage() {
   }
 
   return (
-    <main className="mx-auto w-full max-w-appContent p-3 py-5 md:py-20">
+    <>
       <h2>Contribute a Label to RepoSift</h2>
-    </main>
+    </>
   );
 }

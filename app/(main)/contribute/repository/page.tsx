@@ -21,8 +21,8 @@ export default async function ContributeRepositoryPage() {
   }
 
   return (
-    <main className="mx-auto w-full max-w-appContent p-3 py-5 md:py-20">
+    <>
       <h2>Contribute a Repository to RepoSift</h2>
-    </main>
+    </>
   );
 }

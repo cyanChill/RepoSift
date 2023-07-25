@@ -1,5 +1,4 @@
 import { getServerSession } from "next-auth";
-import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { IconType } from "react-icons/lib";
@@ -29,14 +28,7 @@ export default async function ContributePage() {
   const oldestAge = getOldestAge(session.user.linkedAccounts);
 
   return (
-    <main className="relative mx-auto flex w-full max-w-appContent flex-col justify-evenly gap-8 overflow-hidden p-3 py-5 md:flex-row md:py-20">
-      <Image
-        src="/assets/vector.svg"
-        alt=""
-        width={360}
-        height={360}
-        className="absolute left-1/2 top-0 -z-10 h-auto w-appContent max-w-none -translate-x-1/2 -translate-y-1/2"
-      />
+    <>
       <ContributeType
         href="/contribute/repository"
         Icon={SiBookstack}
@@ -57,7 +49,7 @@ export default async function ContributePage() {
         oldestAge={oldestAge}
         constraint={12}
       />
-    </main>
+    </>
   );
 }
 
