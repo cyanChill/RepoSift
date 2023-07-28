@@ -126,7 +126,7 @@ export default function HomePage() {
             </p>
             <Link
               href="/join"
-              className="btn just-black mx-auto block w-fit bg-p-green-400 px-8 font-medium md:mx-0"
+              className="btn just-black mx-auto bg-p-green-400 px-8 font-medium md:mx-0"
             >
               Join Now
             </Link>
@@ -148,7 +148,7 @@ export default function HomePage() {
             </p>
             <Link
               href="/indexed"
-              className="btn just-black mx-auto block w-fit bg-white px-8 font-medium"
+              className="btn just-black mx-auto bg-white px-8 font-medium"
             >
               Start Searching
             </Link>
@@ -201,7 +201,7 @@ export default function HomePage() {
           </p>
           <Link
             href="/contribute"
-            className="btn just-black block w-fit bg-white px-12 text-lg font-medium md:px-16 md:text-2xl"
+            className="btn just-black bg-white px-12 text-lg font-medium md:px-16 md:text-2xl"
           >
             Contribute
           </Link>

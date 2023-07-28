@@ -22,6 +22,7 @@ module.exports = {
       },
       colors: {
         bkg: "#e9e2db",
+        error: "#ff2727",
         "p-green": { 400: "#a2d6a4", 600: "#6cae7b", 900: "#396f45" },
         turquoise: { 200: "#cefff9", 600: "#3cc7be" },
       },

@@ -40,7 +40,7 @@ export default function ContributeSelector({
       <p className="mt-2 text-sm md:mt-4 md:text-lg">{description}</p>
 
       {disabled && (
-        <p className="mt-4 text-xs italic text-red-500 md:mt-8 md:text-base">
+        <p className="mt-4 text-xs italic text-error md:mt-8 md:text-base">
           This option is disabled for you due to not having the required
           developer account age (
           <span className="font-semibold">

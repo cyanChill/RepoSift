@@ -15,8 +15,14 @@
   .btn {
     @apply rounded-md border-2 px-4 py-2 text-center shadow-white transition duration-300 focus:outline-none focus:ring focus:ring-blue-500 enabled:hover:-translate-x-1 enabled:hover:-translate-y-1 enabled:hover:shadow-full disabled:bg-opacity-50 disabled:text-opacity-75;
   }
+  a.btn {
+    @apply block w-fit hover:-translate-x-1 hover:-translate-y-1 hover:shadow-full;
+  }
   .btn-strip {
-    @apply enabled:hover:translate-0 rounded-none border-0 hover:shadow-none;
+    @apply enabled:hover:translate-0 rounded-none border-0 enabled:hover:shadow-none;
+  }
+  a.btn-strip {
+    @apply hover:translate-0 hover:shadow-none;
   }
 
   /* Layout Styling */
