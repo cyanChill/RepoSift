@@ -7,8 +7,12 @@ export default function Header() {
   let routeName: undefined | string = undefined;
   if (pathname === "/") routeName = "RepoSift";
   if (pathname === "/simple") routeName = "Simple Search";
-  if (pathname.startsWith("/indexed")) routeName = "Indexed Search";
-  if (pathname.startsWith("/contribute")) routeName = "Contribute";
+  if (pathname === "/indexed" || pathname.startsWith("/indexed?")) {
+    routeName = "Indexed Search";
+  }
+  if (pathname === "/contribute" || pathname.startsWith("/contribute?")) {
+    routeName = "Contribute";
+  }
   if (pathname.startsWith("/u/@")) routeName = "Profile";
   if (pathname === "/misc") routeName = "Misc.";
 
