@@ -88,3 +88,27 @@ export const GitHubRepoSearchResult = z.object({
   items: GitHubRepo.array(),
 });
 export type GitHubRepoSearchResult = z.infer<typeof GitHubRepoSearchResult>;
+
+export const LabelFormSchema = z.object({
+  label: z
+    .string()
+    .trim()
+    .min(3)
+    .max(25)
+    .transform((val, ctx) => {
+      // Validate Regex
+      const rgx = /[A-Za-z.\-\s]{3,25}/;
+      if (!val.match(rgx)) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["label"],
+          message:
+            "⚠️ Failed criterias (only letters, periods, hyphens, and spaces).",
+        });
+        return z.NEVER;
+      }
+
+      return val;
+    }),
+});
+export type LabelFormSchema = z.infer<typeof LabelFormSchema>;

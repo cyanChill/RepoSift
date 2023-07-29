@@ -7,10 +7,17 @@ import { cn } from "@/lib/utils";
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   name: string;
   label: string;
+  description?: JSX.Element;
   className?: string;
 }
 
-export const Input = ({ name, label, className, ...rest }: InputProps) => {
+export const Input = ({
+  name,
+  label,
+  description,
+  className,
+  ...rest
+}: InputProps) => {
   return (
     <div className="mb-4 flex flex-col">
       <label htmlFor={name} className="form-label">
@@ -22,6 +29,7 @@ export const Input = ({ name, label, className, ...rest }: InputProps) => {
         className={cn("form-input", className)}
         {...rest}
       />
+      {description && <p className="mt-2 text-sm">{description}</p>}
     </div>
   );
 };

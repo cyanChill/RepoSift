@@ -36,6 +36,7 @@ export const labelRelations = relations(labels, ({ one, many }) => ({
   repositories: many(repositories), // As a primary label
   repoLabels: many(repoLabels), // As "regular" labels
 }));
+export type LabelWithUser = Label & { user: User };
 
 /* Information about repository we'll store in our database */
 export const repositories = mysqlTable(

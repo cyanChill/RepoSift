@@ -105,3 +105,20 @@ export function getMonthDescriptor(numMonths: number) {
 export function didFailMonthConstraint(months: number, date: Date) {
   return isAfter(date, subMonths(Date.now(), months));
 }
+
+/**
+ * @description Turns a string to a safe id value.
+ * @returns A string.
+ */
+export function toSafeId(str: string) {
+  return str.trim().toLowerCase().replace(" ", "_");
+}
+
+/**
+ * @description Gets the error message from an Error object.
+ * @returns A string.
+ */
+export function getErrMsg(err: unknown) {
+  if (err instanceof Error) return err.message;
+  return String(err);
+}

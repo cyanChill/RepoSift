@@ -2,6 +2,9 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 
+import { createLabel } from "@/server-actions/label-actions";
+import type { GenericObj } from "@/lib/types";
+import { formDataToObj, getErrMsg } from "@/lib/utils";
 import SuccessWindow from "./success-window";
 import { Input } from "@/components/form/input";
 
@@ -10,12 +13,15 @@ export default function LabelForm() {
   const [isPending, startTransition] = useTransition();
 
   async function suggestLabel(formData: FormData) {
-    await new Promise((resolve, reject) => {
-      setTimeout(() => {
-        setIsComplete(true);
-        resolve("done");
-      }, 2000);
-    });
+    const cleanedData = formDataToObj(formData) as GenericObj;
+    try {
+      const data = await createLabel(cleanedData);
+      if (!data) throw new Error("Something unexpected occurred.");
+      console.log(data);
+      setIsComplete(true);
+    } catch (err) {
+      console.log("[Error] " + getErrMsg(err));
+    }
   }
 
   if (isComplete) {
@@ -32,11 +38,30 @@ export default function LabelForm() {
       </Link>
 
       <form
+        id="label-form"
         action={(data) => startTransition(() => suggestLabel(data))}
         className="mt-8 md:max-w-[50%] md:px-12"
       >
         <fieldset disabled={isPending} className="flex flex-col">
-          <Input type="text" name="label" label="Label" required />
+          <Input
+            type="text"
+            name="label"
+            label="Label"
+            minLength={3}
+            maxLength={25}
+            pattern="[A-Za-z.\-\s]{3,25}"
+            description={
+              <span>
+                Can only contain{" "}
+                <span className="font-semibold">
+                  letters (A-Z), periods & hyphens (.-), spaces
+                </span>{" "}
+                and be <span className="font-semibold">3-25 characters</span>{" "}
+                long.
+              </span>
+            }
+            required
+          />
           <button
             type="submit"
             className="btn just-black w-24 self-end rounded-none bg-purple-600 py-1.5 font-medium text-white disabled:bg-purple-400 disabled:text-black md:text-lg"
