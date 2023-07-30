@@ -2,6 +2,7 @@ import { Fragment, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { FaChevronDown } from "react-icons/fa6";
 
+import { FormValue, type Option } from "./utils";
 import { cn } from "@/lib/utils";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -34,19 +35,12 @@ export const Input = ({
   );
 };
 
-interface Option {
-  name: string;
-  value: string;
-  disabled?: boolean;
-}
-
 type SelectProps = {
   name: string;
   label: string;
   options: Option[];
   initialValue?: Option;
-  required?: boolean;
-  className?: string;
+  flow?: boolean;
 };
 
 export const Select = ({
@@ -54,72 +48,57 @@ export const Select = ({
   label,
   options,
   initialValue,
-  required = false,
-  className,
+  flow = true,
 }: SelectProps) => {
   const [selectedOpt, setSelectedOpt] = useState<Option>(options[0]);
 
   return (
-    <>
-      <Listbox
-        as="div"
-        className="relative mb-4 w-full max-w-max"
-        value={selectedOpt}
-        onChange={setSelectedOpt}
-        defaultValue={initialValue}
-      >
-        <input
-          id={name}
-          name={name}
-          type="text"
-          value={selectedOpt.value}
-          readOnly
-          hidden
-          required={required}
-        />
-        <Listbox.Label className="form-label">{label}</Listbox.Label>
-        <Listbox.Button
-          className={cn(
-            "form-input flex w-full items-center justify-between gap-2 text-start",
-            className
-          )}
-        >
-          {selectedOpt.name}
-          <FaChevronDown />
-        </Listbox.Button>
+    <Listbox
+      as="div"
+      className={cn("relative mb-4 w-full", { "max-w-max": !flow })}
+      value={selectedOpt}
+      onChange={setSelectedOpt}
+      defaultValue={initialValue}
+    >
+      <FormValue name={name} value={selectedOpt.value} />
 
-        <div className="w-full">
-          <Transition
-            as={Fragment}
-            leave="transition ease-in duration-150"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <Listbox.Options className="absolute bottom-0 left-0 max-h-56 w-full translate-y-full overflow-auto border-2 border-black bg-white">
-              {options.map((opt) => (
-                <Listbox.Option
-                  as={Fragment}
-                  key={opt.name}
-                  value={opt}
-                  disabled={opt.disabled}
-                >
-                  {({ active, selected, disabled }) => (
-                    <li
-                      className={cn("cursor-default px-2 py-1", {
-                        "bg-indigo-600 text-white": active,
-                        "font-medium": selected,
-                        "text-gray-300": disabled,
-                      })}
-                    >
-                      {opt.name}
-                    </li>
-                  )}
-                </Listbox.Option>
-              ))}
-            </Listbox.Options>
-          </Transition>
-        </div>
-      </Listbox>
-    </>
+      <Listbox.Label className="form-label">{label}</Listbox.Label>
+      <Listbox.Button className="form-input flex w-full items-center justify-between gap-2 text-start">
+        {selectedOpt.name}
+        <FaChevronDown />
+      </Listbox.Button>
+
+      <div className="w-full">
+        <Transition
+          as={Fragment}
+          leave="transition ease-in duration-150"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <Listbox.Options className="absolute bottom-0 left-0 z-10 max-h-56 w-full translate-y-full overflow-auto border-2 border-black bg-white">
+            {options.map((opt) => (
+              <Listbox.Option
+                as={Fragment}
+                key={opt.name}
+                value={opt}
+                disabled={opt.disabled}
+              >
+                {({ active, selected, disabled }) => (
+                  <li
+                    className={cn("cursor-default px-2 py-1", {
+                      "bg-indigo-600 text-white": active,
+                      "font-medium": selected,
+                      "text-gray-300": disabled,
+                    })}
+                  >
+                    {opt.name}
+                  </li>
+                )}
+              </Listbox.Option>
+            ))}
+          </Listbox.Options>
+        </Transition>
+      </div>
+    </Listbox>
   );
 };

@@ -24,6 +24,7 @@ export default forwardRef<HTMLFormElement, Props>(function SearchForm(
             { name: "GitLab", value: "gitlab", disabled: true },
             { name: "Bitbucket", value: "bitbucket", disabled: true },
           ]}
+          flow={false}
         />
         <MultiText
           name="languages"

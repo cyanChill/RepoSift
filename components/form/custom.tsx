@@ -1,7 +1,11 @@
-import { useState, useRef, type CSSProperties } from "react";
-import { IoMdClose } from "react-icons/io";
+import { useState, useRef, Fragment } from "react";
+import { Combobox, Transition } from "@headlessui/react";
+import { FaCheck, FaChevronDown } from "react-icons/fa6";
+import { toast } from "react-hot-toast";
 
 import { useFormReset } from "@/hooks/useFormReset";
+import type { Option } from "./utils";
+import { getFilteredOptions, FormValue, ItemsList } from "./utils";
 import { cn } from "@/lib/utils";
 
 type MMRProps = {
@@ -9,7 +13,6 @@ type MMRProps = {
   label: string;
   initialMin?: number;
   initialMax?: number;
-  className?: string;
 };
 
 /** Form field names will be `min${name}` & `min${name}` */
@@ -18,7 +21,6 @@ export const MinMaxRange = ({
   label,
   initialMin,
   initialMax,
-  className,
 }: MMRProps) => {
   return (
     <fieldset className="mb-4 flex flex-col">
@@ -35,7 +37,7 @@ export const MinMaxRange = ({
           min={0}
           step={1}
           defaultValue={initialMin}
-          className={cn("form-input w-full max-w-[6rem]", className)}
+          className="form-input w-full max-w-[6rem]"
         />
 
         <span className="block h-1.5 w-4 bg-black" />
@@ -50,7 +52,7 @@ export const MinMaxRange = ({
           min={0}
           step={1}
           defaultValue={initialMax}
-          className={cn("form-input w-full max-w-[6rem]", className)}
+          className="form-input w-full max-w-[6rem]"
         />
       </div>
     </fieldset>
@@ -64,16 +66,7 @@ type MultiTextProps = {
   max: number;
   formId: string;
   initialValues?: string[];
-  className?: string;
 };
-
-const BG_COLORS = [
-  "bg-red-300",
-  "bg-orange-300",
-  "bg-green-300",
-  "bg-blue-300",
-  "bg-purple-300",
-];
 
 export const MultiText = ({
   name,
@@ -81,7 +74,6 @@ export const MultiText = ({
   max,
   formId,
   initialValues,
-  className,
 }: MultiTextProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [vals, setVals] = useState<string[]>(initialValues ?? []);
@@ -90,7 +82,7 @@ export const MultiText = ({
   const onAdd = () => {
     if (!inputRef.current) return;
     if (vals.length >= max) {
-      console.log("[MultiText] Max number of values reached.");
+      toast.error("Maximum number of values selected.");
       return;
     }
     const newVal = inputRef.current.value.trim();
@@ -104,22 +96,15 @@ export const MultiText = ({
 
   return (
     <div className="mb-4 flex flex-col">
-      <label htmlFor={name} className={cn("form-label", className)}>
-        {label} {max && <span className="ml-2 font-normal">(max {max})</span>}
+      <label htmlFor={name} className="form-label">
+        {label} <span className="ml-2 font-normal">(max {max})</span>
       </label>
-      <input
-        id={name}
-        name={name}
-        type="text"
-        value={JSON.stringify(vals)}
-        readOnly
-        hidden
-      />
+      <FormValue name={name} value={JSON.stringify(vals)} />
 
       <div className="mb-2 flex h-9 items-center md:h-10">
         <input
           type="text"
-          maxLength={20}
+          maxLength={25}
           className="form-input w-full"
           onKeyDown={(e) => {
             if (e.key === "Enter") {
@@ -139,28 +124,210 @@ export const MultiText = ({
       </div>
 
       {/* List of inputted items */}
-      <div className="mx-2 flex flex-wrap gap-2">
-        {vals.map((val, idx) => (
-          <button
-            key={idx}
-            style={
-              {
-                "--bs-offset-x": "2px",
-                "--bs-offset-y": "2px",
-              } as CSSProperties
-            }
-            type="button"
-            className={cn(
-              "newFocus just-black flex items-center gap-2 rounded-md border-2 px-2 py-0.5 text-sm font-medium shadow-full",
-              "bg-opacity-50 disabled:bg-opacity-25 disabled:text-opacity-75 enabled:hocus:bg-opacity-100",
-              BG_COLORS[idx % BG_COLORS.length]
-            )}
-            onClick={() => removeSelf(val)}
-          >
-            {val} <IoMdClose className="pointer-events-none shrink-0" />
-          </button>
-        ))}
-      </div>
+      <ItemsList values={vals} onDelete={removeSelf} />
     </div>
+  );
+};
+
+type SearchSelectProps = {
+  name: string;
+  label: string;
+  options: Option[];
+  initialValue?: Option;
+  flow?: boolean;
+  optional?: boolean;
+};
+
+export const SearchSelect = ({
+  name,
+  label,
+  options,
+  initialValue,
+  flow = true,
+  optional = false,
+}: SearchSelectProps) => {
+  const [selectedOpt, setSelectedOpt] = useState<Option>(options[0]);
+  const [query, setQuery] = useState("");
+
+  const filteredOptions = getFilteredOptions(query, options);
+
+  return (
+    <Combobox
+      as="div"
+      className={cn("relative mb-4 w-full", { "max-w-max": !flow })}
+      value={selectedOpt}
+      onChange={setSelectedOpt}
+      defaultValue={initialValue}
+      // @ts-ignore: Boolean value is acceptable
+      nullable={optional}
+    >
+      <FormValue
+        name={name}
+        value={selectedOpt ? selectedOpt.value : undefined}
+      />
+
+      <Combobox.Label className="form-label">{label}</Combobox.Label>
+      <fieldset className="form-input flex w-full items-center gap-2 text-start">
+        <Combobox.Input
+          onChange={(e) => setQuery(e.target.value)}
+          displayValue={(opt: Option) => opt?.name}
+          className="w-full outline-none"
+        />
+        <Combobox.Button>
+          <FaChevronDown className="pointer-events-none" />
+        </Combobox.Button>
+      </fieldset>
+
+      <Transition
+        as={Fragment}
+        leave="transition ease-in duration-150"
+        leaveFrom="opacity-100"
+        leaveTo="opacity-0"
+        afterLeave={() => setQuery("")}
+      >
+        <Combobox.Options className="absolute bottom-0 left-0 z-10 max-h-56 w-full translate-y-full overflow-auto border-2 border-black bg-white">
+          {filteredOptions.map((opt) => (
+            <Combobox.Option
+              as={Fragment}
+              key={opt.value}
+              value={opt}
+              disabled={opt.disabled}
+            >
+              {({ active, selected, disabled }) => (
+                <li
+                  className={cn("relative cursor-default px-2 py-1 pl-10", {
+                    "bg-indigo-600 text-white": active,
+                    "font-medium": selected,
+                    "text-gray-300": disabled,
+                  })}
+                >
+                  {opt.name}
+                  {selected && (
+                    <FaCheck className="absolute left-0 top-1/2 h-6 w-6 -translate-y-1/2 pl-3" />
+                  )}
+                </li>
+              )}
+            </Combobox.Option>
+          ))}
+        </Combobox.Options>
+      </Transition>
+    </Combobox>
+  );
+};
+
+type MSSProps = {
+  name: string;
+  label: string;
+  options: Option[];
+  initialValues?: Option[];
+  /** A positive integer. */
+  max: number;
+  formId: string;
+  flow?: boolean; // Max-Content or Width 100%
+};
+
+export const MultiSearchSelect = ({
+  name,
+  label,
+  options,
+  initialValues,
+  max,
+  formId,
+  flow = true,
+}: MSSProps) => {
+  const [vals, setVals] = useState<Option[]>(initialValues ?? []);
+  const [query, setQuery] = useState("");
+  useFormReset(() => setVals([]), formId);
+
+  const filteredOptions = getFilteredOptions(query, options);
+
+  const toggleOption = (newOpt: Option) => {
+    // Remove option if already selected
+    const exists = vals.find((opt) => opt.value === newOpt.value);
+    if (exists) {
+      setVals((prev) => prev.filter((opt) => opt.value !== newOpt.value));
+      return;
+    }
+    // Handle if we reached the max number of selecetd options
+    if (vals.length >= max) {
+      toast.error("Maximum number of values selected.");
+      return;
+    }
+    setVals((prev) => [...prev, newOpt]);
+  };
+
+  const removeSelf = (self: string) => {
+    setVals((prev) => prev.filter((val) => val.name !== self));
+  };
+
+  return (
+    <>
+      <FormValue
+        name={name}
+        value={JSON.stringify(vals.map((val) => val.value))}
+      />
+
+      <Combobox
+        as="div"
+        onChange={toggleOption}
+        className={cn("relative mb-4 w-full", { "max-w-max": !flow })}
+      >
+        <Combobox.Label className="form-label">
+          {label} <span className="ml-2 font-normal">(max {max})</span>
+        </Combobox.Label>
+        <fieldset className="form-input flex w-full items-center gap-2 text-start">
+          <Combobox.Input
+            onChange={(e) => setQuery(e.target.value)}
+            className="w-full outline-none"
+          />
+          <Combobox.Button>
+            <FaChevronDown className="pointer-events-none" />
+          </Combobox.Button>
+        </fieldset>
+
+        <Transition
+          as={Fragment}
+          leave="transition ease-in duration-150"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+          afterLeave={() => setQuery("")}
+        >
+          <Combobox.Options className="absolute bottom-0 left-0 z-10 max-h-56 w-full translate-y-full overflow-auto border-2 border-black bg-white">
+            {filteredOptions.map((opt) => (
+              <Combobox.Option
+                as={Fragment}
+                key={opt.value}
+                value={opt}
+                disabled={opt.disabled}
+              >
+                {({ active, disabled }) => {
+                  const selected = vals.find(
+                    (selOpt) => selOpt.value === opt.value
+                  );
+
+                  return (
+                    <li
+                      className={cn("relative cursor-default px-2 py-1 pl-10", {
+                        "bg-indigo-600 text-white": active,
+                        "font-medium": selected,
+                        "text-gray-300": disabled,
+                      })}
+                    >
+                      {opt.name}
+                      {selected && (
+                        <FaCheck className="absolute left-0 top-1/2 h-6 w-6 -translate-y-1/2 pl-3" />
+                      )}
+                    </li>
+                  );
+                }}
+              </Combobox.Option>
+            ))}
+          </Combobox.Options>
+        </Transition>
+      </Combobox>
+
+      {/* List of inputted items */}
+      <ItemsList values={vals.map((val) => val.name)} onDelete={removeSelf} />
+    </>
   );
 };
