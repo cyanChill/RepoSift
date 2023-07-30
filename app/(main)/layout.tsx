@@ -1,4 +1,5 @@
 import { Analytics } from "@vercel/analytics/react";
+import { Toaster } from "react-hot-toast";
 
 import Provider from "@/components/Provider";
 import Navbar from "./_components/navbar";
@@ -14,6 +15,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {children}
       </Provider>
       <Footer />
+
+      <Toaster position="bottom-center" />
       <Analytics />
     </body>
   );

@@ -7,12 +7,14 @@ import type { GitHubRepo } from "@/lib/zod/schema";
 import { GitHubRepoSearchResult, SimpleSearchSchema } from "@/lib/zod/schema";
 import type { AuthProviders } from "@/lib/zod/types";
 
-export async function simpleSearch(formData: GenericObj) {
+export async function simpleSearch(
+  formData: GenericObj
+): Promise<{ error: string } | GitHubSearchReturn | undefined> {
   /* Validate input data */
   const schemaRes = SimpleSearchSchema.safeParse(formData);
   if (!schemaRes.success) {
     console.log(schemaRes.error.errors); // For debugging purposes
-    throw new Error("Invalid inputs.");
+    return { error: "Invalid inputs." };
   }
 
   const { provider, languages, maxStars } = schemaRes.data;
@@ -24,11 +26,11 @@ export async function simpleSearch(formData: GenericObj) {
   const searchProps = { minStars, maxStars, languages, limit };
   if (provider === "github") return await GitHubSearch(searchProps);
   // TODO: Eventually implement Simple Search with GitLab & Bitbucket's
-  const UNIMPLEMENTED_ERROR = new Error(
-    `Simple Search currently doesn't support the ${provider} provider option.`
-  );
-  if (provider === "gitlab") throw UNIMPLEMENTED_ERROR;
-  if (provider === "bitbucket") throw UNIMPLEMENTED_ERROR;
+  const UNIMPLEMENTED_ERROR = {
+    error: `Simple Search currently doesn't support the ${provider} provider option.`,
+  };
+  if (provider === "gitlab") return UNIMPLEMENTED_ERROR;
+  if (provider === "bitbucket") return UNIMPLEMENTED_ERROR;
 }
 
 type SearchProps = {
@@ -38,15 +40,17 @@ type SearchProps = {
   limit: number;
 };
 
+type GitHubSearchReturn = Promise<
+  | { error: null; provider: AuthProviders; items: GitHubRepo[] }
+  | { error: string }
+>;
+
 async function GitHubSearch({
   languages,
   minStars,
   maxStars,
   limit,
-}: SearchProps): Promise<{
-  provider: AuthProviders;
-  items: GitHubRepo[];
-}> {
+}: SearchProps): GitHubSearchReturn {
   const starQStr = !maxStars
     ? `stars:>=${minStars}`
     : `stars:${minStars}..${maxStars}`;
@@ -56,21 +60,25 @@ async function GitHubSearch({
       : "+language:" + languages.join("+language:");
 
   const request_url = `https://api.github.com/search/repositories?q=${starQStr}${langQStr}&per_page=${limit}&sort=stars&order=asc`;
-  const res = await fetch(request_url, {
-    cache: "no-store",
-    headers: {
-      accept: "application/json",
-      authorization: `Basic ${btoa(`${ENV.GITHUB_ID}:${ENV.GITHUB_SECRET}`)}`,
-      "user-agent": "repo-sift-server",
-    },
-  });
-  const data: unknown = await res.json();
-  const dataParsed = GitHubRepoSearchResult.safeParse(data);
-  if (!dataParsed.success) {
-    console.log(dataParsed.error.errors); // For debugging purposes
-    console.log(data); // See what was returned instead
-    throw new Error("Something unexpected happened.");
-  }
+  try {
+    const res = await fetch(request_url, {
+      cache: "no-store",
+      headers: {
+        accept: "application/json",
+        authorization: `Basic ${btoa(`${ENV.GITHUB_ID}:${ENV.GITHUB_SECRET}`)}`,
+        "user-agent": "repo-sift-server",
+      },
+    });
+    const data: unknown = await res.json();
+    const dataParsed = GitHubRepoSearchResult.safeParse(data);
+    if (!dataParsed.success) {
+      console.log(data); // See what was returned instead
+      console.log(dataParsed.error.errors); // For debugging purposes
+      return { error: "Something unexpected happened." };
+    }
 
-  return { provider: "github", items: dataParsed.data.items };
+    return { error: null, provider: "github", items: dataParsed.data.items };
+  } catch (err) {
+    return { error: "Something unexpected happened." };
+  }
 }

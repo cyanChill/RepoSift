@@ -1,6 +1,7 @@
 "use client";
 import { useState, useTransition } from "react";
 import Link from "next/link";
+import { toast } from "react-hot-toast";
 
 import { createLabel } from "@/server-actions/label-actions";
 import type { GenericObj } from "@/lib/types";
@@ -17,10 +18,10 @@ export default function LabelForm() {
     try {
       const data = await createLabel(cleanedData);
       if (!data) throw new Error("Something unexpected occurred.");
-      console.log(data);
+      if (typeof data.error === "string") throw new Error(data.error);
       setIsComplete(true);
     } catch (err) {
-      console.log("[Error] " + getErrMsg(err));
+      toast.error(getErrMsg(err));
     }
   }
 
