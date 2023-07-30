@@ -122,3 +122,13 @@ export function getErrMsg(err: unknown) {
   if (err instanceof Error) return err.message;
   return String(err);
 }
+
+/**
+ * @description An array of the enabled & disabled providers.
+ * @returns An array.
+ */
+export const avaliableProviders = [
+  { name: "GitHub", value: "github" },
+  { name: "GitLab", value: "gitlab", disabled: true },
+  { name: "Bitbucket", value: "bitbucket", disabled: true },
+];

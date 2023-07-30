@@ -185,7 +185,7 @@ export const SearchSelect = ({
         leaveTo="opacity-0"
         afterLeave={() => setQuery("")}
       >
-        <Combobox.Options className="absolute bottom-0 left-0 z-10 max-h-56 w-full translate-y-full overflow-auto border-2 border-black bg-white">
+        <Combobox.Options className="absolute bottom-0 left-0 z-10 max-h-40 w-full translate-y-full overflow-auto border-2 border-black bg-white">
           {filteredOptions.map((opt) => (
             <Combobox.Option
               as={Fragment}
@@ -292,7 +292,7 @@ export const MultiSearchSelect = ({
           leaveTo="opacity-0"
           afterLeave={() => setQuery("")}
         >
-          <Combobox.Options className="absolute bottom-0 left-0 z-10 max-h-56 w-full translate-y-full overflow-auto border-2 border-black bg-white">
+          <Combobox.Options className="absolute bottom-0 left-0 z-10 max-h-40 w-full translate-y-full overflow-auto border-2 border-black bg-white">
             {filteredOptions.map((opt) => (
               <Combobox.Option
                 as={Fragment}

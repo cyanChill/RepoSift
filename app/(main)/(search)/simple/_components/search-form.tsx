@@ -3,6 +3,7 @@ import { forwardRef } from "react";
 
 import { Select } from "@/components/form/input";
 import { MinMaxRange, MultiText } from "@/components/form/custom";
+import { avaliableProviders } from "@/lib/utils";
 
 type Props = {
   action: (formData: FormData) => void;
@@ -19,11 +20,7 @@ export default forwardRef<HTMLFormElement, Props>(function SearchForm(
         <Select
           name="provider"
           label="Search Provider"
-          options={[
-            { name: "GitHub", value: "github" },
-            { name: "GitLab", value: "gitlab", disabled: true },
-            { name: "Bitbucket", value: "bitbucket", disabled: true },
-          ]}
+          options={avaliableProviders}
           flow={false}
         />
         <MultiText

@@ -75,7 +75,7 @@ export const Select = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <Listbox.Options className="absolute bottom-0 left-0 z-10 max-h-56 w-full translate-y-full overflow-auto border-2 border-black bg-white">
+          <Listbox.Options className="absolute bottom-0 left-0 z-10 max-h-40 w-full translate-y-full overflow-auto border-2 border-black bg-white">
             {options.map((opt) => (
               <Listbox.Option
                 as={Fragment}

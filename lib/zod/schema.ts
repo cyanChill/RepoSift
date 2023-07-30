@@ -20,7 +20,7 @@ export const SimpleSearchSchema = z
             path: ["languages"],
             expected: "array",
             received: "string",
-            message: "⚠️ Is not an array.",
+            message: "Languages is not an array.",
           });
           return z.NEVER;
         }
@@ -36,7 +36,7 @@ export const SimpleSearchSchema = z
             type: "array",
             inclusive: true,
             exact: false,
-            message: "⚠️ At most 5 languages.",
+            message: "There can be at most 5 languages.",
           });
           return z.NEVER;
         }
@@ -91,10 +91,13 @@ export type GitHubRepoSearchResult = z.infer<typeof GitHubRepoSearchResult>;
 
 export const LabelFormSchema = z.object({
   label: z
-    .string()
+    .string({
+      required_error: "A label is required.",
+      invalid_type_error: "A label must be a string.",
+    })
     .trim()
-    .min(3)
-    .max(25)
+    .min(3, { message: "A label must be at least 3 characters long." })
+    .max(25, { message: "A label must be at most 25 characters long." })
     .transform((val, ctx) => {
       // Validate Regex
       const rgx = /[A-Za-z.\-\s]{3,25}/;
@@ -103,7 +106,7 @@ export const LabelFormSchema = z.object({
           code: "custom",
           path: ["label"],
           message:
-            "⚠️ Failed criterias (only letters, periods, hyphens, and spaces).",
+            "A label must contain only letters, periods, hyphens, and spaces.",
         });
         return z.NEVER;
       }

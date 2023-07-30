@@ -65,7 +65,7 @@ export default function LabelForm() {
           />
           <button
             type="submit"
-            className="btn just-black w-24 self-end rounded-none bg-purple-600 py-1.5 font-medium text-white disabled:bg-purple-400 disabled:text-black md:text-lg"
+            className="btn just-black mt-8 w-24 self-end rounded-none bg-purple-600 py-1.5 font-medium text-white disabled:bg-purple-400 disabled:text-black md:text-lg"
           >
             {!isPending ? "Submit" : ". . ."}
           </button>
