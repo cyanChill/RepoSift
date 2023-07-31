@@ -5,7 +5,7 @@ import type { GenericObj } from "@/lib/types";
 import { randInt } from "@/lib/utils";
 import type { GitHubRepo } from "@/lib/zod/schema";
 import { GitHubRepoSearchResult, SimpleSearchSchema } from "@/lib/zod/schema";
-import type { AuthProviders } from "@/lib/zod/types";
+import type { AuthProviders } from "@/lib/zod/utils";
 
 export async function simpleSearch(
   formData: GenericObj

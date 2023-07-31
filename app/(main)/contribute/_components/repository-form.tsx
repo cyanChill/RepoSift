@@ -5,12 +5,18 @@ import { toast } from "react-hot-toast";
 
 import { createRepository } from "@/server-actions/repo-actions";
 import type { GenericObj } from "@/lib/types";
-import { avaliableProviders, cn, formDataToObj, getErrMsg } from "@/lib/utils";
+import {
+  LIMITS,
+  PATTERNS,
+  avaliableProviders,
+  cn,
+  formDataToObj,
+  getErrMsg,
+} from "@/lib/utils";
 import SuccessWindow from "./success-window";
-import { Input } from "@/components/form/input";
-import { Select } from "@/components/form/input";
+import { Input, Select } from "@/components/form/input";
 import { MultiSearchSelect, SearchSelect } from "@/components/form/custom";
-import { Option } from "@/components/form/utils";
+import type { Option } from "@/components/form/utils";
 
 type Props = {
   labels: { primary: Option[]; regular: Option[] };
@@ -62,7 +68,9 @@ export default function RepositoryForm({ labels }: Props) {
             <Input
               name="author"
               label="Repository Author"
-              className="min-w-0"
+              min={1}
+              max={LIMITS.GITHUB_USERNAME}
+              pattern={PATTERNS.GITHUB_USERNAME}
               required
             />
             <p
@@ -76,13 +84,15 @@ export default function RepositoryForm({ labels }: Props) {
             <Input
               name="name"
               label="Repository Name"
-              className="min-w-0"
+              min={1}
+              max={LIMITS.GITHUB_REPONAME}
+              pattern={PATTERNS.GITHUB_REPONAME}
               required
             />
           </div>
 
           <SearchSelect
-            name="primary-label"
+            name="primary_label"
             label="Primary Label"
             options={labels.primary}
           />

@@ -79,7 +79,7 @@ const TrafficLights = ({
   const btnClass =
     "flex h-[var(--size)] w-[var(--size)] items-center justify-center rounded-full border border-black p-1 shadow-full";
   const btnAnimClass =
-    "bg-opacity-75 transition duration-300 enabled:hover:bg-opacity-100 disabled:bg-opacity-50 disabled:text-opacity-75";
+    "transition duration-300 enabled:hover:brightness-125 disabled:brightness-75";
 
   return (
     <div
@@ -122,7 +122,7 @@ const TrafficLights = ({
           <span
             className={cn(
               btnClass,
-              { "bg-opacity-50 text-opacity-75": disabled },
+              { "brightness-75": disabled },
               "bg-red-500"
             )}
           >
@@ -131,7 +131,7 @@ const TrafficLights = ({
           <span
             className={cn(
               btnClass,
-              { "bg-opacity-50 text-opacity-75": disabled },
+              { "brightness-75": disabled },
               "bg-yellow-500"
             )}
           >
@@ -140,7 +140,7 @@ const TrafficLights = ({
           <span
             className={cn(
               btnClass,
-              { "bg-opacity-50 text-opacity-75": disabled },
+              { "brightness-75": disabled },
               "bg-green-500"
             )}
           >

@@ -8,16 +8,17 @@ import { labels, type Label } from "@/db/schema/main";
 import { authOptions } from "@/lib/auth";
 import type { GenericObj } from "@/lib/types";
 import { toSafeId, getOldestAge, didFailMonthConstraint } from "@/lib/utils";
-import { LabelFormSchema } from "@/lib/zod/schema";
+import { RepoFormSchema } from "@/lib/zod/schema";
 
 export async function createRepository(formData: GenericObj) {
   /* Validate input data */
-  // const schemaRes = LabelFormSchema.safeParse(formData);
-  // if (!schemaRes.success) {
-  //   console.log(schemaRes.error.errors); // For debugging purposes
-  //   return { error: schemaRes.error.errors[0].message };
-  // }
-  // const { label } = schemaRes.data;
+  const schemaRes = RepoFormSchema.safeParse(formData);
+  if (!schemaRes.success) {
+    console.log(schemaRes.error.errors); // For debugging purposes
+    return { error: schemaRes.error.errors[0].message };
+  }
+  const { author, name, primary_label, provider, labels } = schemaRes.data;
+  console.log(schemaRes.data);
 
   /* Validate user is authenticated */
   const session = await getServerSession(authOptions);

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { FaGithub, FaGitlab, FaBitbucket, FaStar } from "react-icons/fa6";
 
 import type { Results } from "./types";
-import type { AuthProviders } from "@/lib/zod/types";
+import type { AuthProviders } from "@/lib/zod/utils";
 import { cn, noop } from "@/lib/utils";
 import Browser from "@/components/Browser";
 

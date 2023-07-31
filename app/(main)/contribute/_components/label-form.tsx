@@ -5,7 +5,7 @@ import { toast } from "react-hot-toast";
 
 import { createLabel } from "@/server-actions/label-actions";
 import type { GenericObj } from "@/lib/types";
-import { formDataToObj, getErrMsg } from "@/lib/utils";
+import { LIMITS, PATTERNS, formDataToObj, getErrMsg } from "@/lib/utils";
 import SuccessWindow from "./success-window";
 import { Input } from "@/components/form/input";
 
@@ -49,15 +49,18 @@ export default function LabelForm() {
             name="label"
             label="Label"
             minLength={3}
-            maxLength={25}
-            pattern="[A-Za-z.\-\s]{3,25}"
+            maxLength={LIMITS.LABEL}
+            pattern={PATTERNS.LABEL}
             description={
               <span>
                 Can only contain{" "}
                 <span className="font-semibold">
                   letters (A-Z), periods & hyphens (.-), spaces
                 </span>{" "}
-                and be <span className="font-semibold">3-25 characters</span>{" "}
+                and be{" "}
+                <span className="font-semibold">
+                  3-{LIMITS.LABEL} characters
+                </span>{" "}
                 long.
               </span>
             }

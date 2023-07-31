@@ -1,48 +1,22 @@
 import { z } from "zod";
 
-import { OPT_NONNEG_INT, PROVIDERS_ENUM } from "./types";
+import {
+  OPT_NONNEG_INT,
+  PROVIDERS_ENUM,
+  arrayTransform,
+  regexTest,
+} from "./utils";
+import { LIMITS, PATTERNS } from "../utils";
 
+/**
+ * @description Zod schema for "Simple Search" feature.
+ */
 export const SimpleSearchSchema = z
   .object({
     provider: PROVIDERS_ENUM,
     languages: z.coerce
       .string()
-      .transform((val, ctx) => {
-        if (!val) return;
-
-        let parsed: unknown;
-        try {
-          parsed = JSON.parse(val);
-          if (!Array.isArray(parsed)) throw Error();
-        } catch {
-          ctx.addIssue({
-            code: "invalid_type",
-            path: ["languages"],
-            expected: "array",
-            received: "string",
-            message: "Languages is not an array.",
-          });
-          return z.NEVER;
-        }
-
-        const safeArr = parsed.map((arrVal) =>
-          encodeURIComponent(String(arrVal).trim())
-        );
-        if (safeArr.length > 5) {
-          ctx.addIssue({
-            code: "too_big",
-            path: ["languages"],
-            maximum: 5,
-            type: "array",
-            inclusive: true,
-            exact: false,
-            message: "There can be at most 5 languages.",
-          });
-          return z.NEVER;
-        }
-
-        return safeArr;
-      })
+      .transform(arrayTransform("Languages", 5))
       .optional(),
     minStars: OPT_NONNEG_INT,
     maxStars: OPT_NONNEG_INT,
@@ -59,6 +33,9 @@ export const SimpleSearchSchema = z
   );
 export type SimpleSearchSchema = z.infer<typeof SimpleSearchSchema>;
 
+/**
+ * @description Zod schema for the returned GitHub repository owner from the "Simple Search" feature.
+ */
 export const GitHubRepoOwner = z.object({
   login: z.string(),
   id: z.number().int(),
@@ -67,6 +44,9 @@ export const GitHubRepoOwner = z.object({
 });
 export type GitHubRepoOwner = z.infer<typeof GitHubRepoOwner>;
 
+/**
+ * @description Zod schema for the returned GitHub repository from the "Simple Search" feature.
+ */
 export const GitHubRepo = z.object({
   id: z.number().int(),
   name: z.string(),
@@ -82,6 +62,9 @@ export const GitHubRepo = z.object({
 });
 export type GitHubRepo = z.infer<typeof GitHubRepo>;
 
+/**
+ * @description Zod schema for the returned object from the GitHub API from the "Simple Search" feature.
+ */
 export const GitHubRepoSearchResult = z.object({
   total_count: z.number().int(),
   incomplete_results: z.boolean(),
@@ -89,6 +72,9 @@ export const GitHubRepoSearchResult = z.object({
 });
 export type GitHubRepoSearchResult = z.infer<typeof GitHubRepoSearchResult>;
 
+/**
+ * @description Zod schema for "Suggest Label" feature.
+ */
 export const LabelFormSchema = z.object({
   label: z
     .string({
@@ -97,21 +83,63 @@ export const LabelFormSchema = z.object({
     })
     .trim()
     .min(3, { message: "A label must be at least 3 characters long." })
-    .max(25, { message: "A label must be at most 25 characters long." })
-    .transform((val, ctx) => {
-      // Validate Regex
-      const rgx = /[A-Za-z.\-\s]{3,25}/;
-      if (!val.match(rgx)) {
-        ctx.addIssue({
-          code: "custom",
-          path: ["label"],
-          message:
-            "A label must contain only letters, periods, hyphens, and spaces.",
-        });
-        return z.NEVER;
-      }
-
-      return val;
-    }),
+    .max(LIMITS.LABEL, {
+      message: `A label must be at most ${LIMITS.LABEL} characters long.`,
+    })
+    .transform(
+      regexTest({
+        regexBase: PATTERNS.LABEL,
+        label: "label",
+        errorMsg:
+          "A label must contain only letters, periods, hyphens, and spaces.",
+      })
+    ),
 });
 export type LabelFormSchema = z.infer<typeof LabelFormSchema>;
+
+/**
+ * @description Zod schema for "Index repository" feature.
+ */
+export const RepoFormSchema = z.object({
+  provider: PROVIDERS_ENUM,
+  author: z
+    .string()
+    .trim()
+    .min(1, {
+      message: "A repository author must be at least 1 characters long.",
+    })
+    .max(LIMITS.GITHUB_USERNAME, {
+      message: `A repository author must be at most ${LIMITS.GITHUB_USERNAME} characters long.`,
+    })
+    .transform(
+      regexTest({
+        regexBase: PATTERNS.GITHUB_USERNAME,
+        label: "author",
+        errorMsg:
+          "A repository author can contain only alphanumeric characters and hyphens.",
+      })
+    ),
+  name: z
+    .string()
+    .trim()
+    .min(1, {
+      message: "A repository name must be at least 1 characters long.",
+    })
+    .max(LIMITS.GITHUB_REPONAME, {
+      message: `A repository name must be at most ${LIMITS.GITHUB_REPONAME} characters long.`,
+    })
+    .transform(
+      regexTest({
+        regexBase: PATTERNS.GITHUB_REPONAME,
+        label: "name",
+        errorMsg:
+          "A repository name can contain only alphanumeric characters, periods, underscores, and hyphens.",
+      })
+    ),
+  primary_label: z
+    .string()
+    .trim()
+    .min(1, { message: "A primary label must be selected." }),
+  labels: z.coerce.string().transform(arrayTransform("Labels", 5)).optional(),
+});
+export type RepoFormSchema = z.infer<typeof LabelFormSchema>;

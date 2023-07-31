@@ -17,7 +17,7 @@ import type {
   UserWithLinkedAccounts,
   Session,
 } from "@/db/schema/next-auth";
-import type { AuthProviders } from "../zod/types";
+import type { AuthProviders } from "../zod/utils";
 
 /*
   FIXME: Need to figure out how to change the Adapter type to reflect our
