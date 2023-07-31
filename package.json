@@ -12,7 +12,7 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
-    "@headlessui/react": "^1.7.15",
+    "@headlessui/react": "^1.7.16",
     "@paralleldrive/cuid2": "^2.2.1",
     "@planetscale/database": "^1.8.0",
     "@vercel/analytics": "^1.0.1",
