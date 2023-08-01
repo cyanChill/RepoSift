@@ -30,7 +30,7 @@ export function toastSAErrors(err: unknown) {
   if (err instanceof Error && err.cause && Array.isArray(err.cause)) {
     err.cause.map((msg: string) => toast.error(msg));
   } else {
-    toast.error(String(err));
+    toast.error("Something unexpected occurred.");
   }
 }
 
