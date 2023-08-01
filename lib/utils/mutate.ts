@@ -60,5 +60,5 @@ export function getMonthDescriptor(numMonths: number) {
  * @returns A string.
  */
 export function toSafeId(str: string) {
-  return str.trim().toLowerCase().replace(" ", "_");
+  return str.trim().toLowerCase().replaceAll(" ", "_");
 }

@@ -37,7 +37,7 @@ export async function createLabel(
   }
 
   const labelInDB = await db.query.labels.findFirst({
-    where: (fields, { eq }) => eq(fields.name, label.toLowerCase()),
+    where: (fields, { eq }) => eq(fields.name, toSafeId(label)),
     columns: { userId: false },
   });
   if (!labelInDB) return { error: "Failed to insert label." };
