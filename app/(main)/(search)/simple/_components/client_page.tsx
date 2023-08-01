@@ -1,10 +1,10 @@
 "use client";
 import { useState, useRef, useTransition } from "react";
-import { toast } from "react-hot-toast";
 
 import { simpleSearch } from "@/server-actions/simple-search";
 import type { Results } from "./types";
-import { formDataToObj, removeEmptyProperties, getErrMsg } from "@/lib/utils";
+import { throwSAErrors, toastSAErrors } from "@/lib/utils/error";
+import { formDataToObj, removeEmptyProperties } from "@/lib/utils/mutate";
 import SearchForm from "./search-form";
 import ResultsCard from "./results-card";
 
@@ -18,10 +18,14 @@ export default function SSClientPage() {
     try {
       const data = await simpleSearch(cleanedData);
       if (!data) throw new Error("Something unexpected occurred.");
-      if (typeof data.error === "string") throw new Error(data.error);
-      setResults({ error: false, provider: data.provider, items: data.items });
+      throwSAErrors(data.error);
+      setResults({
+        error: false,
+        provider: data.data.provider,
+        items: data.data.items,
+      });
     } catch (err) {
-      toast.error(getErrMsg(err));
+      toastSAErrors(err);
       setResults({ error: true });
     }
   }

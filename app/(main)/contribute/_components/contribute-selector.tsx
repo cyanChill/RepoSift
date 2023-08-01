@@ -1,7 +1,8 @@
 import Link from "next/link";
 import type { IconType } from "react-icons/lib";
 
-import { cn, getMonthDescriptor } from "@/lib/utils";
+import { cn } from "@/lib/utils";
+import { getMonthDescriptor } from "@/lib/utils/mutate";
 
 type Props = {
   href: string;

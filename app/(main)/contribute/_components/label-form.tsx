@@ -1,11 +1,12 @@
 "use client";
 import { useState, useTransition } from "react";
 import Link from "next/link";
-import { toast } from "react-hot-toast";
 
 import { createLabel } from "@/server-actions/label-actions";
 import type { GenericObj } from "@/lib/types";
-import { LIMITS, PATTERNS, formDataToObj, getErrMsg } from "@/lib/utils";
+import { LIMITS, PATTERNS } from "@/lib/utils/constants";
+import { throwSAErrors, toastSAErrors } from "@/lib/utils/error";
+import { formDataToObj } from "@/lib/utils/mutate";
 import SuccessWindow from "./success-window";
 import { Input } from "@/components/form/input";
 
@@ -18,10 +19,10 @@ export default function LabelForm() {
     try {
       const data = await createLabel(cleanedData);
       if (!data) throw new Error("Something unexpected occurred.");
-      if (typeof data.error === "string") throw new Error(data.error);
+      throwSAErrors(data.error);
       setIsComplete(true);
     } catch (err) {
-      toast.error(getErrMsg(err));
+      toastSAErrors(err);
     }
   }
 

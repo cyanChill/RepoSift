@@ -3,7 +3,7 @@ import { forwardRef } from "react";
 
 import { Select } from "@/components/form/input";
 import { MinMaxRange, MultiText } from "@/components/form/custom";
-import { avaliableProviders } from "@/lib/utils";
+import { avaliableProviders } from "@/lib/utils/constants";
 
 type Props = {
   action: (formData: FormData) => void;

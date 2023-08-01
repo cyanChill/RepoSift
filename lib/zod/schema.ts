@@ -6,7 +6,7 @@ import {
   arrayTransform,
   regexTest,
 } from "./utils";
-import { LIMITS, PATTERNS } from "../utils";
+import { LIMITS, PATTERNS } from "../utils/constants";
 
 /**
  * @description Zod schema for "Simple Search" feature.
@@ -31,7 +31,7 @@ export const SimpleSearchSchema = z
     },
     { message: "⚠️ Max stars must be greater than min stars." }
   );
-export type SimpleSearchSchema = z.infer<typeof SimpleSearchSchema>;
+export type SimpleSearchSchemaType = z.infer<typeof SimpleSearchSchema>;
 
 /**
  * @description Zod schema for the returned GitHub repository owner from the "Simple Search" feature.
@@ -42,7 +42,7 @@ export const GitHubRepoOwner = z.object({
   avatar_url: z.string().url(),
   created_at: z.string().datetime().optional(),
 });
-export type GitHubRepoOwner = z.infer<typeof GitHubRepoOwner>;
+export type GitHubRepoOwnerType = z.infer<typeof GitHubRepoOwner>;
 
 /**
  * @description Zod schema for the returned GitHub repository from the "Simple Search" feature.
@@ -60,7 +60,7 @@ export const GitHubRepo = z.object({
   stargazers_count: z.number().int(),
   language: z.string().nullable(),
 });
-export type GitHubRepo = z.infer<typeof GitHubRepo>;
+export type GitHubRepoType = z.infer<typeof GitHubRepo>;
 
 /**
  * @description Zod schema for the returned object from the GitHub API from the "Simple Search" feature.
@@ -70,7 +70,7 @@ export const GitHubRepoSearchResult = z.object({
   incomplete_results: z.boolean(),
   items: GitHubRepo.array(),
 });
-export type GitHubRepoSearchResult = z.infer<typeof GitHubRepoSearchResult>;
+export type GitHubRepoSearchResultType = z.infer<typeof GitHubRepoSearchResult>;
 
 /**
  * @description Zod schema for "Suggest Label" feature.
@@ -95,7 +95,7 @@ export const LabelFormSchema = z.object({
       })
     ),
 });
-export type LabelFormSchema = z.infer<typeof LabelFormSchema>;
+export type LabelFormSchemaType = z.infer<typeof LabelFormSchema>;
 
 /**
  * @description Zod schema for "Index repository" feature.
@@ -142,4 +142,4 @@ export const RepoFormSchema = z.object({
     .min(1, { message: "A primary label must be selected." }),
   labels: z.coerce.string().transform(arrayTransform("Labels", 5)).optional(),
 });
-export type RepoFormSchema = z.infer<typeof LabelFormSchema>;
+export type RepoFormSchemaType = z.infer<typeof RepoFormSchema>;

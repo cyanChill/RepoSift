@@ -57,6 +57,7 @@ export const repositories = mysqlTable(
     pk: primaryKey(table.id, table.type),
   })
 );
+export type BaseRepositoryType = InferModel<typeof repositories>;
 export const repositoryRelations = relations(repositories, ({ one, many }) => ({
   user: one(users, { fields: [repositories.userId], references: [users.id] }),
   primaryLabel: one(labels, {
@@ -66,7 +67,7 @@ export const repositoryRelations = relations(repositories, ({ one, many }) => ({
   labels: many(repoLabels),
   languages: many(repoLangs),
 }));
-export type Repository = InferModel<typeof repositories> & {
+export type Repository = BaseRepositoryType & {
   user: User;
   primaryLabel: Label;
   labels: RepoLabels[];
@@ -84,7 +85,6 @@ export const repoLabels = mysqlTable(
   {
     name: varchar("name", { length: 128 }).notNull(),
     repoId: varchar("repoId", { length: 256 }).notNull(),
-    userId: varchar("userId", { length: 256 }).notNull(), // Suggester
   },
   (table) => ({
     pk: primaryKey(table.name, table.repoId),
@@ -93,7 +93,6 @@ export const repoLabels = mysqlTable(
 );
 export type RepoLabels = InferModel<typeof repoLabels>;
 export const repoLabelRelations = relations(repoLabels, ({ one }) => ({
-  user: one(users, { fields: [repoLabels.userId], references: [users.id] }),
   label: one(labels, {
     fields: [repoLabels.name],
     references: [labels.name],

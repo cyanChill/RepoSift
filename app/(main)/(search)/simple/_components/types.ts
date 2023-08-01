@@ -1,7 +1,7 @@
 import type { AuthProviders } from "@/lib/zod/utils";
-import type { GitHubRepo } from "@/lib/zod/schema";
+import type { GitHubRepoType } from "@/lib/zod/schema";
 
 export type Results =
   | undefined
   | { error: true }
-  | { error: false; provider: AuthProviders; items: GitHubRepo[] };
+  | { error: false; provider: AuthProviders; items: GitHubRepoType[] };

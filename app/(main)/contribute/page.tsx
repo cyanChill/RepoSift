@@ -7,7 +7,8 @@ import { db } from "@/db";
 
 import { authOptions } from "@/lib/auth";
 import type { PageProps } from "@/lib/types";
-import { getOldestAge, didFailMonthConstraint } from "@/lib/utils";
+import { getOldestAge } from "@/lib/utils/mutate";
+import { didFailMonthConstraint } from "@/lib/utils/validation";
 import ContributeSelector from "./_components/contribute-selector";
 import LabelForm from "./_components/label-form";
 import RepositoryForm from "./_components/repository-form";

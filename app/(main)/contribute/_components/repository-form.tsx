@@ -1,18 +1,14 @@
 "use client";
 import { useState, useTransition } from "react";
 import Link from "next/link";
-import { toast } from "react-hot-toast";
 
 import { createRepository } from "@/server-actions/repo-actions";
 import type { GenericObj } from "@/lib/types";
-import {
-  LIMITS,
-  PATTERNS,
-  avaliableProviders,
-  cn,
-  formDataToObj,
-  getErrMsg,
-} from "@/lib/utils";
+import { LIMITS, PATTERNS } from "@/lib/utils/constants";
+import { cn } from "@/lib/utils";
+import { avaliableProviders } from "@/lib/utils/constants";
+import { throwSAErrors, toastSAErrors } from "@/lib/utils/error";
+import { formDataToObj } from "@/lib/utils/mutate";
 import SuccessWindow from "./success-window";
 import { Input, Select } from "@/components/form/input";
 import { MultiSearchSelect, SearchSelect } from "@/components/form/custom";
@@ -31,10 +27,10 @@ export default function RepositoryForm({ labels }: Props) {
     try {
       const data = await createRepository(cleanedData);
       if (!data) throw new Error("Something unexpected occurred.");
-      if (typeof data.error === "string") throw new Error(data.error);
+      throwSAErrors(data.error);
       setIsComplete(true);
     } catch (err) {
-      toast.error(getErrMsg(err));
+      toastSAErrors(err);
     }
   }
 

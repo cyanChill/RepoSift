@@ -1,15 +1,14 @@
 "use server";
 
 import { ENV } from "@/lib/env-server";
-import type { GenericObj } from "@/lib/types";
+import type { ErrorObj, GenericObj, SuccessObj } from "@/lib/types";
 import { randInt } from "@/lib/utils";
-import type { GitHubRepo } from "@/lib/zod/schema";
+import type { GitHubRepoType } from "@/lib/zod/schema";
 import { GitHubRepoSearchResult, SimpleSearchSchema } from "@/lib/zod/schema";
-import type { AuthProviders } from "@/lib/zod/utils";
 
 export async function simpleSearch(
   formData: GenericObj
-): Promise<{ error: string } | GitHubSearchReturn | undefined> {
+): Promise<ErrorObj | GitHubSearchReturn> {
   /* Validate input data */
   const schemaRes = SimpleSearchSchema.safeParse(formData);
   if (!schemaRes.success) {
@@ -31,6 +30,8 @@ export async function simpleSearch(
   };
   if (provider === "gitlab") return UNIMPLEMENTED_ERROR;
   if (provider === "bitbucket") return UNIMPLEMENTED_ERROR;
+
+  return { error: "Invalid provider was provided." };
 }
 
 type SearchProps = {
@@ -41,8 +42,7 @@ type SearchProps = {
 };
 
 type GitHubSearchReturn = Promise<
-  | { error: null; provider: AuthProviders; items: GitHubRepo[] }
-  | { error: string }
+  ErrorObj | SuccessObj<{ provider: "github"; items: GitHubRepoType[] }>
 >;
 
 async function GitHubSearch({
@@ -77,7 +77,7 @@ async function GitHubSearch({
       return { error: "Something unexpected happened." };
     }
 
-    return { error: null, provider: "github", items: dataParsed.data.items };
+    return { data: { provider: "github", items: dataParsed.data.items } };
   } catch (err) {
     return { error: "Something unexpected happened." };
   }
