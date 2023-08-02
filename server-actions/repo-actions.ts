@@ -11,7 +11,7 @@ import type { BaseRepositoryType, Language } from "@/db/schema/main";
 
 import { getGitHubRepoData, getGitHubRepoLang } from "./providerSearch";
 import type { ErrorObj, GenericObj, SuccessObj } from "@/lib/types";
-import { containsSAErr } from "@/lib/utils/error";
+import { containsSAErr, getZodMsg } from "@/lib/utils/error";
 import { toSafeId } from "@/lib/utils/mutate";
 import { RepoFormSchema, type RepoFormSchemaType } from "@/lib/zod/schema";
 import { checkAuthConstraint } from "./utils";
@@ -23,7 +23,7 @@ export async function createRepository(
   const schemaRes = RepoFormSchema.safeParse(formData);
   if (!schemaRes.success) {
     console.log(schemaRes.error.errors); // For debugging purposes
-    return { error: schemaRes.error.errors[0].message };
+    return { error: getZodMsg(schemaRes.error) };
   }
   const { author, name, provider, primary_label, labels = [] } = schemaRes.data;
 

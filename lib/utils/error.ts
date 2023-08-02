@@ -1,4 +1,5 @@
 import { toast } from "react-hot-toast";
+import type { ZodError } from "zod";
 
 import type { ErrorObj } from "../types";
 
@@ -41,4 +42,12 @@ export function toastSAErrors(err: unknown) {
 export function getErrMsg(err: unknown) {
   if (err instanceof Error) return err.message;
   return String(err);
+}
+
+/**
+ * @description Extract the error messages from a Zod error from safeParse().
+ * @returns A string array.
+ */
+export function getZodMsg(errArr: ZodError) {
+  return errArr.errors.map((err) => err.message);
 }

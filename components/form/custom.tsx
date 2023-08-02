@@ -65,6 +65,7 @@ type MultiTextProps = {
   /** A positive integer. */
   max: number;
   formId: string;
+  optional?: boolean;
   initialValues?: string[];
 };
 
@@ -73,6 +74,7 @@ export const MultiText = ({
   label,
   max,
   formId,
+  optional,
   initialValues,
 }: MultiTextProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -97,7 +99,15 @@ export const MultiText = ({
   return (
     <div className="mb-4 flex flex-col">
       <label htmlFor={name} className="form-label">
-        {label} <span className="ml-2 font-normal">(max {max})</span>
+        {label}{" "}
+        <span className="ml-2 font-normal">
+          (max {max}){" "}
+          {optional && (
+            <>
+              - <span className="italic">Optional</span>
+            </>
+          )}
+        </span>
       </label>
       <FormValue name={name} value={JSON.stringify(vals)} />
 
@@ -223,6 +233,7 @@ type MSSProps = {
   /** A positive integer. */
   max: number;
   formId: string;
+  optional?: boolean;
   flow?: boolean; // Max-Content or Width 100%
 };
 
@@ -233,6 +244,7 @@ export const MultiSearchSelect = ({
   initialValues,
   max,
   formId,
+  optional,
   flow = true,
 }: MSSProps) => {
   const [vals, setVals] = useState<Option[]>(initialValues ?? []);
@@ -273,7 +285,15 @@ export const MultiSearchSelect = ({
         className={cn("relative mb-4 w-full", { "max-w-max": !flow })}
       >
         <Combobox.Label className="form-label">
-          {label} <span className="ml-2 font-normal">(max {max})</span>
+          {label}{" "}
+          <span className="ml-2 font-normal">
+            (max {max}){" "}
+            {optional && (
+              <>
+                - <span className="italic">Optional</span>
+              </>
+            )}
+          </span>
         </Combobox.Label>
         <fieldset className="form-input flex w-full items-center gap-2 text-start">
           <Combobox.Input

@@ -1,12 +1,16 @@
 import { z } from "zod";
 
-export const PROVIDERS_ENUM = z.enum(["github", "gitlab", "bitbucket"]);
+export const PROVIDERS_ENUM = z.enum(["github", "gitlab", "bitbucket"], {
+  required_error: "A provider is required.",
+  invalid_type_error:
+    'The provider must be "github", "gitlab", or "bitbucket".',
+});
 export type AuthProviders = z.infer<typeof PROVIDERS_ENUM>;
 
 export const OPT_NONNEG_INT = z.coerce
   .number()
-  .int()
-  .min(0, { message: "⚠️ Must be a non-negative integer." })
+  .int({ message: "Number must be an integer." })
+  .min(0, { message: "Number must be a non-negative integer." })
   .optional();
 
 /**

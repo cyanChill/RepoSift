@@ -29,7 +29,7 @@ export const SimpleSearchSchema = z
       }
       return true;
     },
-    { message: "⚠️ Max stars must be greater than min stars." }
+    { message: "Max stars must be greater than min stars." }
   );
 export type SimpleSearchSchemaType = z.infer<typeof SimpleSearchSchema>;
 
@@ -103,7 +103,10 @@ export type LabelFormSchemaType = z.infer<typeof LabelFormSchema>;
 export const RepoFormSchema = z.object({
   provider: PROVIDERS_ENUM,
   author: z
-    .string()
+    .string({
+      required_error: "A repository author is required.",
+      invalid_type_error: "A repository author must be a string.",
+    })
     .trim()
     .min(1, {
       message: "A repository author must be at least 1 characters long.",
@@ -120,7 +123,10 @@ export const RepoFormSchema = z.object({
       })
     ),
   name: z
-    .string()
+    .string({
+      required_error: "A repository name is required.",
+      invalid_type_error: "A repository name must be a string.",
+    })
     .trim()
     .min(1, {
       message: "A repository name must be at least 1 characters long.",
@@ -137,7 +143,10 @@ export const RepoFormSchema = z.object({
       })
     ),
   primary_label: z
-    .string()
+    .string({
+      required_error: "A primary label is required.",
+      invalid_type_error: "A primary label must be a string.",
+    })
     .trim()
     .min(1, { message: "A primary label must be selected." }),
   labels: z.coerce.string().transform(arrayTransform("Labels", 5)).optional(),

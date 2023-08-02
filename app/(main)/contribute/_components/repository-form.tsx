@@ -97,6 +97,7 @@ export default function RepositoryForm({ labels }: Props) {
             options={labels.regular}
             formId="repository-form"
             max={5}
+            optional
           />
 
           <button

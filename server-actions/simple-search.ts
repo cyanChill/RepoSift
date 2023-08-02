@@ -3,6 +3,7 @@
 import { ENV } from "@/lib/env-server";
 import type { ErrorObj, GenericObj, SuccessObj } from "@/lib/types";
 import { randInt } from "@/lib/utils";
+import { getZodMsg } from "@/lib/utils/error";
 import type { GitHubRepoType } from "@/lib/zod/schema";
 import { GitHubRepoSearchResult, SimpleSearchSchema } from "@/lib/zod/schema";
 
@@ -13,7 +14,7 @@ export async function simpleSearch(
   const schemaRes = SimpleSearchSchema.safeParse(formData);
   if (!schemaRes.success) {
     console.log(schemaRes.error.errors); // For debugging purposes
-    return { error: "Invalid inputs." };
+    return { error: getZodMsg(schemaRes.error) };
   }
 
   const { provider, languages, maxStars } = schemaRes.data;
@@ -74,7 +75,7 @@ async function GitHubSearch({
     if (!dataParsed.success) {
       console.log(data); // See what was returned instead
       console.log(dataParsed.error.errors); // For debugging purposes
-      return { error: "Something unexpected happened." };
+      return { error: "Received data of an unexpected form from GitHub." };
     }
 
     return { data: { provider: "github", items: dataParsed.data.items } };

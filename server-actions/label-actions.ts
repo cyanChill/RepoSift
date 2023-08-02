@@ -3,7 +3,7 @@ import { db } from "@/db";
 import { labels, type Label } from "@/db/schema/main";
 
 import type { ErrorObj, GenericObj, SuccessObj } from "@/lib/types";
-import { containsSAErr } from "@/lib/utils/error";
+import { containsSAErr, getZodMsg } from "@/lib/utils/error";
 import { toSafeId } from "@/lib/utils/mutate";
 import { LabelFormSchema } from "@/lib/zod/schema";
 import { checkAuthConstraint } from "./utils";
@@ -15,7 +15,7 @@ export async function createLabel(
   const schemaRes = LabelFormSchema.safeParse(formData);
   if (!schemaRes.success) {
     console.log(schemaRes.error.errors); // For debugging purposes
-    return { error: schemaRes.error.errors[0].message };
+    return { error: getZodMsg(schemaRes.error) };
   }
   const { label } = schemaRes.data;
 

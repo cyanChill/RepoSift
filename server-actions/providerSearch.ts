@@ -36,7 +36,7 @@ export async function getGitHubRepoData(
     if (!dataParsed.success) {
       console.log(data); // See what was returned instead
       console.log(dataParsed.error.errors); // For debugging purposes
-      return { error: "Something unexpected happened." };
+      return { error: "Received data of an unexpected form from GitHub." };
     }
     return { data: dataParsed.data };
   } catch (err) {
