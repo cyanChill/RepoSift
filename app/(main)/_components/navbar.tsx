@@ -80,7 +80,8 @@ export default function Navbar() {
 }
 
 const NavOptions = () => {
-  const { isAuth, isAdmin } = useAuth();
+  const authStatus = useAuth();
+  const { isAuth } = authStatus;
 
   return (
     <>
@@ -90,7 +91,10 @@ const NavOptions = () => {
       </Link>
       {isAuth && (
         <>
-          <Link href="/profile" className="hocus-underline my-auto w-min">
+          <Link
+            href={`/u/@${authStatus.user.handle}`}
+            className="hocus-underline my-auto w-min"
+          >
             Profile
           </Link>
           <Link href="/misc" className="hocus-underline my-auto w-min">
@@ -98,7 +102,7 @@ const NavOptions = () => {
           </Link>
         </>
       )}
-      {isAdmin && (
+      {isAuth && authStatus.isAdmin && (
         <Link href="/admin" className="hocus-underline my-auto w-min">
           Admin
         </Link>

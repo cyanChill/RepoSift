@@ -9,6 +9,7 @@ import { authOptions } from "@/lib/auth";
 import type { PageProps } from "@/lib/types";
 import { getOldestAge } from "@/lib/utils/mutate";
 import { didFailMonthConstraint } from "@/lib/utils/validation";
+import BannedScreen from "@/components/BannedScreen";
 import ContributeSelector from "./_components/contribute-selector";
 import LabelForm from "./_components/label-form";
 import RepositoryForm from "./_components/repository-form";
@@ -26,6 +27,10 @@ export default async function ContributePage({ searchParams }: PageProps) {
   const session = await getServerSession(authOptions);
 
   if (!session) redirect("/join?callbackUrl=/contribute");
+
+  if (session.user.role === "banned") {
+    return <BannedScreen reason={session.user.banReason ?? undefined} />;
+  }
 
   // Get the date from the oldest account amongst the linked accounts
   const oldestAge = getOldestAge(session.user.linkedAccounts);
