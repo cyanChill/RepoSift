@@ -27,6 +27,6 @@ export default function useAuth(): useAuthReturn {
     isAuth: true,
     user: session.user,
     isAdmin: ["admin", "owner"].includes(session.user.role),
-    isBanned: session?.user.role === "banned",
+    isBanned: session.user.role === "banned",
   };
 }

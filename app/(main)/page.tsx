@@ -3,17 +3,32 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 
+import { ENV } from "@/lib/env-server";
 import { cn } from "@/lib/utils";
+import type { GenericObj } from "@/lib/types";
 import Browser from "@/components/Browser";
 import MarqueeX from "@/components/MarqueeX";
-
-const DUMMY_LABELS = ["Projects", "Front End", "Back End"];
-const DUMMY_LANGS = ["TypeScript", "HTML", "Ruby on Rails"];
 
 const COLOR_SET_1 = ["#7dd3fc", "#facc15", "#60ff46"];
 const COLOR_SET_2 = ["#3cc7be", "#b494e9", "#ff9fea"];
 
-export default function HomePage() {
+type TopStatsObj = { count: number; name: string; display: string };
+
+export default async function HomePage() {
+  // Utilize API route to take advantage of Next.js automatic fetch() caching
+  const res = await fetch(`${ENV.NEXTAUTH_URL}/api/stats`);
+  const data = (await res.json()) as GenericObj;
+
+  const topLanguages: string[] = [];
+  const topLabels: string[] = [];
+
+  if (data.top) {
+    const langs = ((data.top as GenericObj).languages as TopStatsObj[]) ?? [];
+    langs.forEach((lang) => topLanguages.push(lang.display));
+    const lbs = ((data.top as GenericObj).labels as TopStatsObj[]) ?? [];
+    lbs.forEach((lb) => topLabels.push(lb.display));
+  }
+
   return (
     <main className="flex flex-col">
       {/* 1st Section */}
@@ -172,14 +187,14 @@ export default function HomePage() {
       <div className="split-layout">
         <div className="split-content-left bg-purple-300">
           <div className="split-section-content">
-            <RepoStats type="Labels" data={DUMMY_LABELS} colors={COLOR_SET_1} />
+            <RepoStats type="Labels" data={topLabels} colors={COLOR_SET_1} />
           </div>
         </div>
         <div className="split-content-right bg-orange-300">
           <div className="split-section-content">
             <RepoStats
               type="Languages"
-              data={DUMMY_LANGS}
+              data={topLanguages}
               colors={COLOR_SET_2}
             />
           </div>
