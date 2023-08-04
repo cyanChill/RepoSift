@@ -1,7 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-
 /**
  * @description Combines any number of Tailwind classes nicely.
  * @returns A string containing Tailwind classes.

@@ -3,11 +3,10 @@ import { redirect } from "next/navigation";
 import { IoPricetags } from "react-icons/io5";
 import { SiBookstack } from "react-icons/si";
 
-import { db } from "@/db";
-
 import { authOptions } from "@/lib/auth";
 import type { PageProps } from "@/lib/types";
 import { getOldestAge } from "@/lib/utils/mutate";
+import { getFilters } from "@/lib/utils/server";
 import { didFailMonthConstraint } from "@/lib/utils/validation";
 import BannedScreen from "@/components/BannedScreen";
 import ContributeSelector from "./_components/contribute-selector";
@@ -18,12 +17,9 @@ export const metadata = {
   title: "RepoSift | Contribute",
 };
 
-type Labels = {
-  primary: { name: string; value: string }[];
-  regular: { name: string; value: string }[];
-};
-
 export default async function ContributePage({ searchParams }: PageProps) {
+  const { labels } = await getFilters();
+
   const session = await getServerSession(authOptions);
 
   if (!session) redirect("/join?callbackUrl=/contribute");
@@ -38,19 +34,6 @@ export default async function ContributePage({ searchParams }: PageProps) {
   const failedLabelConstraint = didFailMonthConstraint(12, oldestAge);
 
   if (searchParams.type === "repository" && !failedRepoConstraint) {
-    const allLabels = await db.query.labels.findMany({
-      columns: { userId: false },
-    });
-    const labels: Labels = { primary: [], regular: [] };
-
-    allLabels.forEach((lb) => {
-      if (lb.type === "primary") {
-        labels.primary.push({ name: lb.display, value: lb.name });
-      } else {
-        labels.regular.push({ name: lb.display, value: lb.name });
-      }
-    });
-
     return <RepositoryForm labels={labels} />;
   }
 

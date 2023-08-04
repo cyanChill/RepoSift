@@ -14,6 +14,8 @@ const COLOR_SET_2 = ["#3cc7be", "#b494e9", "#ff9fea"];
 
 type TopStatsObj = { count: number; name: string; display: string };
 
+export const revalidate = 86400; // Revalidate data once a day
+
 export default async function HomePage() {
   // Utilize API route to take advantage of Next.js automatic fetch() caching
   const res = await fetch(`${ENV.NEXTAUTH_URL}/api/stats`);
