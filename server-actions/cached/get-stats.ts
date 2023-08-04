@@ -1,10 +1,16 @@
-import { NextResponse } from "next/server";
+import { cache } from "react";
 import { desc, eq, sql } from "drizzle-orm";
 
 import { db } from "@/db";
 import { labels, languages, repoLabels, repoLangs } from "@/db/schema/main";
 
-export async function GET() {
+export const revalidate = 86400; // Revalidate data at most once a day
+
+/**
+ * @description Fetch top stats from database and caches it for 1 day.
+ * @returns An object.
+ */
+export const getStats = cache(async () => {
   // Get top 3 languages used in repositories indexed
   const topLangs = await db
     .select({
@@ -31,8 +37,5 @@ export async function GET() {
     .orderBy((lb) => desc(lb.count))
     .limit(3);
 
-  return NextResponse.json(
-    { top: { languages: topLangs, labels: topLabels } },
-    { status: 200 }
-  );
-}
+  return { languages: topLangs, labels: topLabels };
+});

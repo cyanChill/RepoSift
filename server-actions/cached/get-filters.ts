@@ -1,7 +1,8 @@
-import { NextResponse } from "next/server";
+import { cache } from "react";
 
 import { db } from "@/db";
 import { languages } from "@/db/schema/main";
+
 import type { Option } from "@/components/form/utils";
 
 type Labels = {
@@ -9,7 +10,13 @@ type Labels = {
   regular: Option[];
 };
 
-export async function GET() {
+export const revalidate = 900; // Revalidate data at most every 15 minutes
+
+/**
+ * @description Fetch filters from database and caches it for 15 minutes.
+ * @returns An object.
+ */
+export const getFilters = cache(async () => {
   const allLabels = await db.query.labels.findMany({
     columns: { userId: false },
   });
@@ -29,5 +36,5 @@ export async function GET() {
     })
     .from(languages);
 
-  return NextResponse.json({ labels, languages: allLangs }, { status: 200 });
-}
+  return { labels, languages: allLangs };
+});

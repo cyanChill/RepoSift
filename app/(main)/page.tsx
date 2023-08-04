@@ -3,33 +3,18 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 
-import { ENV } from "@/lib/env-server";
 import { cn } from "@/lib/utils";
-import type { GenericObj } from "@/lib/types";
+import { getStats } from "@/server-actions/cached/get-stats";
 import Browser from "@/components/Browser";
 import MarqueeX from "@/components/MarqueeX";
 
 const COLOR_SET_1 = ["#7dd3fc", "#facc15", "#60ff46"];
 const COLOR_SET_2 = ["#3cc7be", "#b494e9", "#ff9fea"];
 
-type TopStatsObj = { count: number; name: string; display: string };
-
-export const revalidate = 86400; // Revalidate data once a day
-
 export default async function HomePage() {
-  // Utilize API route to take advantage of Next.js automatic fetch() caching
-  const res = await fetch(`${ENV.NEXTAUTH_URL}/api/stats`);
-  const data = (await res.json()) as GenericObj;
-
-  const topLanguages: string[] = [];
-  const topLabels: string[] = [];
-
-  if (data.top) {
-    const langs = ((data.top as GenericObj).languages as TopStatsObj[]) ?? [];
-    langs.forEach((lang) => topLanguages.push(lang.display));
-    const lbs = ((data.top as GenericObj).labels as TopStatsObj[]) ?? [];
-    lbs.forEach((lb) => topLabels.push(lb.display));
-  }
+  const topStats = await getStats();
+  const topLanguages = topStats.languages.map((lang) => lang.display);
+  const topLabels = topStats.labels.map((lb) => lb.display);
 
   return (
     <main className="flex flex-col">
