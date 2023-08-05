@@ -50,7 +50,9 @@ export const Select = ({
   initialValue,
   flow = true,
 }: SelectProps) => {
-  const [selectedOpt, setSelectedOpt] = useState<Option>(options[0]);
+  const [selectedOpt, setSelectedOpt] = useState<Option>(
+    initialValue ?? options[0]
+  );
 
   return (
     <Listbox
@@ -58,7 +60,6 @@ export const Select = ({
       className={cn("relative mb-4 w-full", { "max-w-max": !flow })}
       value={selectedOpt}
       onChange={setSelectedOpt}
-      defaultValue={initialValue}
     >
       <FormValue name={name} value={selectedOpt.value} />
 

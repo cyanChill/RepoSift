@@ -156,8 +156,8 @@ export const SearchSelect = ({
   flow = true,
   optional = false,
 }: SearchSelectProps) => {
-  const [selectedOpt, setSelectedOpt] = useState<Option | undefined>(
-    optional ? undefined : options[0]
+  const [selectedOpt, setSelectedOpt] = useState<Option>(
+    optional ? { name: "", value: "" } : initialValue ?? options[0]
   );
   const [query, setQuery] = useState("");
 
@@ -169,7 +169,6 @@ export const SearchSelect = ({
       className={cn("relative mb-4 w-full", { "max-w-max": !flow })}
       value={selectedOpt}
       onChange={setSelectedOpt}
-      defaultValue={initialValue}
       // @ts-ignore: Boolean value is acceptable
       nullable={optional}
     >
@@ -355,7 +354,7 @@ export const MultiSearchSelect = ({
       <ItemsList
         values={vals.map((val) => val.name)}
         onDelete={removeSelf}
-        className="mb-4 mt-2"
+        className={cn({ "mb-4 mt-2": vals.length !== 0 })}
       />
     </>
   );
