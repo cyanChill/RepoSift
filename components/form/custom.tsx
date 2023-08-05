@@ -11,8 +11,8 @@ import { cn } from "@/lib/utils";
 type MMRProps = {
   name: string;
   label: string;
-  initialMin?: number;
-  initialMax?: number;
+  initialMin?: number | string;
+  initialMax?: number | string;
 };
 
 /** Form field names will be `min${name}` & `min${name}` */
@@ -143,6 +143,7 @@ type SearchSelectProps = {
   name: string;
   label: string;
   options: Option[];
+  formId: string;
   initialValue?: Option;
   flow?: boolean;
   optional?: boolean;
@@ -152,14 +153,18 @@ export const SearchSelect = ({
   name,
   label,
   options,
+  formId,
   initialValue,
   flow = true,
   optional = false,
 }: SearchSelectProps) => {
   const [selectedOpt, setSelectedOpt] = useState<Option>(
-    optional ? { name: "", value: "" } : initialValue ?? options[0]
+    initialValue ?? (optional ? { name: "", value: "" } : options[0])
   );
   const [query, setQuery] = useState("");
+  useFormReset(() => {
+    optional ? setSelectedOpt({ name: "", value: "" }) : null;
+  }, formId);
 
   const filteredOptions = getFilteredOptions(query, options);
 
@@ -274,20 +279,13 @@ export const MultiSearchSelect = ({
   };
 
   return (
-    <>
+    <div className={cn("mb-4 w-full", { "max-w-max": !flow })}>
       <FormValue
         name={name}
         value={JSON.stringify(vals.map((val) => val.value))}
       />
 
-      <Combobox
-        as="div"
-        onChange={toggleOption}
-        className={cn("relative w-full", {
-          "max-w-max": !flow,
-          "mb-4": vals.length === 0,
-        })}
-      >
+      <Combobox as="div" onChange={toggleOption} className="relative">
         <Combobox.Label className="form-label">
           {label}{" "}
           <span className="ml-2 font-normal">
@@ -354,8 +352,8 @@ export const MultiSearchSelect = ({
       <ItemsList
         values={vals.map((val) => val.name)}
         onDelete={removeSelf}
-        className={cn({ "mb-4 mt-2": vals.length !== 0 })}
+        className={cn({ "mt-2": vals.length !== 0 })}
       />
-    </>
+    </div>
   );
 };

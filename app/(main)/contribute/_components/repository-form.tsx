@@ -90,6 +90,7 @@ export default function RepositoryForm({ labels }: Props) {
             name="primary_label"
             label="Primary Label"
             options={labels.primary}
+            formId="repository-form"
           />
           <MultiSearchSelect
             name="labels"

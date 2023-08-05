@@ -62,3 +62,17 @@ export function getMonthDescriptor(numMonths: number) {
 export function toSafeId(str: string) {
   return str.trim().toLowerCase().replaceAll(" ", "_");
 }
+
+/**
+ * @description Converts a JSON string into an array.
+ * @returns An array.
+ */
+export function arrayTransform(str: string): string[] {
+  try {
+    const parsed: unknown = JSON.parse(str);
+    if (!Array.isArray(parsed)) throw new Error();
+    return parsed as string[];
+  } catch {
+    return [];
+  }
+}

@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
 
 import type { PageProps } from "@/lib/types";
-import { firstStrParam } from "@/lib/utils";
+import { firstStrParam } from "@/lib/utils/url";
 import { LoginProviders } from "./_components/login-providers";
 
 export default async function JoinPage({ searchParams }: PageProps) {

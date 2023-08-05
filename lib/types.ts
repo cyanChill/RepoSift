@@ -4,6 +4,7 @@ export type PageProps = {
 };
 
 export type GenericObj = { [x: string]: unknown };
+export type VariableObj<T> = { [x: string]: T };
 
 /**
  * @description The typical function response when recieving an error.

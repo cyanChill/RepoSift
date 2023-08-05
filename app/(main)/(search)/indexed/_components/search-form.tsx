@@ -1,55 +1,64 @@
 "use client";
-import { forwardRef } from "react";
-
+import { avaliableProviders } from "@/lib/utils/constants";
+import { arrayTransform } from "@/lib/utils/mutate";
 import {
   MinMaxRange,
   MultiSearchSelect,
   SearchSelect,
 } from "@/components/form/custom";
-import { avaliableProviders } from "@/lib/utils/constants";
 import type { Option } from "@/components/form/utils";
 
 type Props = {
   labels: { primary: Option[]; regular: Option[] };
   languages: Option[];
   values: {
-    providers?: string[];
-    languages?: string[];
+    providers?: string;
+    languages?: string;
     primary_label?: string;
     labels?: string;
-    minStars?: number;
-    maxStars?: number;
+    minStars?: string;
+    maxStars?: string;
   };
-  // action: (formData: FormData) => void;
-  isSubmitting: boolean;
+  action: (formData: FormData) => void;
+  disabled: boolean;
 };
 
-export default forwardRef<HTMLFormElement, Props>(function SearchForm(
-  { labels, languages, values, isSubmitting },
-  ref
-) {
-  /* 
-    TODO: Need to populate the "initialValue/s" props after getting the
-          physical values from the "values" prop
-    
-    TODO: Need to re-add the "action" prop
-  */
+export default function SearchForm({
+  labels,
+  languages,
+  values,
+  action,
+  disabled,
+}: Props) {
+  const arrayfiedValues = {
+    providers: arrayTransform(values.providers ?? ""),
+    languages: arrayTransform(values.languages ?? ""),
+    labels: arrayTransform(values.labels ?? ""),
+  };
+
+  const initialProviders = avaliableProviders.filter((provider) =>
+    arrayfiedValues.providers.includes(provider.value)
+  );
+  const initialLanguages = languages.filter((lang) =>
+    arrayfiedValues.languages.includes(lang.value)
+  );
+  const initialPrimaryLabel = labels.primary.find(
+    (lb) => lb.value === values.primary_label
+  ) ?? { name: "", value: "" };
+  const initialLabels = labels.regular.filter((lb) =>
+    arrayfiedValues.labels.includes(lb.value)
+  );
 
   return (
-    <form
-      id="indexed-search-form"
-      ref={ref}
-      // action={action}
-      className="md:px-12"
-    >
-      <fieldset disabled={isSubmitting}>
+    <form id="indexed-search-form" action={action} className="md:px-12">
+      <fieldset disabled={disabled}>
         <MultiSearchSelect
           name="providers"
           label="Specific Providers"
           options={avaliableProviders}
           max={3}
           formId="indexed-search-form"
-          initialValues={[]}
+          initialValues={initialProviders}
         />
         <MultiSearchSelect
           name="languages"
@@ -57,13 +66,14 @@ export default forwardRef<HTMLFormElement, Props>(function SearchForm(
           options={languages}
           max={5}
           formId="indexed-search-form"
-          initialValues={[]}
+          initialValues={initialLanguages}
         />
         <SearchSelect
           name="primary_label"
           label="Primary Label"
           options={labels.primary}
-          initialValue={undefined}
+          formId="indexed-search-form"
+          initialValue={initialPrimaryLabel}
           optional
         />
         <MultiSearchSelect
@@ -72,9 +82,14 @@ export default forwardRef<HTMLFormElement, Props>(function SearchForm(
           options={labels.regular}
           max={5}
           formId="indexed-search-form"
-          initialValues={[]}
+          initialValues={initialLabels}
         />
-        <MinMaxRange name="stars" label="Stars" />
+        <MinMaxRange
+          name="Stars"
+          label="Stars"
+          initialMin={values.minStars}
+          initialMax={values.maxStars}
+        />
 
         <div className="mt-8 flex items-center justify-end gap-2 font-medium">
           <button
@@ -87,10 +102,10 @@ export default forwardRef<HTMLFormElement, Props>(function SearchForm(
             type="submit"
             className="btn just-black w-24 rounded-none bg-purple-600 py-1.5 text-white disabled:bg-purple-400 disabled:text-black"
           >
-            {!isSubmitting ? "Submit" : ". . ."}
+            {!disabled ? "Submit" : ". . ."}
           </button>
         </div>
       </fieldset>
     </form>
   );
-});
+}
