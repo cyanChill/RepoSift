@@ -156,7 +156,9 @@ export const SearchSelect = ({
   flow = true,
   optional = false,
 }: SearchSelectProps) => {
-  const [selectedOpt, setSelectedOpt] = useState<Option>(options[0]);
+  const [selectedOpt, setSelectedOpt] = useState<Option | undefined>(
+    optional ? undefined : options[0]
+  );
   const [query, setQuery] = useState("");
 
   const filteredOptions = getFilteredOptions(query, options);
@@ -282,7 +284,10 @@ export const MultiSearchSelect = ({
       <Combobox
         as="div"
         onChange={toggleOption}
-        className={cn("relative mb-4 w-full", { "max-w-max": !flow })}
+        className={cn("relative w-full", {
+          "max-w-max": !flow,
+          "mb-4": vals.length === 0,
+        })}
       >
         <Combobox.Label className="form-label">
           {label}{" "}
@@ -347,7 +352,11 @@ export const MultiSearchSelect = ({
       </Combobox>
 
       {/* List of inputted items */}
-      <ItemsList values={vals.map((val) => val.name)} onDelete={removeSelf} />
+      <ItemsList
+        values={vals.map((val) => val.name)}
+        onDelete={removeSelf}
+        className="mb-4 mt-2"
+      />
     </>
   );
 };

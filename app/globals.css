@@ -76,6 +76,7 @@
 :root {
   --max-app-width: 80rem;
   --nav-z-index: 100;
+  --modal-z-index: 150;
 
   --dynamic-x-pad: max((100% - 71.25rem)/2, 4rem);
 

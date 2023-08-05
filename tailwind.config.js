@@ -38,6 +38,7 @@ module.exports = {
         xprose: "var(--dynamic-x-pad)",
       },
       zIndex: {
+        modal: "var(--modal-z-index)",
         nav: "var(--nav-z-index)",
       },
       animation: {

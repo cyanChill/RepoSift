@@ -35,15 +35,16 @@ const BG_COLORS = [
 type ItemsListProps = {
   values: string[];
   onDelete: (val: string) => void;
+  className?: string;
 };
 
 /**
  * @description Display a list of values which can be removed on click.
  * @returns A JSX Element.
  */
-export const ItemsList = ({ values, onDelete }: ItemsListProps) => {
+export const ItemsList = ({ values, onDelete, className }: ItemsListProps) => {
   return (
-    <div className="mx-2 flex flex-wrap gap-2">
+    <div className={cn("mx-2 flex flex-wrap gap-2", className)}>
       {values.map((val, idx) => (
         <button
           key={idx}
