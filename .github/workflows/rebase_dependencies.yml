@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+
 jobs:
   rebase:
     name: Rebase `dependencies` with `main`
