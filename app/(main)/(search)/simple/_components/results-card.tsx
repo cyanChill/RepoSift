@@ -151,7 +151,7 @@ export default function ResultsCard({
                   )}
                 </div>
                 <p className="text-sm">
-                  {currRepo.description || "No description."}
+                  {currRepo.description ?? "No description."}
                 </p>
 
                 <p className="mt-auto self-end pt-4 text-xs">

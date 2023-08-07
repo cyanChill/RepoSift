@@ -31,9 +31,7 @@ export default function FilterButtons({ labels, languages }: Props) {
   */
 
   function updateFilters(formData: FormData) {
-    const cleanedData = removeEmptyProperties(formDataToObj(formData)) as {
-      [x: string]: string;
-    };
+    const cleanedData = removeEmptyProperties(formDataToObj(formData)) as Record<string, string>;
     // Now we need to update our URL with this new search params
     router.push(`/indexed?${toURLQS(cleanedData)}`);
     setModalActive(false);

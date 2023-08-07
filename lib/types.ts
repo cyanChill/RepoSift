@@ -1,10 +1,10 @@
 export type PageProps = {
   params: { slug: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Record<string, string | string[] | undefined>;
 };
 
-export type GenericObj = { [x: string]: unknown };
-export type VariableObj<T> = { [x: string]: T };
+export type GenericObj = Record<string, unknown>;
+export type VariableObj<T> = Record<string, T>;
 
 /**
  * @description The typical function response when recieving an error.
