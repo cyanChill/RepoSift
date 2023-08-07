@@ -105,7 +105,7 @@ async function indexGitHubRepo(
   await db.insert(repositories).values({
     id: strId,
     type: provider,
-    author: repository.owner?.login || author,
+    author: repository.owner?.login ?? author,
     name: repository.name,
     description: repository.description,
     stars: repository.stargazers_count,
@@ -126,7 +126,7 @@ async function indexGitHubRepo(
   }));
   await db.insert(repoLangs).values(repoLangRel);
   // Create label relations.
-  const repoLabelRel = labels?.map((lb) => ({ name: lb, repoId: strId })) || [];
+  const repoLabelRel = labels?.map((lb) => ({ name: lb, repoId: strId })) ?? [];
   if (repoLabelRel.length > 0) await db.insert(repoLabels).values(repoLabelRel);
 
   return { data: repo };

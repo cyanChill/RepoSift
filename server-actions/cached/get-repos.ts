@@ -40,7 +40,7 @@ export const getIndexedRepos = cache(async function (
   if (minStars) {
     conditions.push(gte(repositories.stars, minStars));
   }
-  if (maxStars || maxStars === 0) {
+  if (maxStars ?? maxStars === 0) {
     conditions.push(lte(repositories.stars, maxStars));
   }
   if (primary_label) {

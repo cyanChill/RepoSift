@@ -8,7 +8,6 @@ export default async function IndexedSearchPage({ searchParams }: PageProps) {
   const { labels, languages } = await getFilters();
   const { providers, languages: langs, labels: lbs, ...rest } = searchParams;
 
-  // TODO: Update children components and pass this down
   const transformedSearchParams = removeEmptyProperties({
     providers: providers ? arrayTransform(providers as string) : undefined,
     languages: langs ? arrayTransform(langs as string) : undefined,
@@ -21,7 +20,11 @@ export default async function IndexedSearchPage({ searchParams }: PageProps) {
 
   return (
     <main className="mx-auto w-full max-w-appContent p-3 py-5 md:py-20">
-      <FilterButtons labels={labels} languages={languages} />
+      <FilterButtons
+        currFilters={transformedSearchParams}
+        labels={labels}
+        languages={languages}
+      />
     </main>
   );
 }

@@ -1,26 +1,25 @@
 "use client";
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { useSearchParams } from "next/navigation";
 import { Transition } from "@headlessui/react";
 import { FaCogs } from "react-icons/fa";
 import { FaXmark } from "react-icons/fa6";
 
-import { cn } from "@/lib/utils";
 import { formDataToObj, removeEmptyProperties } from "@/lib/utils/mutate";
-import { searchParamsToObj, toURLQS } from "@/lib/utils/url";
+import { toURLQS } from "@/lib/utils/url";
 
 import type { Option } from "@/components/form/utils";
 import SearchForm from "./search-form";
+import type { FilterParams } from "./utils";
 
 type Props = {
+  currFilters: FilterParams;
   labels: { primary: Option[]; regular: Option[] };
   languages: Option[];
 };
 
-export default function FilterButtons({ labels, languages }: Props) {
+export default function FilterButtons(props: Props) {
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   const [modalActive, setModalActive] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -31,13 +30,13 @@ export default function FilterButtons({ labels, languages }: Props) {
   */
 
   function updateFilters(formData: FormData) {
-    const cleanedData = removeEmptyProperties(formDataToObj(formData)) as Record<string, string>;
+    const cleanedData = removeEmptyProperties(
+      formDataToObj(formData),
+    ) as Record<string, string>;
     // Now we need to update our URL with this new search params
     router.push(`/indexed?${toURLQS(cleanedData)}`);
     setModalActive(false);
   }
-
-  const searchParamsObj = searchParamsToObj(searchParams);
 
   return (
     <>
@@ -45,6 +44,7 @@ export default function FilterButtons({ labels, languages }: Props) {
         <button
           onClick={() => setModalActive(true)}
           className="btn just-black flex items-center gap-2 bg-white py-0"
+          disabled={isPending}
         >
           <FaCogs /> Filters
         </button>
@@ -74,9 +74,9 @@ export default function FilterButtons({ labels, languages }: Props) {
         </header>
 
         <SearchForm
-          labels={labels}
-          languages={languages}
-          values={searchParamsObj}
+          labels={props.labels}
+          languages={props.languages}
+          values={props.currFilters}
           action={(data) => startTransition(() => updateFilters(data))}
           disabled={isPending}
         />

@@ -1,24 +1,18 @@
 "use client";
 import { avaliableProviders } from "@/lib/utils/constants";
-import { arrayTransform } from "@/lib/utils/mutate";
+
 import {
   MinMaxRange,
   MultiSearchSelect,
   SearchSelect,
 } from "@/components/form/custom";
 import type { Option } from "@/components/form/utils";
+import type { FilterParams } from "./utils";
 
 type Props = {
   labels: { primary: Option[]; regular: Option[] };
   languages: Option[];
-  values: {
-    providers?: string;
-    languages?: string;
-    primary_label?: string;
-    labels?: string;
-    minStars?: string;
-    maxStars?: string;
-  };
+  values: FilterParams;
   action: (formData: FormData) => void;
   disabled: boolean;
 };
@@ -30,24 +24,21 @@ export default function SearchForm({
   action,
   disabled,
 }: Props) {
-  const arrayfiedValues = {
-    providers: arrayTransform(values.providers ?? ""),
-    languages: arrayTransform(values.languages ?? ""),
-    labels: arrayTransform(values.labels ?? ""),
-  };
-
-  const initialProviders = avaliableProviders.filter((provider) =>
-    arrayfiedValues.providers.includes(provider.value)
-  );
-  const initialLanguages = languages.filter((lang) =>
-    arrayfiedValues.languages.includes(lang.value)
-  );
-  const initialPrimaryLabel = labels.primary.find(
-    (lb) => lb.value === values.primary_label
+  const initProviders = avaliableProviders.filter((provider) => {
+    if (values.providers) return values.providers.includes(provider.value);
+    return false;
+  });
+  const initLanguages = languages.filter((lang) => {
+    if (values.languages) return values.languages.includes(lang.value);
+    return false;
+  });
+  const initPrimaryLabel = labels.primary.find(
+    (lb) => lb.value === values.primary_label,
   ) ?? { name: "", value: "" };
-  const initialLabels = labels.regular.filter((lb) =>
-    arrayfiedValues.labels.includes(lb.value)
-  );
+  const initLabels = labels.regular.filter((lb) => {
+    if (values.labels) return values.labels.includes(lb.value);
+    return false;
+  });
 
   return (
     <form id="indexed-search-form" action={action} className="md:px-12">
@@ -58,7 +49,7 @@ export default function SearchForm({
           options={avaliableProviders}
           max={3}
           formId="indexed-search-form"
-          initialValues={initialProviders}
+          initialValues={initProviders}
         />
         <MultiSearchSelect
           name="languages"
@@ -66,14 +57,14 @@ export default function SearchForm({
           options={languages}
           max={5}
           formId="indexed-search-form"
-          initialValues={initialLanguages}
+          initialValues={initLanguages}
         />
         <SearchSelect
           name="primary_label"
           label="Primary Label"
           options={labels.primary}
           formId="indexed-search-form"
-          initialValue={initialPrimaryLabel}
+          initialValue={initPrimaryLabel}
           optional
         />
         <MultiSearchSelect
@@ -82,7 +73,7 @@ export default function SearchForm({
           options={labels.regular}
           max={5}
           formId="indexed-search-form"
-          initialValues={initialLabels}
+          initialValues={initLabels}
         />
         <MinMaxRange
           name="Stars"
