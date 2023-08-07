@@ -7,7 +7,7 @@ import { FaCogs } from "react-icons/fa";
 import { FaXmark } from "react-icons/fa6";
 
 import { cn } from "@/lib/utils";
-import { formDataToObj } from "@/lib/utils/mutate";
+import { formDataToObj, removeEmptyProperties } from "@/lib/utils/mutate";
 import { searchParamsToObj, toURLQS } from "@/lib/utils/url";
 
 import type { Option } from "@/components/form/utils";
@@ -31,9 +31,10 @@ export default function FilterButtons({ labels, languages }: Props) {
   */
 
   function updateFilters(formData: FormData) {
-    const cleanedData = formDataToObj(formData) as { [x: string]: string };
+    const cleanedData = removeEmptyProperties(formDataToObj(formData)) as {
+      [x: string]: string;
+    };
     // Now we need to update our URL with this new search params
-    // updateURL("indexed", toURLQS(cleanedData));
     router.push(`/indexed?${toURLQS(cleanedData)}`);
     setModalActive(false);
   }

@@ -179,7 +179,7 @@ export const SearchSelect = ({
     >
       <FormValue
         name={name}
-        value={selectedOpt ? selectedOpt.value : undefined}
+        value={selectedOpt ? selectedOpt.value : ""}
       />
 
       <Combobox.Label className="form-label">{label}</Combobox.Label>

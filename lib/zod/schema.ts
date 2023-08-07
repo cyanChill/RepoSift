@@ -152,3 +152,50 @@ export const RepoFormSchema = z.object({
   labels: z.coerce.string().transform(arrayTransform("Labels", 5)).optional(),
 });
 export type RepoFormSchemaType = z.infer<typeof RepoFormSchema>;
+
+/**
+ * @description Zod schema for "Indexed Search" feature.
+ */
+export const IndexedSearchSchema = z
+  .object({
+    providers: z
+      .enum(["github", "gitlab", "bitbucket"], {
+        invalid_type_error:
+          'The provider must be "github", "gitlab", or "bitbucket".',
+      })
+      .array()
+      .max(3, { message: "There can be at most 3 providers selected." })
+      .optional(),
+    languages: z
+      .string()
+      .trim()
+      .min(1, { message: "Languages must be at least 1 character long." })
+      .array()
+      .max(5, { message: "There can be at most 5 languages selected." })
+      .optional(),
+    primary_label: z
+      .string()
+      .trim()
+      .min(1, { message: "Primary label must be at least 1 character long." })
+      .optional(),
+    labels: z
+      .string()
+      .trim()
+      .min(1, { message: "Labels must be at least 1 character long." })
+      .array()
+      .max(5, { message: "There can be at most 5 labels selected." })
+      .optional(),
+    minStars: OPT_NONNEG_INT,
+    maxStars: OPT_NONNEG_INT,
+    page: OPT_NONNEG_INT,
+  })
+  .refine(
+    ({ minStars, maxStars }) => {
+      if (typeof minStars === "number" && typeof maxStars === "number") {
+        return maxStars > minStars;
+      }
+      return true;
+    },
+    { message: "Max stars must be greater than min stars." }
+  );
+export type IndexedSearchSchemaType = z.infer<typeof IndexedSearchSchema>;

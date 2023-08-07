@@ -70,8 +70,8 @@ export const repositoryRelations = relations(repositories, ({ one, many }) => ({
 export type Repository = BaseRepositoryType & {
   user: User;
   primaryLabel: Label;
-  labels: RepoLabels[];
-  languages: RepoLanguage[];
+  labels: RepoLabelWLabel[];
+  languages: RepoLangWLang[];
 };
 
 /*
@@ -91,7 +91,7 @@ export const repoLabels = mysqlTable(
     repoIdIndex: index("repoLabels__repoId__idx").on(table.repoId),
   })
 );
-export type RepoLabels = InferModel<typeof repoLabels>;
+export type RepoLabel = InferModel<typeof repoLabels>;
 export const repoLabelRelations = relations(repoLabels, ({ one }) => ({
   label: one(labels, {
     fields: [repoLabels.name],
@@ -102,6 +102,9 @@ export const repoLabelRelations = relations(repoLabels, ({ one }) => ({
     references: [repositories.id],
   }),
 }));
+export interface RepoLabelWLabel extends RepoLabel {
+  label?: Label;
+}
 
 /* Languages automatically assigned to repositories on creation */
 export const repoLangs = mysqlTable(
@@ -126,3 +129,6 @@ export const repoLangRelations = relations(repoLangs, ({ one }) => ({
     references: [repositories.id],
   }),
 }));
+export interface RepoLangWLang extends RepoLanguage {
+  language?: Language;
+}
