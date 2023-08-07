@@ -13,7 +13,7 @@ export default async function JoinPage({ searchParams }: PageProps) {
 
   if (session) {
     // Protect against redirecting to other sites
-    const cbRoute = firstStrParam(searchParams.callbackUrl) || "/";
+    const cbRoute = firstStrParam(searchParams.callbackUrl) ?? "/";
     redirect(cbRoute.startsWith("/") ? cbRoute : "/");
   }
 
