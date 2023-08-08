@@ -24,7 +24,7 @@ export default function ResultPreview({ result, onClose }: Props) {
     "just-black flex w-fit items-center gap-2 border-2 border-l-0 px-1 py-0.5 shadow-full";
 
   return (
-    <article className="just-black h-[50vh] max-h-[50rem] min-h-[12.5rem] overflow-hidden border-2 bg-white shadow-full">
+    <article className="just-black h-[65vh] max-h-[50rem] min-h-[12.5rem] overflow-hidden border-2 bg-white shadow-full md:h-[50vh]">
       {/* "Header" */}
       <div className="flex justify-end border-b-2 border-black bg-turquoise-200 px-2 py-1">
         <button onClick={onClose} title="Close">

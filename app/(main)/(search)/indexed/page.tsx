@@ -19,7 +19,6 @@ export default async function IndexedSearchPage({ searchParams }: PageProps) {
   });
 
   const results = await getIndexedRepos(transformedSearchParams);
-  console.log(results);
 
   return (
     <main className="mx-auto w-full max-w-appContent p-3 py-5 md:py-20">
@@ -51,6 +50,9 @@ export default async function IndexedSearchPage({ searchParams }: PageProps) {
           <Results results={results.data} />
         )}
       </section>
+
+      {/* Pagination Component */}
+      <div className="mt-4 max-w-[50%]">Pagination</div>
     </main>
   );
 }
