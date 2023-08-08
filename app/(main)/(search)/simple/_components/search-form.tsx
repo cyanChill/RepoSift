@@ -12,7 +12,7 @@ type Props = {
 
 export default forwardRef<HTMLFormElement, Props>(function SearchForm(
   { action, isSubmitting },
-  ref
+  ref,
 ) {
   return (
     <form id="simple-search-form" ref={ref} action={action}>
@@ -29,7 +29,7 @@ export default forwardRef<HTMLFormElement, Props>(function SearchForm(
           max={5}
           formId="simple-search-form"
         />
-        <MinMaxRange name="Stars" label="Stars" />
+        <MinMaxRange name="Stars" label="Stars" formId="simple-search-form" />
 
         <div className="flex justify-end gap-2 font-medium md:text-lg">
           <button

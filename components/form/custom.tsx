@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 type MMRProps = {
   name: string;
   label: string;
+  formId: string;
   initialMin?: number | string;
   initialMax?: number | string;
 };
@@ -19,9 +20,17 @@ type MMRProps = {
 export const MinMaxRange = ({
   name,
   label,
+  formId,
   initialMin,
   initialMax,
 }: MMRProps) => {
+  const [minVal, setMinVal] = useState(initialMin ?? "");
+  const [maxVal, setMaxVal] = useState(initialMax ?? "");
+  useFormReset(() => {
+    setMinVal("");
+    setMaxVal("");
+  }, formId);
+
   return (
     <fieldset className="mb-4 flex flex-col">
       <legend className="form-label">{label}</legend>
@@ -36,7 +45,8 @@ export const MinMaxRange = ({
           type="number"
           min={0}
           step={1}
-          defaultValue={initialMin}
+          value={minVal}
+          onChange={(e) => setMinVal(e.target.value)}
           className="form-input w-full max-w-[6rem]"
         />
 
@@ -51,7 +61,8 @@ export const MinMaxRange = ({
           type="number"
           min={0}
           step={1}
-          defaultValue={initialMax}
+          value={maxVal}
+          onChange={(e) => setMaxVal(e.target.value)}
           className="form-input w-full max-w-[6rem]"
         />
       </div>
@@ -159,7 +170,7 @@ export const SearchSelect = ({
   optional = false,
 }: SearchSelectProps) => {
   const [selectedOpt, setSelectedOpt] = useState<Option>(
-    initialValue ?? (optional ? { name: "", value: "" } : options[0])
+    initialValue ?? (optional ? { name: "", value: "" } : options[0]),
   );
   const [query, setQuery] = useState("");
   useFormReset(() => {
@@ -177,10 +188,7 @@ export const SearchSelect = ({
       // @ts-ignore: Boolean value is acceptable
       nullable={optional}
     >
-      <FormValue
-        name={name}
-        value={selectedOpt ? selectedOpt.value : ""}
-      />
+      <FormValue name={name} value={selectedOpt ? selectedOpt.value : ""} />
 
       <Combobox.Label className="form-label">{label}</Combobox.Label>
       <fieldset className="form-input flex w-full items-center gap-2 text-start">
@@ -324,7 +332,7 @@ export const MultiSearchSelect = ({
               >
                 {({ active, disabled }) => {
                   const selected = vals.find(
-                    (selOpt) => selOpt.value === opt.value
+                    (selOpt) => selOpt.value === opt.value,
                   );
 
                   return (

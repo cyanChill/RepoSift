@@ -78,6 +78,7 @@ export default function SearchForm({
         <MinMaxRange
           name="Stars"
           label="Stars"
+          formId="indexed-search-form"
           initialMin={values.minStars}
           initialMax={values.maxStars}
         />
