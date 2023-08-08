@@ -7,6 +7,7 @@ import {
   regexTest,
 } from "./utils";
 import { LIMITS, PATTERNS } from "../utils/constants";
+import { isNum } from "../utils/validation";
 
 /**
  * @description Zod schema for "Simple Search" feature.
@@ -24,12 +25,10 @@ export const SimpleSearchSchema = z
   })
   .refine(
     ({ minStars, maxStars }) => {
-      if (typeof minStars === "number" && typeof maxStars === "number") {
-        return maxStars > minStars;
-      }
+      if (isNum(minStars) && isNum(maxStars)) return maxStars > minStars;
       return true;
     },
-    { message: "Max stars must be greater than min stars." }
+    { message: "Max stars must be greater than min stars." },
   );
 export type SimpleSearchSchemaType = z.infer<typeof SimpleSearchSchema>;
 
@@ -92,7 +91,7 @@ export const LabelFormSchema = z.object({
         label: "label",
         errorMsg:
           "A label must contain only letters, periods, hyphens, and spaces.",
-      })
+      }),
     ),
 });
 export type LabelFormSchemaType = z.infer<typeof LabelFormSchema>;
@@ -120,7 +119,7 @@ export const RepoFormSchema = z.object({
         label: "author",
         errorMsg:
           "A repository author can contain only alphanumeric characters and hyphens.",
-      })
+      }),
     ),
   name: z
     .string({
@@ -140,7 +139,7 @@ export const RepoFormSchema = z.object({
         label: "name",
         errorMsg:
           "A repository name can contain only alphanumeric characters, periods, underscores, and hyphens.",
-      })
+      }),
     ),
   primary_label: z
     .string({
@@ -191,11 +190,9 @@ export const IndexedSearchSchema = z
   })
   .refine(
     ({ minStars, maxStars }) => {
-      if (typeof minStars === "number" && typeof maxStars === "number") {
-        return maxStars > minStars;
-      }
+      if (isNum(minStars) && isNum(maxStars)) return maxStars > minStars;
       return true;
     },
-    { message: "Max stars must be greater than min stars." }
+    { message: "Max stars must be greater than min stars." },
   );
 export type IndexedSearchSchemaType = z.infer<typeof IndexedSearchSchema>;

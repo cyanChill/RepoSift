@@ -12,15 +12,15 @@ import { IndexedSearchSchema } from "@/lib/zod/schema";
 
 export const revalidate = 900; // Revalidate data at most every 15 minutes
 
+export type IndexedRepo = Omit<Repository, "userId" | "_primaryLabel">;
+
 /**
  * @description Get repositories from database based on filters w/ pagination.
  * @returns An object.
  */
 export const getIndexedRepos = cache(async function (
-  formData: GenericObj
-): Promise<
-  ErrorObj | SuccessObj<Omit<Repository, "_primaryLabel" | "userId">[]>
-> {
+  formData: GenericObj,
+): Promise<ErrorObj | SuccessObj<IndexedRepo[]>> {
   /* Validate input data */
   const schemaRes = IndexedSearchSchema.safeParse(formData);
   if (!schemaRes.success) {
@@ -82,7 +82,7 @@ export const getIndexedRepos = cache(async function (
       filteredIds.size > 0
         ? and(
             inArray(repoLabels.repoId, [...filteredIds]),
-            inArray(repoLabels.name, labels)
+            inArray(repoLabels.name, labels),
           )
         : inArray(repoLabels.name, labels);
     // Do the same thing as the "languages" constraint.
