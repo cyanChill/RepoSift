@@ -25,7 +25,7 @@ export default function ResultsListItem({
         "just-black relative flex items-center gap-2 overflow-hidden border-x-2 bg-white p-2 transition duration-150 md:p-4",
         "border-y first:border-t-2 last:border-b-2",
         {
-          "my-2 translate-x-2 border-y-2 bg-yellow-400 shadow-full duration-300 first:mt-0 last:mb-0 md:my-4":
+          "my-2 translate-x-1.5 border-y-2 bg-yellow-400 shadow-full duration-300 first:mt-0 last:mb-0 md:my-4":
             currIdx === selectedIdx,
           "hover:cursor-pointer hover:bg-yellow-200": currIdx !== selectedIdx,
           "border-b-2": isNum(selectedIdx) && currIdx === selectedIdx - 1,

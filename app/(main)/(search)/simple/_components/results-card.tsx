@@ -1,12 +1,12 @@
 "use client";
 import type { CSSProperties } from "react";
 import { useState } from "react";
-import { FaGithub, FaGitlab, FaBitbucket, FaStar } from "react-icons/fa6";
+import { FaStar } from "react-icons/fa6";
 
 import type { Results } from "./types";
-import type { AuthProviders } from "@/lib/zod/utils";
 import { cn, noop } from "@/lib/utils";
 import Browser from "@/components/Browser";
+import { getProviderIcon } from "../../_components/utils";
 
 type Props = {
   results: Results;
@@ -20,12 +20,6 @@ export default function ResultsCard({
   isRefreshing,
 }: Props) {
   const [currIdx, setCurrIdx] = useState(0);
-
-  const getProviderIcon = (provider: AuthProviders) => {
-    if (provider === "github") return <FaGithub />;
-    else if (provider === "gitlab") return <FaGitlab />;
-    else if (provider === "bitbucket") return <FaBitbucket />;
-  };
 
   const getPrevResult = () => {
     currIdx !== 0 ? setCurrIdx((prev) => prev - 1) : null;
