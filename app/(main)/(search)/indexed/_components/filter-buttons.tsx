@@ -33,6 +33,9 @@ export default function FilterButtons(props: Props) {
     const cleanedData = removeEmptyProperties(
       formDataToObj(formData),
     ) as Record<string, string>;
+    for (const key in cleanedData) {
+      if (cleanedData[key] === "[]") delete cleanedData[key];
+    }
     // Now we need to update our URL with this new search params
     router.push(`/indexed?${toURLQS(cleanedData)}`);
     setModalActive(false);
