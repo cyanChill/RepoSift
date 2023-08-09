@@ -23,7 +23,7 @@ export default function Results({ results }: Props) {
   return (
     <>
       {/* Result List */}
-      <section className="w-full min-w-0">
+      <section className="w-full min-w-0 md:h-[50vh] md:max-h-[50rem]">
         {results.map((result, idx) => (
           <ResultsListItem
             key={result.id}

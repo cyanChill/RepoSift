@@ -9,4 +9,5 @@ export interface FilterParams {
   minStars?: string;
   maxStars?: string;
   page?: string;
+  per_page?: string;
 }

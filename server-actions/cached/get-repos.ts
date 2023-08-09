@@ -20,7 +20,10 @@ export type IndexedRepo = Omit<Repository, "userId" | "_primaryLabel">;
  */
 export const getIndexedRepos = cache(async function (
   formData: GenericObj,
-): Promise<ErrorObj | SuccessObj<IndexedRepo[]>> {
+): Promise<
+  | ErrorObj
+  | SuccessObj<{ items: IndexedRepo[]; currPage: number; hasNext: boolean }>
+> {
   /* Validate input data */
   const schemaRes = IndexedSearchSchema.safeParse(formData);
   if (!schemaRes.success) {
@@ -28,9 +31,9 @@ export const getIndexedRepos = cache(async function (
     return { error: getZodMsg(schemaRes.error) };
   }
   const { providers, languages, primary_label, labels } = schemaRes.data;
-  const { minStars, maxStars, page = 1 } = schemaRes.data;
+  const { minStars, maxStars, page = 1, per_page } = schemaRes.data;
 
-  const LIMIT = 15; // Maximum results returned
+  const LIMIT = per_page && per_page > 1 ? per_page : 15; // Maximum results returned
   const conditions: SQL[] = [];
   let filteredIds = new Set<string>();
 
@@ -69,7 +72,9 @@ export const getIndexedRepos = cache(async function (
     filteredIds = new Set(matchedRepos);
 
     // No repositories found with all languages required.
-    if (filteredIds.size === 0) return { data: [] };
+    if (filteredIds.size === 0) {
+      return { data: { items: [], currPage: page, hasNext: false } };
+    }
   }
   if (labels && labels.length > 0) {
     /*
@@ -101,7 +106,9 @@ export const getIndexedRepos = cache(async function (
     filteredIds = new Set(matchedRepos);
 
     // No repositories found with all labels required.
-    if (filteredIds.size === 0) return { data: [] };
+    if (filteredIds.size === 0) {
+      return { data: { items: [], currPage: page, hasNext: false } };
+    }
   }
 
   // Reduce the number of possible repositories that can be searched.
@@ -118,9 +125,15 @@ export const getIndexedRepos = cache(async function (
       primaryLabel: true,
       user: true,
     },
-    limit: LIMIT,
+    limit: LIMIT + 1,
     offset: (page <= 0 ? 0 : page - 1) * LIMIT,
   });
 
-  return { data: results };
+  return {
+    data: {
+      items: results.length > LIMIT ? results.slice(0, -1) : results,
+      currPage: page,
+      hasNext: results.length > LIMIT,
+    },
+  };
 });

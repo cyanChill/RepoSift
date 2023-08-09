@@ -187,6 +187,7 @@ export const IndexedSearchSchema = z
     minStars: OPT_NONNEG_INT,
     maxStars: OPT_NONNEG_INT,
     page: OPT_NONNEG_INT,
+    per_page: OPT_NONNEG_INT,
   })
   .refine(
     ({ minStars, maxStars }) => {

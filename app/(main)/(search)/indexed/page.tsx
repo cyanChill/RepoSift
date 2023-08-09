@@ -6,6 +6,7 @@ import { containsSAErr } from "@/lib/utils/error";
 import { arrayTransform, removeEmptyProperties } from "@/lib/utils/mutate";
 import FilterButtons from "./_components/filter-buttons";
 import Results from "./_components/results";
+import Pagination from "@/components/form/pagination";
 
 export default async function IndexedSearchPage({ searchParams }: PageProps) {
   const { labels, languages } = await getFilters();
@@ -42,17 +43,24 @@ export default async function IndexedSearchPage({ searchParams }: PageProps) {
               )}
             </ul>
           </section>
-        ) : results.data.length === 0 ? (
+        ) : results.data.items.length === 0 ? (
           <section className="w-full min-w-0">
             <p className="font-medium">No results found.</p>
           </section>
         ) : (
-          <Results results={results.data} />
+          <Results results={results.data.items} />
         )}
       </section>
 
       {/* Pagination Component */}
-      <div className="mt-4 max-w-[50%]">Pagination</div>
+      <div className="mt-4 md:max-w-[50%]">
+        {!containsSAErr(results) && results.data.items.length > 0 && (
+          <Pagination
+            currPage={results.data.currPage}
+            hasNext={results.data.hasNext}
+          />
+        )}
+      </div>
     </main>
   );
 }
