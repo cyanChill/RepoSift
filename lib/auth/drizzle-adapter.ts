@@ -27,7 +27,7 @@ import type { AuthProviders } from "../zod/utils";
 type UserFuncsReturnType = Promise<UserWithLinkedAccounts | null>;
 
 export function DrizzleAdapter(
-  db: PlanetScaleDatabase<DrizzleSchema>
+  db: PlanetScaleDatabase<DrizzleSchema>,
 ): Adapter {
   return {
     /* Runs when we "getUserByAccount()" fails to return something. */
@@ -51,6 +51,7 @@ export function DrizzleAdapter(
         // Create the main user account
         await tx.insert(users).values({
           id: id,
+          name: id,
           handle: uniqueHandle,
           role: "user",
           imgSrc: data.type,
@@ -102,13 +103,13 @@ export function DrizzleAdapter(
         "\n[getUserByAccount()] providerAccountId, provider:",
         providerAccountId,
         provider,
-        "\n"
+        "\n",
       );
 
       const account = await db.query.accounts.findFirst({
         where: and(
           eq(accounts.providerAccountId, providerAccountId),
-          eq(accounts.provider, provider)
+          eq(accounts.provider, provider),
         ),
       });
       if (!account) return null;
@@ -166,7 +167,7 @@ export function DrizzleAdapter(
         "\n[unlinkAccount()] providerAccountId, provider:",
         providerAccountId,
         provider,
-        "\n"
+        "\n",
       );
 
       await db
@@ -174,16 +175,16 @@ export function DrizzleAdapter(
         .where(
           and(
             eq(accounts.providerAccountId, providerAccountId),
-            eq(accounts.provider, provider)
-          )
+            eq(accounts.provider, provider),
+          ),
         );
       await db
         .delete(linkedAccounts)
         .where(
           and(
             eq(linkedAccounts.id, providerAccountId),
-            eq(linkedAccounts.type, provider as AuthProviders)
-          )
+            eq(linkedAccounts.type, provider as AuthProviders),
+          ),
         );
     },
 
@@ -208,7 +209,7 @@ export function DrizzleAdapter(
     /* ✅ Runs whenever we open the tab with our site. */
     // @ts-ignore: Returns our implementation of the User model.
     async getSessionAndUser(
-      sessionToken
+      sessionToken,
     ): Promise<{ session: Session; user: UserWithLinkedAccounts } | null> {
       console.log("\n[getSessionAndUser()] sessionToken:", sessionToken, "\n");
 

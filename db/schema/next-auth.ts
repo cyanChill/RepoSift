@@ -24,6 +24,7 @@ export const users = mysqlTable(
   "users",
   {
     id: varchar("id", { length: 256 }).primaryKey().notNull(),
+    name: varchar("name", { length: 64 }).default("RepoSift User").notNull(),
     handle: varchar("handle", { length: 64 }).unique().notNull(),
     role: mysqlEnum("role", ["user", "banned", "bot", "admin", "owner"])
       .default("user")
