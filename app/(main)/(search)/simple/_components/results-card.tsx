@@ -135,11 +135,11 @@ export default function ResultsCard({
                   }
                   className="mb-1 flex text-xs font-medium md:mb-2"
                 >
-                  <p className="just-black flex w-fit items-center gap-2 border-2 bg-yellow-300 px-1 py-0.5 shadow-full">
+                  <p className="card flex w-fit items-center gap-2 border-2 bg-yellow-300 px-1 py-0.5">
                     <FaStar /> {currRepo.stargazers_count}
                   </p>
                   {currRepo.language && (
-                    <p className="just-black flex w-fit items-center gap-2 border-2 border-l-0 bg-purple-300 px-1 py-0.5 shadow-full">
+                    <p className="card flex w-fit items-center gap-2 border-2 border-l-0 bg-purple-300 px-1 py-0.5">
                       {currRepo.language}
                     </p>
                   )}

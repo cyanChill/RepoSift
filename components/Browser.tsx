@@ -14,14 +14,13 @@ const Browser = ({ className, style, children }: CSSNChild) => {
   return (
     <div
       className={cn(
-        "flex flex-col overflow-hidden rounded-lg border-2 border-black bg-gray-200 shadow-full",
-        className
+        "card flex flex-col overflow-hidden rounded-lg bg-gray-200 p-0",
+        className,
       )}
       style={
         {
           "--bs-offset-x": "8px",
           "--bs-offset-y": "8px",
-          "--tw-shadow-color": "black",
           ...style,
         } as CSSProperties
       }
@@ -36,8 +35,8 @@ const Header = ({ className, style, children }: CSSNChild) => {
   return (
     <div
       className={cn(
-        "grid auto-cols-auto grid-flow-col grid-cols-[max-content_1fr] items-center gap-x-4 border-b-2 border-black bg-white p-2",
-        className
+        "grid auto-cols-auto grid-flow-col grid-cols-[max-content_1fr] items-center gap-x-4 border-b-3 border-black bg-white p-2",
+        className,
       )}
       style={style}
     >
@@ -120,29 +119,23 @@ const TrafficLights = ({
       ) : (
         <>
           <span
-            className={cn(
-              btnClass,
-              { "brightness-75": disabled },
-              "bg-red-500"
-            )}
+            className={cn(btnClass, "bg-red-500", {
+              "brightness-75": disabled,
+            })}
           >
             {redChild}
           </span>
           <span
-            className={cn(
-              btnClass,
-              { "brightness-75": disabled },
-              "bg-yellow-500"
-            )}
+            className={cn(btnClass, "bg-yellow-500", {
+              "brightness-75": disabled,
+            })}
           >
             {yellowChild}
           </span>
           <span
-            className={cn(
-              btnClass,
-              { "brightness-75": disabled },
-              "bg-green-500"
-            )}
+            className={cn(btnClass, "bg-green-500", {
+              "brightness-75": disabled,
+            })}
           >
             {greenChild}
           </span>
@@ -158,7 +151,7 @@ const SearchBar = ({ className, style, children }: CSSNChild) => {
     <div
       className={cn(
         "col-start-2 w-full max-w-lg justify-self-center rounded-md border-2 border-black bg-white px-2 py-1",
-        className
+        className,
       )}
       style={style}
     >

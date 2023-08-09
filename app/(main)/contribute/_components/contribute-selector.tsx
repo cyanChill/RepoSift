@@ -26,13 +26,11 @@ export default function ContributeSelector({
   disabled,
 }: Props) {
   return (
-    <section className="just-black flex w-full flex-col border-2 bg-white p-4 shadow-full md:h-[500px] md:max-w-[425px] md:p-6 md:pb-12">
+    <section className="card flex w-full flex-col md:h-[500px] md:max-w-[425px] md:p-6 md:pb-12">
       <Icon
-        className={cn(
-          "just-black h-auto w-12 border-2 p-2 shadow-full md:w-20",
-          bgClr.icon,
-          { "bg-gray-200": disabled }
-        )}
+        className={cn("card h-auto w-12 border-2 p-2 md:w-20", bgClr.icon, {
+          "bg-gray-200": disabled,
+        })}
       />
 
       <h2 className="mt-4 text-lg font-semibold md:mt-8 md:text-2xl">
@@ -54,12 +52,12 @@ export default function ContributeSelector({
       <Link
         href={href}
         className={cn(
-          "just-black mt-6 w-fit self-center border-2 px-6 py-2 text-center font-medium md:mt-auto md:px-12 md:text-lg",
+          "card mt-6 w-fit self-center border-2 px-6 py-2 text-center font-medium md:mt-auto md:px-12 md:text-lg",
           bgClr.button,
           {
-            "pointer-events-none bg-gray-200": disabled,
-            "shadow-full transition duration-300 hover:shadow-none": !disabled,
-          }
+            "pointer-events-none bg-gray-200 shadow-none": disabled,
+            "transition duration-300 hover:shadow-none": !disabled,
+          },
         )}
       >
         {btnText}

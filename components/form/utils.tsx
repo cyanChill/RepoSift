@@ -53,9 +53,9 @@ export const ItemsList = ({ values, onDelete, className }: ItemsListProps) => {
           }
           type="button"
           className={cn(
-            "newFocus just-black flex items-center gap-2 rounded-md border-2 px-2 py-0.5 text-sm font-medium shadow-full",
+            "newFocus card flex items-center gap-2 rounded-md border-2 px-2 py-0.5 text-sm font-medium",
             "disabled:brightness-75 enabled:hocus:brightness-125",
-            BG_COLORS[idx % BG_COLORS.length]
+            BG_COLORS[idx % BG_COLORS.length],
           )}
           onClick={() => onDelete(val)}
         >

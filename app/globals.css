@@ -71,6 +71,11 @@
   .hocus-underline {
     @apply relative before:absolute before:bottom-0 before:h-0.5 before:w-full before:origin-left before:scale-0 before:bg-black before:transition before:duration-300 hocus:before:scale-100;
   }
+
+  /* Repeated Styles */
+  .card {
+    @apply just-black border-3 bg-white p-3 shadow-full;
+  }
 }
 
 :root {

@@ -97,21 +97,21 @@ export default async function HomePage() {
               alt=""
               width={128}
               height={128}
-              className="just-black col-span-2 h-24 w-24 justify-self-center border-3 bg-white p-3 shadow-full md:h-32 md:w-32"
+              className="card col-span-2 h-24 w-24 justify-self-center md:h-32 md:w-32"
             />
             <Image
               src="/assets/icons/gitlab-colored.svg"
               alt=""
               width={128}
               height={128}
-              className="just-black h-24 w-24 justify-self-end border-3 bg-white p-3 shadow-full md:h-32 md:w-32"
+              className="h-24 w-24 justify-self-end md:h-32 md:w-32"
             />
             <Image
               src="/assets/icons/bitbucket-colored.svg"
               alt=""
               width={128}
               height={128}
-              className="just-black h-24 w-24 border-3 bg-white p-3 shadow-full md:h-32 md:w-32"
+              className="card h-24 w-24 md:h-32 md:w-32"
             />
           </div>
         </div>
@@ -244,7 +244,7 @@ const RepoStats = ({ type, data, colors }: RepoStatsProps) => {
                 className={cn(
                   "relative flex min-h-[108px] w-[80%] justify-between gap-2 border border-black bg-white p-2 text-lg font-medium md:text-2xl",
                   "before:absolute before:-left-2 before:top-2 before:z-[-1] before:h-full before:w-full before:border before:border-black before:bg-[var(--clr)]",
-                  POSITION[idx]
+                  POSITION[idx],
                 )}
               >
                 <div className="max-w-[calc(100%-56px)]">{val}</div>

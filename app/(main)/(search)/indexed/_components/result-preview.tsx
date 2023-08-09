@@ -21,10 +21,10 @@ export default function ResultPreview({ result, onClose }: Props) {
     "--bs-offset-y": "2px",
   } as CSSProperties;
   const baseLabelClass =
-    "just-black flex w-fit items-center gap-2 border-2 border-l-0 px-1 py-0.5 shadow-full";
+    "card flex w-fit items-center gap-2 border-2 border-l-0 px-1 py-0.5";
 
   return (
-    <article className="just-black h-[65vh] max-h-[50rem] min-h-[12.5rem] overflow-hidden border-2 bg-white shadow-full md:h-[50vh]">
+    <article className="card h-[65vh] max-h-[50rem] min-h-[12.5rem] overflow-hidden p-0 md:h-[50vh]">
       {/* "Header" */}
       <div className="flex justify-end border-b-2 border-black bg-turquoise-200 px-2 py-1">
         <button onClick={onClose} title="Close">
@@ -83,7 +83,7 @@ export default function ResultPreview({ result, onClose }: Props) {
               <a
                 href={`/u/@${result.user.handle}`}
                 target="_blank"
-                className={cn(baseLabelClass, "bg-white hover:underline")}
+                className={cn(baseLabelClass, "hover:underline")}
               >
                 @{result.user.handle}
               </a>
@@ -93,7 +93,7 @@ export default function ResultPreview({ result, onClose }: Props) {
               <p className={cn(baseLabelClass, "border-l-2 bg-violet-300")}>
                 Last Updated
               </p>
-              <p className={cn(baseLabelClass, "bg-white")}>
+              <p className={baseLabelClass}>
                 {new Date(result.lastUpdated).toLocaleString()}
               </p>
             </div>
