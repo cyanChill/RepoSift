@@ -15,7 +15,7 @@ type Props = {
 /*
   TODO: Eventually implement the ability to report & refresh the repository data.
 */
-export default function ResultPreview({ result, onClose }: Props) {
+export default function RepoCard({ result, onClose }: Props) {
   const shadowStyle = {
     "--bs-offset-x": "2px",
     "--bs-offset-y": "2px",

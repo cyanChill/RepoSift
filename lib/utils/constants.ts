@@ -9,6 +9,12 @@ export const avaliableProviders = [
 ];
 
 /**
+ * @description An array of the avaliable providers as strings instead of objects.
+ * @returns An array.
+ */
+export const providersVal = ["github", "gitlab", "bitbucket"];
+
+/**
  * @description An object containing the character limit of values.
  * @returns An object.
  */

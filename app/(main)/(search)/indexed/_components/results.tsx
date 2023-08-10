@@ -5,8 +5,8 @@ import { Transition } from "@headlessui/react";
 import type { IndexedRepo } from "@/server-actions/cached/get-repos";
 import { useIsMobile } from "@/hooks/useBreakpoint";
 import { isNum } from "@/lib/utils/validation";
+import RepoCard from "@/components/RepoCard";
 import ResultsListItem from "./results-list-item";
-import ResultPreview from "./result-preview";
 
 type Props = {
   results: IndexedRepo[];
@@ -37,7 +37,7 @@ export default function Results({ results }: Props) {
 
       <section className="fixed left-0 top-1/2 z-[110] h-min w-full min-w-0 -translate-y-1/2 md:sticky md:top-24 md:translate-y-0">
         {isNum(selectedIdx) && results[selectedIdx] && (
-          <ResultPreview
+          <RepoCard
             result={results[selectedIdx]}
             onClose={() => setSelectedIdx(undefined)}
           />
