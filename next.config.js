@@ -4,6 +4,9 @@ const nextConfig = {
     serverActions: true,
     serverComponentsExternalPackages: ["mysql2"],
   },
+  images: {
+    domains: ["avatars.githubusercontent.com"],
+  },
 };
 
 module.exports = nextConfig;

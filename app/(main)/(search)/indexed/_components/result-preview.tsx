@@ -5,7 +5,7 @@ import { IoAlertSharp, IoRefreshSharp } from "react-icons/io5";
 
 import type { IndexedRepo } from "@/server-actions/cached/get-repos";
 import { cn } from "@/lib/utils";
-import { getProviderIcon, getRepoLink } from "../../_components/utils";
+import { getProviderIcon, getRepoLink } from "@/app/(main)/_components/utils";
 
 type Props = {
   result: IndexedRepo;

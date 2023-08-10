@@ -6,7 +6,7 @@ import { FaStar } from "react-icons/fa6";
 import type { Results } from "./types";
 import { cn, noop } from "@/lib/utils";
 import Browser from "@/components/Browser";
-import { getProviderIcon } from "../../_components/utils";
+import { getProviderIcon } from "@/app/(main)/_components/utils";
 
 type Props = {
   results: Results;

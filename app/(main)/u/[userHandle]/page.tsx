@@ -1,0 +1,105 @@
+import Image from "next/image";
+
+import { db } from "@/db";
+
+import { getAccountLink } from "@/app/(main)/_components/utils";
+import DataTabs from "./_components/data-tabs";
+
+type Props = { params: { userHandle: string } };
+
+export default async function ProfilePage({ params }: Props) {
+  const decodedHandle = decodeURIComponent(params.userHandle);
+  // Check if valid handle
+  if (!decodedHandle.startsWith("@")) throw new Error("Invalid handle.");
+
+  const user = await db.query.users.findFirst({
+    where: (fields, { eq }) => eq(fields.handle, decodedHandle.slice(1)),
+    columns: { id: false, banReason: false },
+    with: {
+      linkedAccounts: { columns: { id: false, userId: false } },
+      contributedLabels: { columns: { type: false, userId: false } },
+      contributedRepos: {
+        columns: {
+          id: true,
+          type: true,
+          author: true,
+          name: true,
+          description: true,
+        },
+      },
+    },
+  });
+
+  if (!user) throw new Error("User doesn't exist.");
+
+  const profileImg = user.linkedAccounts.find(
+    (acc) => acc.type === user.imgSrc,
+  );
+
+  return (
+    <main className="mx-auto grid w-full max-w-appContent gap-4 p-3 py-5 max-md:justify-items-center md:grid-cols-[12rem,auto] md:py-20">
+      {/* Profile Image */}
+      <Image
+        src={profileImg?.image ?? "/assets/default_avatar.png"}
+        alt={`@${user.handle}'s profile picture`}
+        width={100}
+        height={100}
+        className="card h-20 w-20 p-0 md:h-48 md:w-48"
+      />
+      {/* Handle w/ Account Links */}
+      <section className="flex w-full min-w-0 flex-col justify-end max-md:items-center max-md:text-center">
+        <p className="w-full min-w-0 truncate text-2xl font-semibold md:text-4xl">
+          {user.name}
+        </p>
+        <p className="mb-2 w-full min-w-0 truncate text-sm font-medium md:text-lg">
+          @{user.handle}
+        </p>
+        <div className="flex gap-2">
+          {user.linkedAccounts.map((acc) => (
+            <a
+              key={acc.type}
+              href={getAccountLink(acc.type, acc.username)}
+              target="_blank"
+              className="card flex h-10 w-10 items-center rounded-md p-1 transition duration-300 hover:shadow-none md:h-12 md:w-12"
+            >
+              <Image
+                src={
+                  acc.type === "github"
+                    ? `/assets/icons/github.svg`
+                    : `/assets/icons/${acc.type}-colored.svg`
+                }
+                alt=""
+                height={64}
+                width={64}
+                className="pointer-events-none"
+              />
+            </a>
+          ))}
+        </div>
+      </section>
+      {/* Contribution Summary */}
+      <section className="grid h-fit grid-cols-2 gap-x-2 text-center font-medium">
+        <p className="col-span-2 text-sm font-semibold md:text-start">
+          Contributed
+        </p>
+        <div className="card flex flex-col justify-center rounded-md border-2 bg-sky-300 p-1">
+          <p className="text-lg font-semibold md:text-2xl">
+            {user.contributedRepos.length}
+          </p>
+          <p className="truncate text-xs">Repositories</p>
+        </div>
+        <div className="card flex flex-col justify-center rounded-md border-2 bg-green-300 p-1">
+          <p className="text-lg font-semibold md:text-2xl">
+            {user.contributedLabels.length}
+          </p>
+          <p className="text-xs">Labels</p>
+        </div>
+      </section>
+      {/* Contribution List */}
+      <DataTabs
+        labels={user.contributedLabels}
+        repositories={user.contributedRepos}
+      />
+    </main>
+  );
+}

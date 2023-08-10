@@ -14,6 +14,13 @@ export default function Header() {
     routeName = "Contribute";
   }
   if (pathname.startsWith("/u/@")) routeName = "Profile";
+  if (
+    pathname.startsWith("/repository/github/") ||
+    pathname.startsWith("/repository/gitlab/") ||
+    pathname.startsWith("/repository/bitbucket/")
+  ) {
+    routeName = "Repository";
+  }
   if (pathname === "/misc") routeName = "Misc.";
 
   if (!routeName) return null;

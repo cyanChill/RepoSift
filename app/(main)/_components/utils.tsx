@@ -19,5 +19,10 @@ export function getRepoLink(
   if (provider === "github") {
     return `https://www.github.com/${author}/${repoName}`;
   }
-  throw new Error(`Repolink for ${provider} has not been implemented.`);
+  throw new Error(`Repository link for ${provider} has not been implemented.`);
+}
+
+export function getAccountLink(provider: AuthProviders, author: string) {
+  if (provider === "github") return `https://www.github.com/${author}`;
+  throw new Error(`Account link for ${provider} has not been implemented.`);
 }
