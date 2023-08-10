@@ -25,6 +25,13 @@
     @apply hover:translate-0 hover:shadow-none;
   }
 
+  .reverse-btn {
+    @apply card px-4 py-2 text-center transition duration-300 hover:shadow-none focus:outline-none focus:ring focus:ring-blue-500 disabled:brightness-75;
+  }
+  a.reverse-btn {
+    @apply block w-fit;
+  }
+
   /* Layout Styling */
   .d-full {
     @apply h-full w-full;

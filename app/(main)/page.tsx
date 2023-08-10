@@ -104,7 +104,7 @@ export default async function HomePage() {
               alt=""
               width={128}
               height={128}
-              className="h-24 w-24 justify-self-end md:h-32 md:w-32"
+              className="card h-24 w-24 justify-self-end md:h-32 md:w-32"
             />
             <Image
               src="/assets/icons/bitbucket-colored.svg"

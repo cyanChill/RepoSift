@@ -15,7 +15,7 @@ export default function Pagination({ currPage, hasNext }: Props) {
   const searchParams = useSearchParams();
 
   const baseStyles =
-    "card border-2 py-0.5 font-medium transition duration-300 hover:bg-gray-200 hover:shadow-none";
+    "reverse-btn border-2 py-0.5 font-medium hover:bg-gray-200";
 
   return (
     <nav className="flex justify-between px-10">

@@ -60,7 +60,7 @@ export default async function ProfilePage({ params }: Props) {
               key={acc.type}
               href={getAccountLink(acc.type, acc.username)}
               target="_blank"
-              className="card flex h-10 w-10 items-center rounded-md p-1 transition duration-300 hover:shadow-none md:h-12 md:w-12"
+              className="reverse-btn flex items-center rounded-md p-1"
             >
               <Image
                 src={
@@ -71,7 +71,7 @@ export default async function ProfilePage({ params }: Props) {
                 alt=""
                 height={64}
                 width={64}
-                className="pointer-events-none"
+                className="pointer-events-none h-6 w-6 md:h-9 md:w-9"
               />
             </a>
           ))}

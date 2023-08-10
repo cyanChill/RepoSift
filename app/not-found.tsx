@@ -22,10 +22,7 @@ export default function NotFound() {
         <h1 className="mb-4 text-2xl font-semibold md:text-4xl">
           Sorry, this page was not found.
         </h1>
-        <Link
-          href="/"
-          className="card py-2 font-medium transition duration-150 hover:bg-gray-200 hover:shadow-none"
-        >
+        <Link href="/" className="reverse-btn font-medium hover:bg-gray-200">
           Go Home
         </Link>
 

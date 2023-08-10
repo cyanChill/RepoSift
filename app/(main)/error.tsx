@@ -34,15 +34,12 @@ export default function Error({ error }: Props) {
       <p className="text-lg font-medium">{errMsg}</p>
 
       <div className="my-8 flex gap-2">
-        <Link
-          href="/"
-          className="card py-2 font-medium transition duration-150 hover:bg-gray-200 hover:shadow-none"
-        >
+        <Link href="/" className="reverse-btn font-medium hover:bg-gray-200">
           Go Home
         </Link>
         <button
           onClick={() => router.back()}
-          className="card py-2 font-medium transition duration-150 hover:bg-gray-200 hover:shadow-none"
+          className="reverse-btn font-medium hover:bg-gray-200"
         >
           Go Back
         </button>

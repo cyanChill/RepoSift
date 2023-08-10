@@ -52,12 +52,9 @@ export default function ContributeSelector({
       <Link
         href={href}
         className={cn(
-          "card mt-6 w-fit self-center border-2 px-6 py-2 text-center font-medium md:mt-auto md:px-12 md:text-lg",
+          "reverse-btn mt-6 self-center border-2 px-6 font-medium md:mt-auto md:px-12 md:text-lg",
           bgClr.button,
-          {
-            "pointer-events-none bg-gray-200 shadow-none": disabled,
-            "transition duration-300 hover:shadow-none": !disabled,
-          },
+          { "pointer-events-none bg-gray-200 shadow-none": disabled },
         )}
       >
         {btnText}
