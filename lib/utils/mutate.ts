@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+
 import type { LinkedAccount } from "@/db/schema/next-auth";
 
 import { isFalsyNotZero } from "./validation";
@@ -76,3 +78,11 @@ export function arrayTransform(str: string): string[] {
     return [];
   }
 }
+
+/**
+ * @description Converts a date into a better format.
+ * @returns A string
+ */
+export const cleanDate = (date: Date) => {
+  return format(new Date(date), "MMMM dd, yyyy kk:mm:ss");
+};

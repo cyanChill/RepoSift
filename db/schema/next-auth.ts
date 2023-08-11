@@ -31,7 +31,7 @@ export const users = mysqlTable(
       .notNull(),
     imgSrc: mysqlEnum("imgSrc", ["github", "gitlab", "bitbucket"]).notNull(),
     banReason: text("banReason"),
-    handleUpdatedAt: timestamp("handleUpdatedAt").onUpdateNow().notNull(),
+    handleUpdatedAt: timestamp("handleUpdatedAt").notNull(),
   },
   (table) => ({
     handleIndex: uniqueIndex("users__handle__idx").on(table.handle),

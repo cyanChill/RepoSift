@@ -30,7 +30,7 @@ export const Input = ({
         className={cn("form-input", className)}
         {...rest}
       />
-      {description && <p className="mt-2 text-sm">{description}</p>}
+      {description && <p className="mt-2 text-xs sm:text-sm">{description}</p>}
     </div>
   );
 };
@@ -51,7 +51,7 @@ export const Select = ({
   flow = true,
 }: SelectProps) => {
   const [selectedOpt, setSelectedOpt] = useState<Option>(
-    initialValue ?? options[0]
+    initialValue ?? options[0],
   );
 
   return (

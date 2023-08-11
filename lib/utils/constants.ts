@@ -22,6 +22,8 @@ export const LIMITS = {
   GITHUB_USERNAME: 39,
   GITHUB_REPONAME: 100,
   LABEL: 25,
+  NAME: 50,
+  HANDLE: 30,
 };
 
 /**
@@ -32,4 +34,6 @@ export const PATTERNS = {
   GITHUB_USERNAME: `[A-Za-z0-9\\-]{1,${LIMITS.GITHUB_USERNAME}}`,
   GITHUB_REPONAME: `[\\w.\\-]{1,${LIMITS.GITHUB_REPONAME}}`,
   LABEL: `[A-Za-z.\\-\\s]{3,${LIMITS.LABEL}}`,
+  NAME: `.{3,${LIMITS.NAME}}`,
+  HANDLE: `\\w{4,${LIMITS.HANDLE}}`,
 };

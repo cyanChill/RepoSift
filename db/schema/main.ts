@@ -51,7 +51,7 @@ export const repositories = mysqlTable(
     maintainLink: text("maintainLink"),
     _primaryLabel: varchar("_primary_label", { length: 128 }).notNull(),
     userId: varchar("userId", { length: 256 }).notNull(), // Suggester
-    lastUpdated: timestamp("lastUpdated").onUpdateNow().notNull(),
+    lastUpdated: timestamp("lastUpdated").notNull(),
   },
   (table) => ({
     pk: primaryKey(table.id, table.type),

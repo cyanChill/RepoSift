@@ -16,7 +16,7 @@ import { RepoFormSchema, type RepoFormSchemaType } from "@/lib/zod/schema";
 import { checkAuthConstraint } from "./utils";
 
 export async function createRepository(
-  formData: GenericObj
+  formData: GenericObj,
 ): Promise<ErrorObj | indexGitHubRepoReturn> {
   /* Validate input data */
   const schemaRes = RepoFormSchema.safeParse(formData);
@@ -28,7 +28,7 @@ export async function createRepository(
 
   const authRes = await checkAuthConstraint(
     3,
-    "User isn't old enough to index a repository."
+    "User isn't old enough to index a repository.",
   );
   if (containsSAErr(authRes)) return authRes;
 
@@ -38,7 +38,7 @@ export async function createRepository(
       and(
         eq(fields.type, provider),
         sql`lower(${fields.author}) = ${author.toLowerCase()}`,
-        sql`lower(${fields.name}) = ${name.toLowerCase()}`
+        sql`lower(${fields.name}) = ${name.toLowerCase()}`,
       ),
   });
   if (repoExist) return { error: "That repository has already been indexed." };
@@ -74,7 +74,7 @@ type indexGitHubRepoReturn = Promise<ErrorObj | SuccessObj<BaseRepositoryType>>;
 
 async function indexGitHubRepo(
   props: RepoFormSchemaType,
-  suggesterId: string
+  suggesterId: string,
 ): indexGitHubRepoReturn {
   const { author, name, provider, primary_label, labels } = props;
   const searchResult = await getGitHubRepoData({
@@ -111,7 +111,7 @@ async function indexGitHubRepo(
     stars: repository.stargazers_count,
     _primaryLabel: primary_label,
     userId: suggesterId,
-    lastUpdated: new Date(repository.updated_at),
+    lastUpdated: new Date(),
   } as BaseRepositoryType);
   const repo = await db.query.repositories.findFirst({
     where: (fields, { and, eq }) =>
