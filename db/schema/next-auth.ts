@@ -31,11 +31,16 @@ export const users = mysqlTable(
       .notNull(),
     imgSrc: mysqlEnum("imgSrc", ["github", "gitlab", "bitbucket"]).notNull(),
     banReason: text("banReason"),
-    handleUpdatedAt: timestamp("handleUpdatedAt").notNull(),
+    nameUpdatedAt: timestamp("nameUpdatedAt")
+      .default(new Date("2023-07-01T01:00:00.000Z"))
+      .notNull(),
+    handleUpdatedAt: timestamp("handleUpdatedAt")
+      .default(new Date("2023-07-01T01:00:00.000Z"))
+      .notNull(),
   },
   (table) => ({
     handleIndex: uniqueIndex("users__handle__idx").on(table.handle),
-  })
+  }),
 );
 export type User = InferModel<typeof users>;
 export const userRelations = relations(users, ({ many }) => ({
@@ -65,7 +70,7 @@ export const linkedAccounts = mysqlTable(
   (table) => ({
     pk: primaryKey(table.id, table.type),
     userIdIndex: index("linkedAccounts__userId__idx").on(table.userId),
-  })
+  }),
 );
 export type LinkedAccount = InferModel<typeof linkedAccounts>;
 export const linkedAccountRelations = relations(linkedAccounts, ({ one }) => ({
@@ -89,10 +94,10 @@ export const accounts = mysqlTable(
   },
   (table) => ({
     providerProviderAccountIdIndex: uniqueIndex(
-      "accounts__provider__providerAccountId__idx"
+      "accounts__provider__providerAccountId__idx",
     ).on(table.provider, table.providerAccountId),
     userIdIndex: index("accounts__userId__idx").on(table.userId),
-  })
+  }),
 );
 export type Account = InferModel<typeof accounts>;
 export const accountRelations = relations(accounts, ({ one }) => ({
@@ -109,10 +114,10 @@ export const sessions = mysqlTable(
   },
   (table) => ({
     sessionTokenIndex: uniqueIndex("sessions__sessionToken__idx").on(
-      table.sessionToken
+      table.sessionToken,
     ),
     userIdIndex: index("sessions__userId_idx").on(table.userId),
-  })
+  }),
 );
 export type Session = InferModel<typeof sessions>;
 export const sessionRelations = relations(sessions, ({ one }) => ({

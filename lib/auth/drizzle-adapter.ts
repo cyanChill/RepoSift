@@ -55,6 +55,7 @@ export function DrizzleAdapter(
           handle: uniqueHandle,
           role: "user",
           imgSrc: data.type,
+          nameUpdatedAt: new Date("2023-07-01T01:00:00.000Z"),
           handleUpdatedAt: new Date("2023-07-01T01:00:00.000Z"),
         } as User);
         // Create the linked account

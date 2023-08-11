@@ -197,3 +197,57 @@ export const IndexedSearchSchema = z
     { message: "Max stars must be greater than min stars." },
   );
 export type IndexedSearchSchemaType = z.infer<typeof IndexedSearchSchema>;
+
+/**
+ * @description Zod schema for updating user name.
+ */
+export const NameFormSchema = z.object({
+  name: z
+    .string({
+      required_error: "A name is required.",
+      invalid_type_error: "A name must be a string.",
+    })
+    .trim()
+    .min(3, {
+      message: "A name must be at least 3 characters long.",
+    })
+    .max(LIMITS.NAME, {
+      message: `A name must be at most ${LIMITS.NAME} characters long.`,
+    }),
+});
+export type NameFormSchemaType = z.infer<typeof NameFormSchema>;
+
+/**
+ * @description Zod schema for updating user handle.
+ */
+export const HandleFormSchema = z.object({
+  handle: z
+    .string({
+      required_error: "A handle is required.",
+      invalid_type_error: "A handle must be a string.",
+    })
+    .trim()
+    .min(4, {
+      message: "A handle must be at least 4 characters long.",
+    })
+    .max(LIMITS.HANDLE, {
+      message: `A handle must be at most ${LIMITS.HANDLE} characters long.`,
+    })
+    .transform(
+      regexTest({
+        regexBase: PATTERNS.HANDLE,
+        label: "handle",
+        errorMsg:
+          "A handle can contain only alphanumeric characters, numbers, and underscores.",
+      }),
+    ),
+});
+export type HandleFormSchemaType = z.infer<typeof HandleFormSchema>;
+
+/**
+ * @description Zod schema for updating user profile picture.
+ */
+export const PicFormSchema = z.object({
+  profile_pic: PROVIDERS_ENUM,
+});
+export type PicFormSchemaType = z.infer<typeof PicFormSchema>;
