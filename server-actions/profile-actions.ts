@@ -1,13 +1,13 @@
 "use server";
 import { getServerSession } from "next-auth";
 import { eq } from "drizzle-orm";
-import { isBefore, subWeeks } from "date-fns";
 
 import { db } from "@/db";
 import { users } from "@/db/schema/next-auth";
 import { authOptions } from "@/lib/auth";
 
 import { getZodMsg } from "@/lib/utils/error";
+import { isNotOneWeekOld } from "@/lib/utils/validation";
 import type { ErrorObj, GenericObj, SuccessObj } from "@/lib/types";
 import {
   HandleFormSchema,
@@ -28,7 +28,7 @@ export async function updateName(
   const { user } = session;
 
   // Verify user last updated their name 1+ week ago.
-  if (!isBefore(user.nameUpdatedAt, subWeeks(Date.now(), 1))) {
+  if (isNotOneWeekOld(user.nameUpdatedAt)) {
     return { error: "You have updated your name recently." };
   }
 
@@ -59,7 +59,7 @@ export async function updateHandle(
   const { user } = session;
 
   // Verify user last updated their handle 1+ week ago.
-  if (!isBefore(user.handleUpdatedAt, subWeeks(Date.now(), 1))) {
+  if (isNotOneWeekOld(user.handleUpdatedAt)) {
     return { error: "You have updated your handle recently." };
   }
 

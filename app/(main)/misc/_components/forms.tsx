@@ -2,7 +2,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { addDays, isBefore, subDays } from "date-fns";
+import { addDays } from "date-fns";
 import { TfiSave } from "react-icons/tfi";
 import { toast } from "react-hot-toast";
 
@@ -17,6 +17,7 @@ import type { GenericObj } from "@/lib/types";
 import { LIMITS, PATTERNS, avaliableProviders } from "@/lib/utils/constants";
 import { throwSAErrors, toastSAErrors } from "@/lib/utils/error";
 import { cleanDate, formDataToObj } from "@/lib/utils/mutate";
+import { isNotOneWeekOld } from "@/lib/utils/validation";
 import type { AuthProviders } from "@/lib/zod/utils";
 import { Select } from "@/components/form/input";
 
@@ -29,7 +30,7 @@ export function NameForm({ user }: Props) {
   const [isPending, startTransition] = useTransition();
   const [newName, setNewName] = useState(user.name);
 
-  if (!isBefore(user.nameUpdatedAt, subDays(Date.now(), 7))) {
+  if (isNotOneWeekOld(user.nameUpdatedAt)) {
     return (
       <RecentField
         label="Name"
@@ -94,7 +95,7 @@ export function HandleForm({ user }: Props) {
   const [isPending, startTransition] = useTransition();
   const [newHandle, setNewHandle] = useState(user.handle);
 
-  if (!isBefore(user.handleUpdatedAt, subDays(Date.now(), 7))) {
+  if (isNotOneWeekOld(user.handleUpdatedAt)) {
     return (
       <RecentField
         label="Handle"

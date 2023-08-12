@@ -1,4 +1,4 @@
-import { isAfter, subMonths } from "date-fns";
+import { isAfter, subMonths, subWeeks } from "date-fns";
 
 /**
  * @description Test whether a value is falsy but not "0".
@@ -22,4 +22,12 @@ export function didFailMonthConstraint(months: number, date: Date) {
  */
 export function isNum(val: unknown): val is number {
   return typeof val === "number";
+}
+
+/**
+ * @description Checks whether a date isn't from 1+ week ago.
+ * @returns A boolean.
+ */
+export function isNotOneWeekOld(date: Date) {
+  return isAfter(date, subWeeks(Date.now(), 1));
 }

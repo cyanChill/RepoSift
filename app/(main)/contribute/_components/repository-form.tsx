@@ -2,7 +2,7 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 
-import { createRepository } from "@/server-actions/repo-actions";
+import { createRepository } from "@/server-actions/index-repo";
 import type { GenericObj } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { LIMITS, PATTERNS, avaliableProviders } from "@/lib/utils/constants";
