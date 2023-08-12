@@ -1,32 +1,20 @@
 "use server";
-import { z } from "zod";
 import { eq } from "drizzle-orm";
 
 import { db } from "@/db";
 import { repositories, repoLangs, languages } from "@/db/schema/main";
-import type { Language } from "@/db/schema/main";
 
 import { getGitHubRepoData, getGitHubRepoLang } from "./providerSearch";
 import type { ErrorObj, SuccessObj } from "@/lib/types";
-import { containsSAErr, getZodMsg } from "@/lib/utils/error";
-import { toSafeId } from "@/lib/utils/mutate";
+import { containsSAErr } from "@/lib/utils/error";
 import { isNotOneWeekOld } from "@/lib/utils/validation";
 
-const InputSchema = z
-  .string({
-    required_error: "A repository id is required.",
-    invalid_type_error: "A repository id must be a string.",
-  })
-  .trim()
-  .min(1, { message: "A repository id must be non-empty." });
-
 export async function refreshRepository(
-  unCleanRepoId: string,
+  repoId: string,
 ): Promise<ErrorObj | RefreshRepoReturn> {
-  /* Validate input data */
-  const schemaRes = InputSchema.safeParse(unCleanRepoId);
-  if (!schemaRes.success) return { error: getZodMsg(schemaRes.error) };
-  const repoId = schemaRes.data;
+  if (!repoId.trim()) {
+    return { error: "You must provide a valid repository id." };
+  }
 
   const repoExist = await db.query.repositories.findFirst({
     where: (fields, { eq }) => eq(fields.id, repoId),
@@ -56,18 +44,14 @@ async function refreshGitHub(repoId: string): RefreshRepoReturn {
   if (containsSAErr(searchResult)) return searchResult;
   const { data: repository } = searchResult;
 
-  const langs = await getGitHubRepoLang(repository.languages_url);
-  if (containsSAErr(langs)) return langs;
+  const updtLangs = await getGitHubRepoLang(repository.languages_url);
+  if (containsSAErr(updtLangs)) return updtLangs;
   // Update "RepoLangs" on repository relations
   //  1. Delete old "RepoLangs" relation
   //  2. Fetch updated languages & insert into "Languages" table if they don't exist
   //  3. Re-create the relations.
   await db.delete(repoLangs).where(eq(repoLangs.repoId, repoId));
-  const updtLangs: Language[] = langs.data.map((lang) => ({
-    name: toSafeId(lang),
-    display: lang,
-  }));
-  for (const lang of updtLangs) {
+  for (const lang of updtLangs.data) {
     try {
       await db.insert(languages).values(lang);
     } catch {}

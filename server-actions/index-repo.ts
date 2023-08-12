@@ -6,18 +6,16 @@ import {
   repoLabels,
   languages,
 } from "@/db/schema/main";
-import type { BaseRepositoryType, Language } from "@/db/schema/main";
 
 import { getGitHubRepoData, getGitHubRepoLang } from "./providerSearch";
 import type { ErrorObj, GenericObj, SuccessObj } from "@/lib/types";
 import { containsSAErr, getZodMsg } from "@/lib/utils/error";
-import { toSafeId } from "@/lib/utils/mutate";
 import { RepoFormSchema, type RepoFormSchemaType } from "@/lib/zod/schema";
 import { checkAuthConstraint } from "./utils";
 
 export async function createRepository(
   formData: GenericObj,
-): Promise<ErrorObj | indexGitHubRepoReturn> {
+): Promise<ErrorObj | IndexRepoReturn> {
   /* Validate input data */
   const schemaRes = RepoFormSchema.safeParse(formData);
   if (!schemaRes.success) {
@@ -70,38 +68,28 @@ export async function createRepository(
   return { error: "Invalid provider was provided." };
 }
 
-type indexGitHubRepoReturn = Promise<ErrorObj | SuccessObj<BaseRepositoryType>>;
+type IndexRepoReturn = Promise<ErrorObj | SuccessObj<null>>;
 
 async function indexGitHubRepo(
   props: RepoFormSchemaType,
   suggesterId: string,
-): indexGitHubRepoReturn {
+): IndexRepoReturn {
   const { author, name, provider, primary_label, labels } = props;
+
   const searchResult = await getGitHubRepoData({
     type: "new",
     author,
     repoName: name,
   });
   if (containsSAErr(searchResult)) return searchResult;
-
   const { data: repository } = searchResult;
+  const strId = String(repository.id);
+
   /* Get Repository Languages */
   const langs = await getGitHubRepoLang(repository.languages_url);
   if (containsSAErr(langs)) return langs;
-  // Insert languages into database if they don't exist.
-  const foundLangs: Language[] = langs.data.map((lang) => ({
-    name: toSafeId(lang),
-    display: lang,
-  }));
-  for (const lang of foundLangs) {
-    const exists = await db.query.languages.findFirst({
-      where: (fields, { eq }) => eq(fields.name, lang.name),
-    });
-    if (!exists) await db.insert(languages).values(lang);
-  }
 
-  // Repository exists in GitHub & labels have been validated to exist already.
-  const strId = String(repository.id);
+  // Insert repository
   await db.insert(repositories).values({
     id: strId,
     type: provider,
@@ -112,22 +100,24 @@ async function indexGitHubRepo(
     _primaryLabel: primary_label,
     userId: suggesterId,
     lastUpdated: new Date(),
-  } as BaseRepositoryType);
+  });
   const repo = await db.query.repositories.findFirst({
     where: (fields, { and, eq }) =>
       and(eq(fields.id, strId), eq(fields.type, provider)),
   });
   if (!repo) return { error: "Failed to insert repository." };
 
-  // Create language relations.
-  const repoLangRel = foundLangs.map((lang) => ({
-    name: lang.name,
-    repoId: strId,
-  }));
-  await db.insert(repoLangs).values(repoLangRel);
+  /* Insert languages into database & create RepoLangs relations */
+  for (const lang of langs.data) {
+    try {
+      await db.insert(languages).values(lang);
+    } catch {}
+    await db.insert(repoLangs).values({ name: lang.name, repoId: strId });
+  }
+
   // Create label relations.
   const repoLabelRel = labels?.map((lb) => ({ name: lb, repoId: strId })) ?? [];
   if (repoLabelRel.length > 0) await db.insert(repoLabels).values(repoLabelRel);
 
-  return { data: repo };
+  return { data: null };
 }
