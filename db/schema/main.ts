@@ -55,7 +55,7 @@ export const repositories = mysqlTable(
   },
   (table) => ({
     pk: primaryKey(table.id, table.type),
-  })
+  }),
 );
 export type BaseRepositoryType = InferModel<typeof repositories>;
 export const repositoryRelations = relations(repositories, ({ one, many }) => ({
@@ -89,7 +89,7 @@ export const repoLabels = mysqlTable(
   (table) => ({
     pk: primaryKey(table.name, table.repoId),
     repoIdIndex: index("repoLabels__repoId__idx").on(table.repoId),
-  })
+  }),
 );
 export type RepoLabel = InferModel<typeof repoLabels>;
 export const repoLabelRelations = relations(repoLabels, ({ one }) => ({
@@ -116,7 +116,7 @@ export const repoLangs = mysqlTable(
   (table) => ({
     pk: primaryKey(table.name, table.repoId),
     repoIdIndex: index("repoLangs__repoId__idx").on(table.repoId),
-  })
+  }),
 );
 export type RepoLanguage = InferModel<typeof repoLangs>;
 export const repoLangRelations = relations(repoLangs, ({ one }) => ({
@@ -132,3 +132,21 @@ export const repoLangRelations = relations(repoLangs, ({ one }) => ({
 export interface RepoLangWLang extends RepoLanguage {
   language?: Language;
 }
+
+/*
+  -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+                              Reports
+  -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+*/
+export const reports = mysqlTable("reports", {
+  id: varchar("id", { length: 256 }).primaryKey().notNull(),
+  title: varchar("title", { length: 80 }).notNull(),
+  description: varchar("description", { length: 1000 }).notNull(),
+  userId: varchar("userId", { length: 256 }).notNull(), // Reporter
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export const reportRelations = relations(reports, ({ one }) => ({
+  user: one(users, { fields: [reports.userId], references: [users.id] }),
+}));
+export type Report = InferModel<typeof reports>;
+export type ReportWithUser = Report & { user: User };

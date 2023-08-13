@@ -11,7 +11,6 @@ import { DisplayForm, HandleForm, NameForm } from "./_components/forms";
 
 export default async function MiscPage() {
   const session = await getServerSession(authOptions);
-
   if (!session) redirect("/join?callbackUrl=/misc");
   const { user } = session;
 

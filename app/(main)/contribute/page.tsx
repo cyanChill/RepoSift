@@ -21,7 +21,6 @@ export default async function ContributePage({ searchParams }: PageProps) {
   const { labels } = await getFilters();
 
   const session = await getServerSession(authOptions);
-
   if (!session) redirect("/join?callbackUrl=/contribute");
 
   if (session.user.role === "banned") {

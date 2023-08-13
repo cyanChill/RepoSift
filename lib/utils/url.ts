@@ -27,7 +27,7 @@ export function toURLQS(data: VariableObj<string>) {
 export function replaceSearchParam(
   searchParams: VariableObj<string>,
   name: string,
-  value: string
+  value: string,
 ) {
   const params = new URLSearchParams(searchParams);
   params.set(name, value);
@@ -39,7 +39,7 @@ export function replaceSearchParam(
  * @returns Object with string values.
  */
 export function searchParamsToObj(
-  searchParams: URLSearchParams | ReadonlyURLSearchParams
+  searchParams: URLSearchParams | ReadonlyURLSearchParams,
 ) {
   const obj: VariableObj<string> = {};
   searchParams.forEach((value, key) => (obj[key] = value));

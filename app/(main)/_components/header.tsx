@@ -22,6 +22,9 @@ export default function Header() {
     routeName = "Repository";
   }
   if (pathname === "/misc") routeName = "Misc.";
+  if (pathname === "/report" || pathname.startsWith("/report?")) {
+    routeName = "Report";
+  }
 
   if (!routeName) return null;
 

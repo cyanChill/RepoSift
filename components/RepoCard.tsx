@@ -1,6 +1,7 @@
 "use client";
 import { useTransition } from "react";
 import type { CSSProperties } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { MdClose } from "react-icons/md";
 import { FaStar } from "react-icons/fa6";
@@ -15,15 +16,13 @@ import { cn } from "@/lib/utils";
 import { throwSAErrors, toastSAErrors } from "@/lib/utils/error";
 import { isNotOneWeekOld } from "@/lib/utils/validation";
 import { getProviderIcon, getRepoLink } from "@/app/(main)/_components/utils";
+import { toURLQS } from "@/lib/utils/url";
 
 type Props = {
   result: IndexedRepo;
   onClose: () => void;
 };
 
-/*
-  TODO: Eventually implement the ability to report the repository.
-*/
 export default function RepoCard({ result, onClose }: Props) {
   const router = useRouter();
   const { isAuth } = useAuth();
@@ -148,18 +147,18 @@ export default function RepoCard({ result, onClose }: Props) {
           >
             {/* Report Repository */}
             {isAuth && (
-              <button
-                className={cn(
-                  baseLabelClass,
-                  "border-l-2 bg-red-300 px-0.5 enabled:hover:bg-red-400",
-                )}
-                onClick={() => {
-                  console.log("Sending Report...");
-                }}
+              <Link
+                href={`/report?${toURLQS({
+                  title: `[Repository Report] ${result.author}/${result.name}`,
+                })}`}
+                className={cn(baseLabelClass, "border-l-2 bg-red-300 px-0.5", {
+                  "hover:bg-red-400": !isPending,
+                  "brightness-75": isPending,
+                })}
                 title="Report Repository"
               >
                 <IoAlertSharp className="pointer-events-none h-4 w-4" />
-              </button>
+              </Link>
             )}
             {/* Refresh Data */}
             <button
