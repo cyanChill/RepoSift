@@ -146,7 +146,7 @@ export function HandleForm({ user }: Props) {
         <button
           type="submit"
           className="form-input h-10 w-10 bg-yellow-400 px-2.5 enabled:hover:bg-yellow-300"
-          disabled={newHandle === user.handle}
+          disabled={newHandle.toLowerCase() === user.handleLower}
         >
           <TfiSave className="pointer-events-none" />
         </button>

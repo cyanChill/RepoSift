@@ -63,12 +63,12 @@ export async function updateHandle(
     return { error: "You have updated your handle recently." };
   }
 
-  if (user.handle === handle) {
+  if (user.handleLower === handle.toLowerCase()) {
     return { error: "Your new handle is the same as your old one." };
   }
 
   const handleUsed = await db.query.users.findFirst({
-    where: (fields, { eq }) => eq(fields.handle, handle),
+    where: (fields, { eq }) => eq(fields.handleLower, handle.toLowerCase()),
   });
   if (handleUsed) {
     return { error: "This handle is already used by someone else." };
@@ -77,7 +77,11 @@ export async function updateHandle(
   try {
     await db
       .update(users)
-      .set({ handle, handleUpdatedAt: new Date() })
+      .set({
+        handle,
+        handleLower: handle.toLowerCase(),
+        handleUpdatedAt: new Date(),
+      })
       .where(eq(users.id, user.id));
 
     return {

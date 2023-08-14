@@ -10,13 +10,7 @@ import {
   accounts,
   sessions,
 } from "@/db/schema/next-auth";
-import type {
-  User,
-  LinkedAccount,
-  Account,
-  UserWithLinkedAccounts,
-  Session,
-} from "@/db/schema/next-auth";
+import type { UserWithLinkedAccounts, Session } from "@/db/schema/next-auth";
 import type { AuthProviders } from "../zod/utils";
 
 /*
@@ -53,11 +47,12 @@ export function DrizzleAdapter(
           id: id,
           name: id,
           handle: uniqueHandle,
+          handleLower: uniqueHandle.toLowerCase(),
           role: "user",
           imgSrc: data.type,
           nameUpdatedAt: new Date("2023-07-01T01:00:00.000Z"),
           handleUpdatedAt: new Date("2023-07-01T01:00:00.000Z"),
-        } as User);
+        });
         // Create the linked account
         await tx.insert(linkedAccounts).values({
           id: data._id,
@@ -66,7 +61,7 @@ export function DrizzleAdapter(
           image: data.image,
           createdAt: new Date(data.created_at ?? ""),
           userId: id,
-        } as LinkedAccount);
+        });
       });
 
       const user = await db.query.users.findFirst({
@@ -159,7 +154,7 @@ export function DrizzleAdapter(
         refresh_token: accountData.refresh_token,
         expires_at: accountData.expires_at,
         id_token: accountData.id_token,
-      } as Account);
+      });
     },
 
     /* ❗ Unimplemented Method as of Next-Auth v4.22.1 ❗ */

@@ -1,19 +1,26 @@
 import Image from "next/image";
+import Link from "next/link";
+import { getServerSession } from "next-auth";
 
 import { db } from "@/db";
+import { authOptions } from "@/lib/auth";
 
+import { toURLQS } from "@/lib/utils/url";
 import { getAccountLink } from "@/app/(main)/_components/utils";
 import DataTabs from "./_components/data-tabs";
 
 type Props = { params: { userHandle: string } };
 
 export default async function ProfilePage({ params }: Props) {
+  const session = await getServerSession(authOptions);
+
   const decodedHandle = decodeURIComponent(params.userHandle);
   // Check if valid handle
   if (!decodedHandle.startsWith("@")) throw new Error("Invalid handle.");
 
   const user = await db.query.users.findFirst({
-    where: (fields, { eq }) => eq(fields.handle, decodedHandle.slice(1)),
+    where: (fields, { eq }) =>
+      eq(fields.handleLower, decodedHandle.slice(1).toLowerCase()),
     columns: { id: false, banReason: false },
     with: {
       linkedAccounts: { columns: { id: false, userId: false } },
@@ -94,6 +101,16 @@ export default async function ProfilePage({ params }: Props) {
           </p>
           <p className="text-xs">Labels</p>
         </div>
+        {session && (
+          <Link
+            href={`/report?${toURLQS({
+              title: `[User Report] @${user.handle}`,
+            })}`}
+            className="reverse-btn col-span-2 mt-2 !w-full rounded-md border-l-2 bg-red-300 px-0.5 py-1 hover:bg-red-400"
+          >
+            Report User
+          </Link>
+        )}
       </section>
       {/* Contribution List */}
       <DataTabs

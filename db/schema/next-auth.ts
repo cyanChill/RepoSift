@@ -24,8 +24,9 @@ export const users = mysqlTable(
   "users",
   {
     id: varchar("id", { length: 256 }).primaryKey().notNull(),
-    name: varchar("name", { length: 64 }).default("RepoSift User").notNull(),
-    handle: varchar("handle", { length: 64 }).unique().notNull(),
+    name: varchar("name", { length: 128 }).default("RepoSift User").notNull(),
+    handle: varchar("handle", { length: 256 }).notNull(),
+    handleLower: varchar("handleLower", { length: 256 }).unique().notNull(),
     role: mysqlEnum("role", ["user", "banned", "bot", "admin", "owner"])
       .default("user")
       .notNull(),
@@ -39,7 +40,7 @@ export const users = mysqlTable(
       .notNull(),
   },
   (table) => ({
-    handleIndex: uniqueIndex("users__handle__idx").on(table.handle),
+    handleLowerIndex: uniqueIndex("users__handleLower__idx").on(table.handleLower),
   }),
 );
 export type User = InferModel<typeof users>;
