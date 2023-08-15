@@ -8,6 +8,10 @@ import { getPathWithQuery } from "@/lib/utils/headers";
 import { firstStrParam } from "@/lib/utils/url";
 import ReportForm from "./_components/report-form";
 
+export const metadata = {
+  title: "RepoSift | Report",
+};
+
 export default async function ReportPage({ searchParams }: PageProps) {
   const session = await getServerSession(authOptions);
   if (!session) redirect(`/join?callbackUrl=${getPathWithQuery()}`);

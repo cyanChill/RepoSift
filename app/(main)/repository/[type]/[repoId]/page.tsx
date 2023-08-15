@@ -6,6 +6,22 @@ import DisplayedRepo from "./_components/displayed-repo";
 
 type Props = { params: { type: AuthProviders; repoId: string } };
 
+export async function generateMetadata({ params: { type, repoId } }: Props) {
+  let pageTitle = "";
+
+  if (!providersVal.includes(type)) {
+  } else {
+    const repo = await db.query.repositories.findFirst({
+      where: (fields, { and, eq }) =>
+        and(eq(fields.id, repoId), eq(fields.type, type)),
+      columns: { name: true, author: true },
+    });
+    if (repo) pageTitle = `| ${repo.author}/${repo.name}`;
+  }
+
+  return { title: `RepoSift ${pageTitle}` };
+}
+
 export default async function RepositoryPage({
   params: { type, repoId },
 }: Props) {

@@ -8,6 +8,10 @@ import FilterButtons from "./_components/filter-buttons";
 import Results from "./_components/results";
 import Pagination from "@/components/form/pagination";
 
+export const metadata = {
+  title: "RepoSift | Indexed Search",
+};
+
 export default async function IndexedSearchPage({ searchParams }: PageProps) {
   const { labels, languages } = await getFilters();
   const { providers, languages: langs, labels: lbs, ...rest } = searchParams;

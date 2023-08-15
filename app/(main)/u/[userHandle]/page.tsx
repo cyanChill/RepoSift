@@ -12,6 +12,10 @@ import DataTabs from "./_components/data-tabs";
 
 type Props = { params: { userHandle: string } };
 
+export function generateMetadata({ params }: Props) {
+  return { title: `RepoSift | ${decodeURIComponent(params.userHandle)}` };
+}
+
 export default async function ProfilePage({ params }: Props) {
   const session = await getServerSession(authOptions);
 

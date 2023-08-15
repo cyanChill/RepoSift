@@ -9,6 +9,10 @@ import { authOptions } from "@/lib/auth";
 import type { AuthProviders } from "@/lib/zod/utils";
 import { DisplayForm, HandleForm, NameForm } from "./_components/forms";
 
+export const metadata = {
+  title: "RepoSift | Misc.",
+};
+
 export default async function MiscPage() {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/join?callbackUrl=/misc");
