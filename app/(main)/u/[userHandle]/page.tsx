@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
+import { FaCrown, FaRobot, FaUserShield } from "react-icons/fa";
 
 import { db } from "@/db";
 import { authOptions } from "@/lib/auth";
@@ -58,10 +59,26 @@ export default async function ProfilePage({ params }: Props) {
         <p className="w-full min-w-0 truncate text-2xl font-semibold md:text-4xl">
           {user.name}
         </p>
-        <p className="mb-2 w-full min-w-0 truncate text-sm font-medium md:text-lg">
+        <p className="w-full min-w-0 truncate text-sm font-medium md:text-lg">
           @{user.handle}
         </p>
-        <div className="flex gap-2">
+        {user.role === "bot" && (
+          <p className="mt-1 flex w-fit items-center gap-2 rounded-md border border-violet-900 bg-violet-400 px-2 py-0.5 text-sm font-medium">
+            <FaRobot /> Bot
+          </p>
+        )}
+        {user.role === "admin" && (
+          <p className="mt-1 flex w-fit items-center gap-2 rounded-md border border-cyan-900 bg-teal-400 px-2 py-0.5 text-sm font-medium">
+            <FaUserShield /> Admin
+          </p>
+        )}
+        {user.role === "owner" && (
+          <p className="mt-1 flex w-fit items-center gap-2 rounded-md border border-amber-900 bg-amber-400 px-2 py-0.5 text-sm font-medium">
+            <FaCrown /> Owner
+          </p>
+        )}
+
+        <div className="mt-2 flex gap-2">
           {user.linkedAccounts.map((acc) => (
             <a
               key={acc.type}
