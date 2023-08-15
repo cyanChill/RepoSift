@@ -34,7 +34,7 @@ export default function RepoCard({ result, onClose }: Props) {
   const onRefresh = async () => {
     if (reRefreshed) return; // Return if not allowed to refresh
     try {
-      const data = await refreshRepository(result.id);
+      const data = await refreshRepository(result.id, result.type);
       if (!data) throw new Error("Something unexpected occurred.");
       throwSAErrors(data.error);
       toast.success("Successfully refreshed repository.");

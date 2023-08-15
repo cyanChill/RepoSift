@@ -6,18 +6,25 @@ import { repositories, repoLangs, languages } from "@/db/schema/main";
 
 import { getGitHubRepoData, getGitHubRepoLang } from "./providerSearch";
 import type { ErrorObj, SuccessObj } from "@/lib/types";
+import { providersVal } from "@/lib/utils/constants";
 import { containsSAErr } from "@/lib/utils/error";
 import { isNotOneWeekOld } from "@/lib/utils/validation";
+import type { AuthProviders } from "@/lib/zod/utils";
 
 export async function refreshRepository(
   repoId: string,
+  repoType: AuthProviders,
 ): Promise<ErrorObj | RefreshRepoReturn> {
   if (!repoId.trim()) {
     return { error: "You must provide a valid repository id." };
   }
+  if (!providersVal.includes(repoType)) {
+    return { error: "Invalid repository type." };
+  }
 
   const repoExist = await db.query.repositories.findFirst({
-    where: (fields, { eq }) => eq(fields.id, repoId),
+    where: (fields, { and, eq }) =>
+      and(eq(fields.id, repoId), eq(fields.type, repoType)),
   });
   if (!repoExist) {
     return { error: "The repository you're trying to refresh doesn't exist." };
@@ -75,7 +82,7 @@ async function refreshGitHub(repoId: string): RefreshRepoReturn {
       ...updtValues,
       lastUpdated: new Date(),
     })
-    .where(eq(repositories.id, repoId));
+    .where(and(eq(repositories.id, repoId), eq(repositories.type, "github")));
 
   return { data: null };
 }
