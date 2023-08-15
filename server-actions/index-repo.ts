@@ -112,11 +112,15 @@ async function indexGitHubRepo(
     try {
       await db.insert(languages).values(lang);
     } catch {}
-    await db.insert(repoLangs).values({ name: lang.name, repoId: strId });
+    await db
+      .insert(repoLangs)
+      .values({ name: lang.name, repoId: strId, repoType: provider });
   }
 
   // Create label relations.
-  const repoLabelRel = labels?.map((lb) => ({ name: lb, repoId: strId })) ?? [];
+  const repoLabelRel =
+    labels?.map((lb) => ({ name: lb, repoId: strId, repoType: provider })) ??
+    [];
   if (repoLabelRel.length > 0) await db.insert(repoLabels).values(repoLabelRel);
 
   return { data: null };

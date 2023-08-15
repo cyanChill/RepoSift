@@ -85,10 +85,12 @@ export const repoLabels = mysqlTable(
   {
     name: varchar("name", { length: 128 }).notNull(),
     repoId: varchar("repoId", { length: 256 }).notNull(),
+    repoType: mysqlEnum("type", ["github", "gitlab", "bitbucket"])
+      .default("github")
+      .notNull(),
   },
   (table) => ({
-    pk: primaryKey(table.name, table.repoId),
-    repoIdIndex: index("repoLabels__repoId__idx").on(table.repoId),
+    pk: primaryKey(table.name, table.repoId, table.repoType),
   }),
 );
 export type RepoLabel = InferModel<typeof repoLabels>;
@@ -98,8 +100,8 @@ export const repoLabelRelations = relations(repoLabels, ({ one }) => ({
     references: [labels.name],
   }),
   repository: one(repositories, {
-    fields: [repoLabels.repoId],
-    references: [repositories.id],
+    fields: [repoLabels.repoId, repoLabels.repoType],
+    references: [repositories.id, repositories.type],
   }),
 }));
 export interface RepoLabelWLabel extends RepoLabel {
@@ -112,10 +114,12 @@ export const repoLangs = mysqlTable(
   {
     name: varchar("name", { length: 128 }).notNull(),
     repoId: varchar("repoId", { length: 256 }).notNull(),
+    repoType: mysqlEnum("type", ["github", "gitlab", "bitbucket"])
+      .default("github")
+      .notNull(),
   },
   (table) => ({
-    pk: primaryKey(table.name, table.repoId),
-    repoIdIndex: index("repoLangs__repoId__idx").on(table.repoId),
+    pk: primaryKey(table.name, table.repoId, table.repoType),
   }),
 );
 export type RepoLanguage = InferModel<typeof repoLangs>;
@@ -125,8 +129,8 @@ export const repoLangRelations = relations(repoLangs, ({ one }) => ({
     references: [languages.name],
   }),
   repository: one(repositories, {
-    fields: [repoLangs.repoId],
-    references: [repositories.id],
+    fields: [repoLangs.repoId, repoLangs.repoType],
+    references: [repositories.id, repositories.type],
   }),
 }));
 export interface RepoLangWLang extends RepoLanguage {

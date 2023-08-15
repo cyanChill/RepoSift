@@ -23,7 +23,7 @@ export default function Results({ results }: Props) {
   return (
     <>
       {/* Result List */}
-      <section className="w-full min-w-0 md:h-[50vh] md:max-h-[50rem]">
+      <section className="w-full min-w-0">
         {results.map((result, idx) => (
           <ResultsListItem
             key={result.id}
@@ -35,7 +35,7 @@ export default function Results({ results }: Props) {
         ))}
       </section>
 
-      <section className="fixed left-0 top-1/2 z-[110] h-min w-full min-w-0 -translate-y-1/2 md:sticky md:top-24 md:translate-y-0">
+      <section className="fixed left-0 top-1/2 z-[110] h-min w-full min-w-0 -translate-y-1/2 md:sticky md:top-24 md:h-[50vh] md:max-h-[50rem] md:translate-y-0">
         {isNum(selectedIdx) && results[selectedIdx] && (
           <RepoCard
             result={results[selectedIdx]}
