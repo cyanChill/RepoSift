@@ -251,3 +251,20 @@ export const PicFormSchema = z.object({
   profile_pic: PROVIDERS_ENUM,
 });
 export type PicFormSchemaType = z.infer<typeof PicFormSchema>;
+
+/**
+ * @description Zod schema for "Admin repository update" feature.
+ */
+export const UpdateRepoSchema = z.object({
+  provider: PROVIDERS_ENUM,
+  primary_label: z
+    .string({
+      required_error: "A primary label is required.",
+      invalid_type_error: "A primary label must be a string.",
+    })
+    .trim()
+    .min(1, { message: "A primary label must be selected." }),
+  labels: z.coerce.string().transform(arrayTransform("Labels", 5)).optional(),
+  maintainLink: z.string().trim().min(1).optional(),
+});
+export type UpdateRepoSchemaType = z.infer<typeof UpdateRepoSchema>;

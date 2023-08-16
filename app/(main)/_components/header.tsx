@@ -25,6 +25,9 @@ export default function Header() {
   if (pathname === "/report" || pathname.startsWith("/report?")) {
     routeName = "Report";
   }
+  if (pathname === "/admin" || pathname.startsWith("/admin/")) {
+    routeName = "Admin";
+  }
 
   if (!routeName) return null;
 

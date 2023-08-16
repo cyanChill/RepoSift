@@ -58,7 +58,7 @@ export async function createRepository(
   if (provider === "github") {
     return await indexGitHubRepo(schemaRes.data, authRes.data.id);
   }
-  // TODO: Eventually implement Simple Search with GitLab & Bitbucket's
+  // TODO: Eventually implement Indexed Search with GitLab & Bitbucket's
   const UNIMPLEMENTED_ERROR = {
     error: `You currently can't index a repository from the ${provider} provider option.`,
   };
