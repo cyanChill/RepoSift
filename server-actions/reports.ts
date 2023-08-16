@@ -43,9 +43,12 @@ export async function createReport(
   if (!session) return { error: "User is not authenticated." };
   const { user } = session;
 
-  await db
-    .insert(reports)
-    .values({ id: createId(), title, description, userId: user.id });
+  await db.insert(reports).values({
+    id: createId(),
+    title,
+    description: JSON.stringify(description),
+    userId: user.id,
+  });
 
   return { data: null };
 }

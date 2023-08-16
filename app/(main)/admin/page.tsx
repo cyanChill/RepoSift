@@ -19,8 +19,8 @@ export default async function AdminPage() {
 
   return (
     <main className="mx-auto w-full max-w-appContent-1/2 p-3 py-5 md:py-20">
-      <p className="text-lg">Select what action you want to take:</p>
-      <ul className="mb-8 ml-8 list-disc">
+      <p className="md:text-lg">Select what action you want to take:</p>
+      <ul className="mb-4 ml-8 list-disc text-sm md:mb-8 md:text-base">
         <li>
           <span className="font-medium">[Manage Users]</span> gives you the
           ability to ban or unban a user.
@@ -45,7 +45,7 @@ export default async function AdminPage() {
           to see the actions made by admins.
         </li>
       </ul>
-      <hr className="my-8 h-px border-0 bg-black" />
+      <hr className="my-4 h-px border-0 bg-black md:my-8" />
 
       <nav className="flex flex-col">
         <Link href="/admin/users" className={cn(navClass)}>

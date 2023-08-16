@@ -18,11 +18,11 @@ export default async function ReportPage({ searchParams }: PageProps) {
 
   return (
     <main className="mx-auto w-full max-w-appContent-1/2 p-3 py-5 md:py-20">
-      <p className="text-lg">
+      <p className="md:text-lg">
         Fill out the form to report any bugs, incorrect information,
         suggestions, or fixes you may have for RepoSift as a site.
       </p>
-      <ul className="mb-8 ml-8 list-disc">
+      <ul className="mb-4 ml-8 list-disc text-sm md:mb-8 md:text-base">
         <li>
           If reporting a{" "}
           <span className="font-semibold">repository, label, or user</span>,
@@ -38,7 +38,7 @@ export default async function ReportPage({ searchParams }: PageProps) {
           repository, make sure you put it in the description.
         </li>
       </ul>
-      <hr className="my-8 h-px border-0 bg-black" />
+      <hr className="my-4 h-px border-0 bg-black md:my-8" />
 
       <ReportForm
         title={firstStrParam(searchParams.title) ?? ""}

@@ -1,9 +1,17 @@
 "use server";
 import { getServerSession } from "next-auth";
-import { and, eq, notInArray } from "drizzle-orm";
+import { and, eq, inArray, notInArray } from "drizzle-orm";
+import { createId } from "@paralleldrive/cuid2";
 
 import { db } from "@/db";
-import { labels, repoLabels, repoLangs, repositories } from "@/db/schema/main";
+import {
+  labels,
+  logs,
+  repoLabels,
+  repoLangs,
+  reports,
+  repositories,
+} from "@/db/schema/main";
 import { users } from "@/db/schema/next-auth";
 import type { UserWithLinkedAccounts } from "@/db/schema/next-auth";
 import { authOptions } from "@/lib/auth";
@@ -60,8 +68,12 @@ export async function updateUser(
             notInArray(users.role, ["bot", "admin", "owner"]),
           ),
         );
-
-      // TODO: Log the person who enacted this action
+      // Log the person who enacted this action
+      await tx.insert(logs).values({
+        id: createId(),
+        action: `Updated user. - (${userId})`,
+        userId: user.id,
+      });
     });
 
     return { data: null };
@@ -92,8 +104,12 @@ export async function updateLabel(
         .update(repoLabels)
         .set({ name: toSafeId(newName) })
         .where(eq(repoLabels.name, labelName));
-
-      // TODO: Log the person who enacted this action
+      // Log the person who enacted this action
+      await tx.insert(logs).values({
+        id: createId(),
+        action: `Updated label. - \"${labelName}\" -> \"${newName}\"`,
+        userId: user.id,
+      });
     });
 
     return { data: null };
@@ -118,8 +134,12 @@ export async function deleteLabel(
       await tx
         .delete(labels)
         .where(and(eq(labels.name, labelName), eq(labels.type, "regular")));
-
-      // TODO: Log the person who enacted this action
+      // Log the person who enacted this action
+      await tx.insert(logs).values({
+        id: createId(),
+        action: `Deleted label. - (${labelName})`,
+        userId: user.id,
+      });
     });
 
     return { data: null };
@@ -181,8 +201,12 @@ export async function updateRepository(
         .where(
           and(eq(repositories.id, repoId), eq(repositories.type, provider)),
         );
-
-      // TODO: Log the person who enacted this action
+      // Log the person who enacted this action
+      await tx.insert(logs).values({
+        id: createId(),
+        action: `Updated repository. - ${provider} (${repoId})`,
+        userId: user.id,
+      });
     });
 
     return { data: null };
@@ -222,13 +246,94 @@ export async function deleteRepository(
         .where(
           and(eq(repositories.id, repoId), eq(repositories.type, repoType)),
         );
-
-      // TODO: Log the person who enacted this action
+      // Log the person who enacted this action
+      await tx.insert(logs).values({
+        id: createId(),
+        action: `Deleted repository. - ${repoType} (${repoId})`,
+        userId: user.id,
+      });
     });
 
     return { data: null };
   } catch (err) {
     console.log(err); // Debugging purposes
     return { error: "Failed to delete repository." };
+  }
+}
+
+export async function completeReports(
+  reportIds: string[],
+): Promise<ErrorObj | SuccessObj<null>> {
+  if (!Array.isArray(reportIds) || reportIds.length === 0) {
+    return { error: "You must specify an array of report ids." };
+  }
+
+  const authRes = await isAdmin();
+  if (containsSAErr(authRes)) return authRes;
+  const user = authRes.data;
+
+  try {
+    await db.transaction(async (tx) => {
+      await tx
+        .update(reports)
+        .set({ isCompleted: true })
+        .where(inArray(reports.id, reportIds));
+      // Log the person who enacted this action
+      const newReports = reportIds.map((id) => ({
+        id: createId(),
+        action: "Marked report as completed.",
+        reportId: id,
+        userId: user.id,
+      }));
+      await tx.insert(logs).values(newReports);
+    });
+
+    return { data: null };
+  } catch (err) {
+    console.log(err); // Debugging purposes
+    return { error: "Failed to mark report as completed." };
+  }
+}
+
+export async function deleteReports(
+  reportIds: string[],
+): Promise<ErrorObj | SuccessObj<null>> {
+  if (!Array.isArray(reportIds) || reportIds.length === 0) {
+    return { error: "You must specify an array of report ids." };
+  }
+
+  const authRes = await isAdmin();
+  if (containsSAErr(authRes)) return authRes;
+  const user = authRes.data;
+  if (user.role !== "owner") {
+    return { error: "You must be an owner to delete a report." };
+  }
+
+  try {
+    await db.transaction(async (tx) => {
+      // Get all reports we want to delete
+      const delRpt = await tx.query.reports.findMany({
+        where: (fields) => inArray(fields.id, reportIds),
+        with: { user: { columns: { id: true, handle: true } } },
+      });
+      if (delRpt.length === 0) throw new Error("Report doesn't exist.");
+      if (delRpt.length !== reportIds.length) {
+        throw new Error("Not all report ids are valid.");
+      }
+
+      await tx.delete(reports).where(inArray(reports.id, reportIds));
+      // Log the person who enacted this action
+      const newReports = delRpt.map((rpt) => ({
+        id: createId(),
+        action: `Deleted report from @${rpt.user.handle} (id: ${rpt.user.id}) as spam with title: ${rpt.title}`,
+        userId: user.id,
+      }));
+      await tx.insert(logs).values(newReports);
+    });
+
+    return { data: null };
+  } catch (err) {
+    console.log(err); // Debugging purposes
+    return { error: "Failed to delete report as spam." };
   }
 }

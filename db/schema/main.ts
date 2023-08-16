@@ -8,7 +8,7 @@ import {
   timestamp,
   mysqlEnum,
   mysqlTable,
-  index,
+  boolean,
 } from "drizzle-orm/mysql-core";
 
 import { users, type User } from "./next-auth";
@@ -139,18 +139,32 @@ export interface RepoLangWLang extends RepoLanguage {
 
 /*
   -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-                              Reports
+                            Reports & Logs
   -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 */
 export const reports = mysqlTable("reports", {
   id: varchar("id", { length: 256 }).primaryKey().notNull(),
   title: varchar("title", { length: 80 }).notNull(),
-  description: varchar("description", { length: 1000 }).notNull(),
+  description: text("description").notNull(),
+  isCompleted: boolean("isCompleted").default(false).notNull(),
   userId: varchar("userId", { length: 256 }).notNull(), // Reporter
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").default(new Date()).notNull(),
 });
 export const reportRelations = relations(reports, ({ one }) => ({
   user: one(users, { fields: [reports.userId], references: [users.id] }),
 }));
 export type Report = InferModel<typeof reports>;
 export type ReportWithUser = Report & { user: User };
+
+export const logs = mysqlTable("logs", {
+  id: varchar("id", { length: 256 }).primaryKey().notNull(),
+  action: text("action").notNull(),
+  reportId: varchar("reportId", { length: 256 }),
+  userId: varchar("userId", { length: 256 }).notNull(), // Action Handled By
+  createdAt: timestamp("createdAt").default(new Date()).notNull(),
+});
+export const logRelation = relations(logs, ({ one }) => ({
+  user: one(users, { fields: [logs.userId], references: [users.id] }),
+  report: one(reports, { fields: [logs.reportId], references: [reports.id] }),
+}));
+export type Log = InferModel<typeof logs>;

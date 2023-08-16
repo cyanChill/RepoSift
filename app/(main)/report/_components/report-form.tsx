@@ -55,14 +55,14 @@ export default function ReportForm({ title, description }: Props) {
             id="description"
             name="description"
             rows={10}
-            maxLength={1000}
+            maxLength={2000}
             className="form-input resize-none"
             required
             defaultValue={description}
-            placeholder="Specify the problem."
+            placeholder="Please include all information relevant to your issue."
           />
           <p className="mt-2 text-xs sm:text-sm">
-            Max <span className="font-semibold">1000 characters</span> long.
+            Max <span className="font-semibold">2000 characters</span> long.
           </p>
         </div>
         <button
