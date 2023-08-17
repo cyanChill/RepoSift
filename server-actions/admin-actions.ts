@@ -107,7 +107,7 @@ export async function updateLabel(
       // Log the person who enacted this action
       await tx.insert(logs).values({
         id: createId(),
-        action: `Updated label. - \"${labelName}\" -> \"${newName}\"`,
+        action: `Updated label. - \"${labelName}\" -> \"${toSafeId(newName)}\"`,
         userId: user.id,
       });
     });

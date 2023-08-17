@@ -28,7 +28,6 @@ export default function ReportList({ isOwner, reports }: Props) {
 
   async function markCompleted() {
     if (selIds.length === 0) return;
-
     try {
       const data = await completeReports(selIds);
       if (!data) throw new Error("Something unexpected occurred.");
@@ -45,7 +44,6 @@ export default function ReportList({ isOwner, reports }: Props) {
 
   async function markSpam() {
     if (selIds.length === 0) return;
-
     try {
       const data = await deleteReports(selIds);
       if (!data) throw new Error("Something unexpected occurred.");

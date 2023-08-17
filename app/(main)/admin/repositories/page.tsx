@@ -10,6 +10,10 @@ import type { PageProps } from "@/lib/types";
 import { firstStrParam } from "@/lib/utils/url";
 import { BaseForm, ManageRepoForm } from "../_components/forms";
 
+export const metadata = {
+  title: "RepoSift | Manage Repositories",
+};
+
 export default async function AdminRepositoriesPage({
   searchParams,
 }: PageProps) {
@@ -48,6 +52,22 @@ export default async function AdminRepositoriesPage({
 
   return (
     <main className="mx-auto w-full max-w-appContent-1/2 p-3 py-5 md:py-20">
+      <p className="md:text-lg">
+        In this menu, you can search for repositories in the following format:{" "}
+        {`[provider] author/repoName`}. Once you find the repository {"you're"}{" "}
+        looking for, you can:
+      </p>
+      <ul className="mb-4 ml-8 list-disc text-sm md:mb-8 md:text-base">
+        <li>Change the primary label of the repository.</li>
+        <li>Change the {`"regular"`} labels associated with the repository.</li>
+        <li>
+          Provide a {`"maintain link"`} for a repository labeled as{" "}
+          {`"abandoned"`}.
+        </li>
+        <li>Delete the repository.</li>
+      </ul>
+      <hr className="my-4 h-px border-0 bg-black md:my-8" />
+
       <BaseForm
         variant="repositories"
         fieldName="repoId"

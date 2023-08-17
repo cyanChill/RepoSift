@@ -1,5 +1,5 @@
 "use client";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { LuFolderSearch } from "react-icons/lu";
 import { toast } from "react-hot-toast";
@@ -14,6 +14,7 @@ import {
   updateUser,
 } from "@/server-actions/admin-actions";
 
+import { cn } from "@/lib/utils";
 import type { GenericObj } from "@/lib/types";
 import { throwSAErrors, toastSAErrors } from "@/lib/utils/error";
 import { formDataToObj } from "@/lib/utils/mutate";
@@ -46,6 +47,10 @@ export function BaseForm({
     const cleanedData = formDataToObj(formData) as Record<string, string>;
     router.push(`/admin/${variant}?${toURLQS(cleanedData)}`);
   }
+
+  useEffect(() => {
+    setQuery(initVal ?? "");
+  }, [initVal]);
 
   return (
     <form
@@ -139,6 +144,7 @@ export function ManageUserForm({ user }: { user: UserWithLinkedAccounts }) {
 export function ManageLabelForm({ label }: { label: LabelWithUser }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   async function onSubmit(formData: FormData) {
     const updtName = formData.get("label") as string;
@@ -154,6 +160,7 @@ export function ManageLabelForm({ label }: { label: LabelWithUser }) {
   }
 
   async function onDelete() {
+    if (!confirmDelete) return;
     try {
       const data = await deleteLabel(label.name);
       if (!data) throw new Error("Something unexpected occurred.");
@@ -186,17 +193,32 @@ export function ManageLabelForm({ label }: { label: LabelWithUser }) {
           </a>
         </p>
 
+        <label
+          htmlFor="delete-confirmation"
+          className={cn("my-2 flex w-fit items-center gap-1", {
+            "hover:cursor-pointer": !isPending,
+          })}
+        >
+          <input
+            id="delete-confirmation"
+            type="checkbox"
+            onClick={() => setConfirmDelete((prev) => !prev)}
+            className="enabled:hover:cursor-pointer"
+          />{" "}
+          Checking this acknowledges your deletion request.
+        </label>
         <div className="flex flex-col-reverse justify-end gap-2 md:flex-row">
           <button
             type="button"
             onClick={() => startTransition(() => onDelete())}
-            className="reverse-btn bg-red-400 py-1 font-medium enabled:hover:bg-red-300"
+            className="reverse-btn bg-red-400 py-1 font-medium enabled:hover:bg-red-300 disabled:shadow-none"
+            disabled={!confirmDelete}
           >
             Delete Label
           </button>
           <button
             type="submit"
-            className="reverse-btn bg-purple-400 py-1 font-medium enabled:hover:bg-purple-300"
+            className="reverse-btn bg-purple-400 py-1 font-medium enabled:hover:bg-purple-300 disabled:shadow-none"
           >
             Update Label
           </button>
@@ -220,6 +242,7 @@ export function ManageRepoForm({
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   async function onSubmit(formData: FormData) {
     formData.append("provider", repository.type);
@@ -235,6 +258,7 @@ export function ManageRepoForm({
   }
 
   async function onDelete() {
+    if (!confirmDelete) return;
     try {
       const data = await deleteRepository(repository.id, repository.type);
       if (!data) throw new Error("Something unexpected occurred.");
@@ -291,17 +315,32 @@ export function ManageRepoForm({
           }
         />
 
+        <label
+          htmlFor="delete-confirmation"
+          className={cn("my-2 flex w-fit items-center gap-1", {
+            "hover:cursor-pointer": !isPending,
+          })}
+        >
+          <input
+            id="delete-confirmation"
+            type="checkbox"
+            onClick={() => setConfirmDelete((prev) => !prev)}
+            className="enabled:hover:cursor-pointer"
+          />{" "}
+          Checking this acknowledges your deletion request.
+        </label>
         <div className="flex flex-col-reverse justify-end gap-2 md:flex-row">
           <button
             type="button"
             onClick={() => startTransition(() => onDelete())}
-            className="reverse-btn bg-red-400 py-1 font-medium enabled:hover:bg-red-300"
+            className="reverse-btn bg-red-400 py-1 font-medium enabled:hover:bg-red-300 disabled:shadow-none"
+            disabled={!confirmDelete}
           >
             Delete Repository
           </button>
           <button
             type="submit"
-            className="reverse-btn bg-purple-400 py-1 font-medium enabled:hover:bg-purple-300"
+            className="reverse-btn bg-purple-400 py-1 font-medium enabled:hover:bg-purple-300 disabled:shadow-none"
           >
             Update Repository
           </button>

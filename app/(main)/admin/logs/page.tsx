@@ -6,6 +6,10 @@ import { authOptions } from "@/lib/auth";
 
 import { cleanDate } from "@/lib/utils/mutate";
 
+export const metadata = {
+  title: "RepoSift | View Logs",
+};
+
 export default async function AdminLogsPage() {
   const session = await getServerSession(authOptions);
   if (!session || !["admin", "owner"].includes(session.user.role)) {
@@ -20,8 +24,7 @@ export default async function AdminLogsPage() {
   return (
     <main className="mx-auto w-full max-w-appContent p-3 py-5 md:py-20">
       <p className="md:text-lg">
-        In this menu, you are able to view all the administrative related logs
-        such as:
+        In this menu, you can view all the administrative related logs such as:
       </p>
       <ul className="mb-4 ml-8 list-disc text-sm md:mb-8 md:text-base">
         <li>When an admin manually updates a {"user's"} role.</li>

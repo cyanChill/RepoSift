@@ -39,6 +39,22 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
 
   return (
     <main className="mx-auto w-full max-w-appContent-1/2 p-3 py-5 md:py-20">
+      <p className="md:text-lg">
+        In this menu, you can search for users by their handle and do the
+        following:
+      </p>
+      <ul className="mb-4 ml-8 list-disc text-sm md:mb-8 md:text-base">
+        <li>
+          Update the role of non-RepoSift affiliated accounts to either have the{" "}
+          {`"user"`} or {`"banned"`} role.
+        </li>
+        <li>
+          You {"can't"} update the roles of users of RepoSift with the {`"bot"`}
+          , {`"admin"`}, or {`"owner"`} roles.
+        </li>
+      </ul>
+      <hr className="my-4 h-px border-0 bg-black md:my-8" />
+
       <BaseForm
         variant="users"
         fieldName="handle"

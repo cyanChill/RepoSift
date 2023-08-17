@@ -6,6 +6,10 @@ import { authOptions } from "@/lib/auth";
 
 import ReportList from "./_components/ReportList";
 
+export const metadata = {
+  title: "RepoSift | View Reports",
+};
+
 export default async function AdminReportsPage() {
   const session = await getServerSession(authOptions);
   if (!session || !["admin", "owner"].includes(session.user.role)) {
@@ -21,11 +25,11 @@ export default async function AdminReportsPage() {
 
   return (
     <main className="mx-auto w-full max-w-appContent p-3 py-5 md:py-20">
-      <p className="md:text-lg">In this menu, you are able to:</p>
+      <p className="md:text-lg">In this menu, you can:</p>
       <ul className="mb-4 ml-8 list-disc text-sm md:mb-8 md:text-base">
         <li>View all the reports submitted by users.</li>
         <li>
-          As an <span className="font-semibold">admin or owner</span> you can
+          As an <span className="font-semibold">admin or owner</span>, you can
           mark reports as complete if {"you've"} taken the appropriate actions
           to resolve the report.
         </li>
@@ -36,7 +40,7 @@ export default async function AdminReportsPage() {
           <span className="font-semibold">
             DO NOT mark the report as completed
           </span>
-          . Wait for the owner to take action.
+          . Let the owner handle it.
         </li>
         {session.user.role === "owner" && (
           <li>

@@ -11,6 +11,10 @@ import Browser from "@/components/Browser";
 
 type Props = { params: { reportId: string } };
 
+export const metadata = {
+  title: "RepoSift | View Report",
+};
+
 export default async function ReportPage({ params: { reportId } }: Props) {
   const session = await getServerSession(authOptions);
   if (!session || !["admin", "owner"].includes(session.user.role)) {
