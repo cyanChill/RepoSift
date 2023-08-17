@@ -274,15 +274,24 @@ export async function completeReports(
 
   try {
     await db.transaction(async (tx) => {
+      // Get all reports we want to mark as completed
+      const updtRpt = await tx.query.reports.findMany({
+        where: (fields) => inArray(fields.id, reportIds),
+        columns: { id: true, title: true },
+      });
+      if (updtRpt.length !== reportIds.length) {
+        throw new Error("Not all report ids are valid.");
+      }
+
       await tx
         .update(reports)
         .set({ isCompleted: true })
         .where(inArray(reports.id, reportIds));
       // Log the person who enacted this action
-      const newReports = reportIds.map((id) => ({
+      const newReports = updtRpt.map((rpt) => ({
         id: createId(),
-        action: "Marked report as completed.",
-        reportId: id,
+        action: `Marked report as completed with title: ${rpt.title}.`,
+        reportId: rpt.id,
         userId: user.id,
       }));
       await tx.insert(logs).values(newReports);
@@ -316,7 +325,6 @@ export async function deleteReports(
         where: (fields) => inArray(fields.id, reportIds),
         with: { user: { columns: { id: true, handle: true } } },
       });
-      if (delRpt.length === 0) throw new Error("Report doesn't exist.");
       if (delRpt.length !== reportIds.length) {
         throw new Error("Not all report ids are valid.");
       }

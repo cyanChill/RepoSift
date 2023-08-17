@@ -1,5 +1,5 @@
 /* https://github.com/drizzle-team/drizzle-orm/tree/main/drizzle-orm/src/mysql-core */
-import { relations, type InferModel } from "drizzle-orm";
+import { relations, sql, type InferModel } from "drizzle-orm";
 import {
   primaryKey,
   int,
@@ -144,11 +144,13 @@ export interface RepoLangWLang extends RepoLanguage {
 */
 export const reports = mysqlTable("reports", {
   id: varchar("id", { length: 256 }).primaryKey().notNull(),
-  title: varchar("title", { length: 80 }).notNull(),
+  title: varchar("title", { length: 100 }).notNull(),
   description: text("description").notNull(),
   isCompleted: boolean("isCompleted").default(false).notNull(),
   userId: varchar("userId", { length: 256 }).notNull(), // Reporter
-  createdAt: timestamp("createdAt").default(new Date()).notNull(),
+  createdAt: timestamp("createdAt")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
 });
 export const reportRelations = relations(reports, ({ one }) => ({
   user: one(users, { fields: [reports.userId], references: [users.id] }),
@@ -161,7 +163,9 @@ export const logs = mysqlTable("logs", {
   action: text("action").notNull(),
   reportId: varchar("reportId", { length: 256 }),
   userId: varchar("userId", { length: 256 }).notNull(), // Action Handled By
-  createdAt: timestamp("createdAt").default(new Date()).notNull(),
+  createdAt: timestamp("createdAt")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
 });
 export const logRelation = relations(logs, ({ one }) => ({
   user: one(users, { fields: [logs.userId], references: [users.id] }),

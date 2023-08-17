@@ -1,5 +1,6 @@
 "use client";
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 
 import { completeReports, deleteReports } from "@/server-actions/admin-actions";
@@ -21,8 +22,8 @@ type Props = {
 };
 
 export default function ReportList({ isOwner, reports }: Props) {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [data, setData] = useState(reports);
   const [selIds, setSelIds] = useState<string[]>([]);
 
   async function markCompleted() {
@@ -35,8 +36,8 @@ export default function ReportList({ isOwner, reports }: Props) {
       toast.success(
         `Successfully marked ${selIds.length} reports as completed.`,
       );
-      setData((prev) => prev.filter((report) => !selIds.includes(report.id)));
       setSelIds([]);
+      router.refresh();
     } catch (err) {
       toastSAErrors(err);
     }
@@ -50,8 +51,8 @@ export default function ReportList({ isOwner, reports }: Props) {
       if (!data) throw new Error("Something unexpected occurred.");
       throwSAErrors(data.error);
       toast.success(`Successfully deleted ${selIds.length} reports.`);
-      setData((prev) => prev.filter((report) => !selIds.includes(report.id)));
       setSelIds([]);
+      router.refresh();
     } catch (err) {
       toastSAErrors(err);
     }
@@ -69,6 +70,7 @@ export default function ReportList({ isOwner, reports }: Props) {
             <button
               onClick={() => startTransition(() => markSpam())}
               className="reverse-btn w-fit bg-red-400 px-3 py-0.5 text-sm font-medium enabled:hover:bg-red-300 disabled:shadow-none"
+              disabled={selIds.length === 0}
             >
               Spam
             </button>
@@ -76,6 +78,7 @@ export default function ReportList({ isOwner, reports }: Props) {
           <button
             onClick={() => startTransition(() => markCompleted())}
             className="reverse-btn w-fit px-3 py-0.5 text-sm font-medium disabled:shadow-none"
+            disabled={selIds.length === 0}
           >
             Completed
           </button>
@@ -86,13 +89,18 @@ export default function ReportList({ isOwner, reports }: Props) {
           <thead>
             <tr className="border-b-2 border-black child:p-2">
               <th className="w-48 min-w-[12rem] font-semibold">Created At</th>
-              <th className="min-w-[25rem] font-semibold">Report Information</th>
+              <th className="min-w-[25rem] font-semibold">
+                Report Information
+              </th>
+              <th className="w-40 min-w-[10rem] max-w-[10rem] font-semibold">
+                Reported By
+              </th>
               <th className="w-12 min-w-[3rem] font-semibold" />
             </tr>
           </thead>
 
           <tbody>
-            {data.map((report) => (
+            {reports.map((report) => (
               <ReportRow
                 key={report.id}
                 report={report}
@@ -128,7 +136,7 @@ const ReportRow = ({ report, toggleSelected }: ReportRowProps) => {
   return (
     <tr key={report.id} className="border-b-2 border-black last:border-b-0">
       <td className="p-2 align-top text-sm">{cleanDate(report.createdAt)}</td>
-      <td className="p-2">
+      <td className="p-2 align-top">
         <p className="font-medium">{report.title}</p>
         <p className="whitespace-pre-wrap text-sm">
           {expand ? jsonDesc : minDesc}
@@ -141,6 +149,15 @@ const ReportRow = ({ report, toggleSelected }: ReportRowProps) => {
             </button>
           )}
         </p>
+      </td>
+      <td className="w-40 min-w-0 max-w-[10rem] p-2 align-top text-sm">
+        <a
+          href={`/u/@${report.user.handle}`}
+          target="_blank"
+          className="block truncate font-medium hover:underline"
+        >
+          @{report.user.handle}
+        </a>
       </td>
       <td className="p-2 text-center align-top">
         <input
