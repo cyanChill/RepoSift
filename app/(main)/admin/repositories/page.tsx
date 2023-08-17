@@ -1,10 +1,6 @@
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-
 import { db } from "@/db";
 import type { Repository } from "@/db/schema/main";
 import { getFilters } from "@/server-actions/cached/get-filters";
-import { authOptions } from "@/lib/auth";
 
 import type { PageProps } from "@/lib/types";
 import { firstStrParam } from "@/lib/utils/url";
@@ -18,11 +14,6 @@ export default async function AdminRepositoriesPage({
   searchParams,
 }: PageProps) {
   const { labels } = await getFilters();
-
-  const session = await getServerSession(authOptions);
-  if (!session || !["admin", "owner"].includes(session.user.role)) {
-    redirect("/");
-  }
 
   const { repoId: unsafeRepoId } = searchParams;
   // Expected form is: "[{provider}] {author}/{repoName}"

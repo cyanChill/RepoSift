@@ -1,9 +1,5 @@
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-
 import { db } from "@/db";
 import type { LabelWithUser } from "@/db/schema/main";
-import { authOptions } from "@/lib/auth";
 
 import type { PageProps } from "@/lib/types";
 import { firstStrParam } from "@/lib/utils/url";
@@ -14,11 +10,6 @@ export const metadata = {
 };
 
 export default async function AdminLabelsPage({ searchParams }: PageProps) {
-  const session = await getServerSession(authOptions);
-  if (!session || !["admin", "owner"].includes(session.user.role)) {
-    redirect("/");
-  }
-
   const { label: unsafeLabel } = searchParams;
   const rawLabel = firstStrParam(unsafeLabel);
 

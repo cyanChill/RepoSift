@@ -1,5 +1,4 @@
 import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
 
 import { db } from "@/db";
 import { authOptions } from "@/lib/auth";
@@ -11,10 +10,9 @@ export const metadata = {
 };
 
 export default async function AdminReportsPage() {
+  // We know that the current session is a "admin" or "owner"
   const session = await getServerSession(authOptions);
-  if (!session || !["admin", "owner"].includes(session.user.role)) {
-    redirect("/");
-  }
+  if (!session) throw new Error("Admin/Owner session doesn't exist.");
 
   const reports = await db.query.reports.findMany({
     where: (fields, { eq }) => eq(fields.isCompleted, false),

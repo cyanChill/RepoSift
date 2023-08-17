@@ -1,20 +1,11 @@
 import Link from "next/link";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-
-import { authOptions } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
 export const metadata = {
   title: "RepoSift | Admin",
 };
 
-export default async function AdminPage() {
-  const session = await getServerSession(authOptions);
-  if (!session || !["admin", "owner"].includes(session.user.role)) {
-    redirect("/");
-  }
-
+export default function AdminPage() {
   const navClass = "reverse-btn my-2 !w-full text-start font-medium";
 
   return (

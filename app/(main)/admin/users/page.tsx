@@ -1,10 +1,7 @@
 import Image from "next/image";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
 
 import { db } from "@/db";
 import type { UserWithLinkedAccounts } from "@/db/schema/next-auth";
-import { authOptions } from "@/lib/auth";
 
 import type { PageProps } from "@/lib/types";
 import { firstStrParam } from "@/lib/utils/url";
@@ -15,11 +12,6 @@ export const metadata = {
 };
 
 export default async function AdminUsersPage({ searchParams }: PageProps) {
-  const session = await getServerSession(authOptions);
-  if (!session || !["admin", "owner"].includes(session.user.role)) {
-    redirect("/");
-  }
-
   const { handle: unsafeHandle } = searchParams;
   const handle = firstStrParam(unsafeHandle);
 

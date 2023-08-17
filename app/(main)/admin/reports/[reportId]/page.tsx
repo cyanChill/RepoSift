@@ -1,10 +1,7 @@
 import type { CSSProperties } from "react";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
 import { BsPatchCheckFill } from "react-icons/bs";
 
 import { db } from "@/db";
-import { authOptions } from "@/lib/auth";
 
 import { cn } from "@/lib/utils";
 import Browser from "@/components/Browser";
@@ -16,11 +13,6 @@ export const metadata = {
 };
 
 export default async function ReportPage({ params: { reportId } }: Props) {
-  const session = await getServerSession(authOptions);
-  if (!session || !["admin", "owner"].includes(session.user.role)) {
-    redirect("/");
-  }
-
   const report = await db.query.reports.findFirst({
     where: (fields, { eq }) => eq(fields.id, reportId),
     with: { user: true },

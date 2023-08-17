@@ -1,8 +1,4 @@
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-
 import { db } from "@/db";
-import { authOptions } from "@/lib/auth";
 
 import { cleanDate } from "@/lib/utils/mutate";
 
@@ -11,11 +7,6 @@ export const metadata = {
 };
 
 export default async function AdminLogsPage() {
-  const session = await getServerSession(authOptions);
-  if (!session || !["admin", "owner"].includes(session.user.role)) {
-    redirect("/");
-  }
-
   const logs = await db.query.logs.findMany({
     with: { user: { columns: { handle: true } } },
     orderBy: (logs, { desc }) => [desc(logs.createdAt)],
