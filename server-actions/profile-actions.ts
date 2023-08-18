@@ -68,7 +68,7 @@ export async function updateHandle(
   }
 
   const handleUsed = await db.query.users.findFirst({
-    where: (fields, { eq }) => eq(fields.handleLower, handle.toLowerCase()),
+    where: (fields, { eq }) => eq(fields.handleLower, handle),
   });
   if (handleUsed) {
     return { error: "This handle is already used by someone else." };

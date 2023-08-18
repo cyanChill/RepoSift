@@ -16,13 +16,10 @@ export default async function AdminLabelsPage({ searchParams }: PageProps) {
   let label: LabelWithUser | undefined;
   if (rawLabel) {
     label = await db.query.labels.findFirst({
-      where: (fields, { and, eq, or, sql }) =>
+      where: (fields, { and, eq, or }) =>
         and(
           eq(fields.type, "regular"),
-          or(
-            eq(fields.name, rawLabel.toLowerCase()),
-            sql`lower(${fields.display}) = ${rawLabel.toLowerCase()}`,
-          ),
+          or(eq(fields.name, rawLabel), eq(fields.display, rawLabel)),
         ),
       with: { user: true },
     });

@@ -32,11 +32,11 @@ export async function createRepository(
 
   /* Validate repository doesn't already exist in our database. */
   const repoExist = await db.query.repositories.findFirst({
-    where: (fields, { and, eq, sql }) =>
+    where: (fields, { and, eq }) =>
       and(
         eq(fields.type, provider),
-        sql`lower(${fields.author}) = ${author.toLowerCase()}`,
-        sql`lower(${fields.name}) = ${name.toLowerCase()}`,
+        eq(fields.author, author),
+        eq(fields.name, name),
       ),
   });
   if (repoExist) return { error: "That repository has already been indexed." };

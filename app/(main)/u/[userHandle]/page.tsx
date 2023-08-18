@@ -24,8 +24,7 @@ export default async function ProfilePage({ params }: Props) {
   if (!decodedHandle.startsWith("@")) throw new Error("Invalid handle.");
 
   const user = await db.query.users.findFirst({
-    where: (fields, { eq }) =>
-      eq(fields.handleLower, decodedHandle.slice(1).toLowerCase()),
+    where: (fields, { eq }) => eq(fields.handleLower, decodedHandle.slice(1)),
     columns: { id: false, banReason: false },
     with: {
       linkedAccounts: { columns: { id: false, userId: false } },
