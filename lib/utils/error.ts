@@ -15,10 +15,19 @@ export function containsSAErr(err: unknown): err is ErrorObj {
 }
 
 /**
+ * @description Extracts the error/errors in an ErrorObj and returns an array.
+ * @returns A string array.
+ */
+export function extractSAErr(err: ErrorObj) {
+  if (typeof err.error === "string") return [err.error];
+  return err.error;
+}
+
+/**
  * @description Asserts whether an error was returned from our server actions.
  */
 export function throwSAErrors(
-  err: string | string[] | undefined
+  err: string | string[] | undefined,
 ): asserts err is undefined {
   if (typeof err === "string") throw new Error(undefined, { cause: [err] });
   if (Array.isArray(err)) throw new Error(undefined, { cause: err });

@@ -1,5 +1,5 @@
 /* https://github.com/drizzle-team/drizzle-orm/tree/main/drizzle-orm/src/mysql-core */
-import { relations, type InferModel } from "drizzle-orm";
+import { relations, sql, type InferModel } from "drizzle-orm";
 import {
   primaryKey,
   int,
@@ -40,7 +40,9 @@ export const users = mysqlTable(
       .notNull(),
   },
   (table) => ({
-    handleLowerIndex: uniqueIndex("users__handleLower__idx").on(table.handleLower),
+    handleLowerIndex: uniqueIndex("users__handleLower__idx").on(
+      table.handleLower,
+    ),
   }),
 );
 export type User = InferModel<typeof users>;
@@ -66,6 +68,9 @@ export const linkedAccounts = mysqlTable(
     username: varchar("username", { length: 256 }).notNull(),
     image: varchar("image", { length: 256 }),
     createdAt: timestamp("createdAt").notNull(),
+    lastUpdated: timestamp("lastUpdated")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
     userId: varchar("userId", { length: 256 }).notNull(),
   },
   (table) => ({

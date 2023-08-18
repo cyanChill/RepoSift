@@ -1,13 +1,10 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
-import { GoLink, GoUnlink } from "react-icons/go";
 
-import { avaliableProviders } from "@/lib/utils/constants";
 import { authOptions } from "@/lib/auth";
-import type { AuthProviders } from "@/lib/zod/utils";
 import { DisplayForm, HandleForm, NameForm } from "./_components/forms";
+import { LinkedAccWidget, RefreshBtn } from "./_components/linked-accounts";
 
 export const metadata = {
   title: "RepoSift | Misc.",
@@ -17,12 +14,6 @@ export default async function MiscPage() {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/join?callbackUrl=/misc");
   const { user } = session;
-
-  const getProvider = (val: AuthProviders) => {
-    const res = avaliableProviders.find((prov) => prov.value === val);
-    if (res) return res.name;
-    throw new Error("Invalid linked account provider.");
-  };
 
   const section = "mb-8";
   const sectionHeader = "mb-4 text-2xl font-semibold md:mb-6 md:text-4xl";
@@ -61,36 +52,10 @@ export default async function MiscPage() {
               <h3 className={subSectionHeader}>Linked Accounts</h3>
               <div className="flex flex-col gap-4">
                 {user.linkedAccounts.map((acc) => (
-                  <article
-                    key={acc.type}
-                    className="card flex items-center gap-2 p-2"
-                  >
-                    <Image
-                      src={
-                        acc.type === "github"
-                          ? `/assets/icons/github.svg`
-                          : `/assets/icons/${acc.type}-colored.svg`
-                      }
-                      alt=""
-                      height={64}
-                      width={64}
-                      className="pointer-events-none h-8 w-8 md:h-12 md:w-12"
-                    />
-                    <div className="w-full min-w-0">
-                      <p className="truncate font-medium md:text-xl">
-                        {getProvider(acc.type)}
-                      </p>
-                      <p className="truncate text-sm">{acc.username}</p>
-                    </div>
-                    <button
-                      className="reverse-btn p-1 disabled:shadow-none"
-                      disabled
-                    >
-                      <GoLink className="pointer-events-none h-4 w-4 md:h-6 md:w-6" />
-                    </button>
-                  </article>
+                  <LinkedAccWidget key={acc.id} account={acc} />
                 ))}
               </div>
+              <RefreshBtn />
             </section>
           </>
         )}
