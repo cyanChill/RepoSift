@@ -26,98 +26,91 @@ export const getIndexedRepos = cache(async function (
 > {
   /* Validate input data */
   const schemaRes = IndexedSearchSchema.safeParse(formData);
-  if (!schemaRes.success) {
-    console.log(schemaRes.error.errors); // For debugging purposes
-    return { error: getZodMsg(schemaRes.error) };
-  }
-  const { providers, languages, primary_label, labels } = schemaRes.data;
-  const { minStars, maxStars, page = 1, per_page } = schemaRes.data;
+  if (!schemaRes.success) return { error: getZodMsg(schemaRes.error) };
+
+  const { languages = [], primary_label, labels = [] } = schemaRes.data;
+  const { providers: types, minStars, maxStars } = schemaRes.data;
+  const { page = 1, per_page } = schemaRes.data;
 
   const LIMIT = per_page && per_page > 1 ? per_page : 15; // Maximum results returned
-  const conditions: SQL[] = [];
-  let filteredIds = new Set<string>();
+  const cons: SQL[] = [];
+  let repoSubset = new Set<string>();
 
-  if (providers && providers.length > 0) {
-    conditions.push(inArray(repositories.type, providers));
-  }
-  if (minStars) {
-    conditions.push(gte(repositories.stars, minStars));
-  }
-  if (maxStars ?? maxStars === 0) {
-    conditions.push(lte(repositories.stars, maxStars));
-  }
-  if (primary_label) {
-    conditions.push(eq(repositories._primaryLabel, primary_label));
-  }
+  /* Basic Filters */
+  if (types && types.length > 0) cons.push(inArray(repositories.type, types));
+  if (minStars) cons.push(gte(repositories.stars, minStars));
+  if (maxStars ?? maxStars === 0) cons.push(lte(repositories.stars, maxStars));
+  if (primary_label) cons.push(eq(repositories._primaryLabel, primary_label));
+
+  /* Relational Table Filters */
   if (languages && languages.length > 0) {
-    /*
-      1. Get all "RepoLang" entries that's in our "languages" constraint.
-        -> Group them by "repoId", with a "numMatches" containing the
-           number of matched "RepoLang" entries for a given repository.
-      2. Possible repositories that match our filters will have "numMatches"
-         equal to the number of values in the "languages" constraint.
-    */
+    // 1. Get all "RepoLang" entries that's in our "languages" constraint.
+    //   -> Group them by "repoId" & "repoType", with a "numMatches" containing
+    //      the number of matched "RepoLang" entries for a given repository.
+    // 2. Possible repositories that match our filters will have "numMatches"
+    //    equal to the number of values in the "languages" constraint.
     const matchedRepos = (
       await db
         .select({
-          numMatches: sql<number>`count(${repoLangs.repoId})`,
-          repoId: repoLangs.repoId,
+          numMatches: sql<number>`count(*)`,
+          repoPK: repoLangs.repoPK,
         })
         .from(repoLangs)
         .where(inArray(repoLangs.name, languages))
-        .groupBy(({ repoId }) => repoId)
+        .groupBy(({ repoPK }) => repoPK)
     )
       .filter((entry) => +entry.numMatches === languages.length)
-      .map((entry) => entry.repoId);
-    filteredIds = new Set(matchedRepos);
+      .map((entry) => entry.repoPK);
+    repoSubset = new Set(matchedRepos);
 
     // No repositories found with all languages required.
-    if (filteredIds.size === 0) {
+    if (repoSubset.size === 0) {
       return { data: { items: [], currPage: page, hasNext: false } };
     }
   }
+
   if (labels && labels.length > 0) {
-    /*
-      1. If "filteredIds.size === 0", then we don't have a "languages" constraint.
-      2. If we do have a "languages" constraint, "filteredIds.size" is
-         guaranteed to be >0 and we'll find "RepoLabel" entries based off
-         the repository ids in "filteredIds".
-    */
+    // 1. If "repoSubset.size === 0", then we don't have a "languages" constraint.
+    // 2. If we do have a "languages" constraint, "repoSubset.size" is
+    //    guaranteed to be >0 and we'll find "RepoLabel" entries based off
+    //    the repository ids in "repoSubset".
+
     const _cond =
-      filteredIds.size > 0
+      repoSubset.size > 0
         ? and(
-            inArray(repoLabels.repoId, [...filteredIds]),
+            inArray(repoLabels.repoPK, [...repoSubset]),
             inArray(repoLabels.name, labels),
           )
         : inArray(repoLabels.name, labels);
+
     // Do the same thing as the "languages" constraint.
     const matchedRepos = (
       await db
         .select({
-          numMatches: sql<number>`count(${repoLabels.repoId})`,
-          repoId: repoLabels.repoId,
+          numMatches: sql<number>`count(*)`,
+          repoPK: repoLabels.repoPK,
         })
         .from(repoLabels)
         .where(_cond)
-        .groupBy(({ repoId }) => repoId)
+        .groupBy(({ repoPK }) => repoPK)
     )
       .filter((entry) => +entry.numMatches === labels.length)
-      .map((entry) => entry.repoId);
-    filteredIds = new Set(matchedRepos);
+      .map((entry) => entry.repoPK);
+    repoSubset = new Set(matchedRepos);
 
     // No repositories found with all labels required.
-    if (filteredIds.size === 0) {
+    if (repoSubset.size === 0) {
       return { data: { items: [], currPage: page, hasNext: false } };
     }
   }
 
   // Reduce the number of possible repositories that can be searched.
-  if (filteredIds.size > 0) {
-    conditions.push(inArray(repositories.id, [...filteredIds]));
+  if (repoSubset.size > 0) {
+    cons.push(inArray(repositories._pk, [...repoSubset]));
   }
 
   const results = await db.query.repositories.findMany({
-    where: and(...conditions),
+    where: and(...cons),
     columns: { _primaryLabel: false, userId: false },
     with: {
       labels: { with: { label: true } },

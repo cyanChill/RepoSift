@@ -113,9 +113,7 @@ async function indexGitHubRepo(
     try {
       await db.insert(languages).values(lang);
     } catch {}
-    await db
-      .insert(repoLangs)
-      .values({ name: lang.name, repoId: strId, repoType: provider });
+    await db.insert(repoLangs).values({ name: lang.name, repoPK: _repoPK });
   }
 
   // Create label relations.

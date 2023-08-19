@@ -227,11 +227,7 @@ export async function deleteRepository(
     const _repoPK = `${repoId}|${repoType}`;
     await db.transaction(async (tx) => {
       await tx.delete(repoLabels).where(eq(repoLabels.repoPK, _repoPK));
-      await tx
-        .delete(repoLangs)
-        .where(
-          and(eq(repoLangs.repoId, repoId), eq(repoLangs.repoType, repoType)),
-        );
+      await tx.delete(repoLangs).where(eq(repoLangs.repoPK, _repoPK));
       await tx.delete(repositories).where(eq(repositories._pk, _repoPK));
       // Log the person who enacted this action
       await tx.insert(logs).values({

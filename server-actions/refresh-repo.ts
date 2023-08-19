@@ -50,22 +50,20 @@ async function refreshGitHub(repoId: string): RefreshRepoReturn {
   if (containsSAErr(searchResult)) return searchResult;
   const { data: repository } = searchResult;
 
+  const _repoPK = `${repoId}|github`;
+
   const updtLangs = await getGitHubRepoLang(repository.languages_url);
   if (containsSAErr(updtLangs)) return updtLangs;
   // Update "RepoLangs" on repository relations
   //  1. Delete old "RepoLangs" relation
   //  2. Fetch updated languages & insert into "Languages" table if they don't exist
   //  3. Re-create the relations.
-  await db
-    .delete(repoLangs)
-    .where(and(eq(repoLangs.repoId, repoId), eq(repoLangs.repoType, "github")));
+  await db.delete(repoLangs).where(eq(repoLangs.repoPK, _repoPK));
   for (const lang of updtLangs.data) {
     try {
       await db.insert(languages).values(lang);
     } catch {}
-    await db
-      .insert(repoLangs)
-      .values({ name: lang.name, repoId, repoType: "github" });
+    await db.insert(repoLangs).values({ name: lang.name, repoPK: _repoPK });
   }
 
   // Update "Repository" values
@@ -81,7 +79,7 @@ async function refreshGitHub(repoId: string): RefreshRepoReturn {
       ...updtValues,
       lastUpdated: new Date(),
     })
-    .where(eq(repositories._pk, `${repoId}|github`));
+    .where(eq(repositories._pk, _repoPK));
 
   return { data: null };
 }

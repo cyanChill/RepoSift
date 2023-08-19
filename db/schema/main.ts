@@ -105,13 +105,10 @@ export const repoLangs = mysqlTable(
   "repoLangs",
   {
     name: varchar("name", { length: 128 }).notNull(),
-    repoId: varchar("repoId", { length: 256 }).notNull(),
-    repoType: mysqlEnum("type", ["github", "gitlab", "bitbucket"])
-      .default("github")
-      .notNull(),
+    repoPK: varchar("repoPK", { length: 512 }).notNull(),
   },
   (table) => ({
-    pk: primaryKey(table.name, table.repoId, table.repoType),
+    pk: primaryKey(table.name, table.repoPK),
   }),
 );
 export type RepoLanguage = InferModel<typeof repoLangs>;
@@ -121,8 +118,8 @@ export const repoLangRelations = relations(repoLangs, ({ one }) => ({
     references: [languages.name],
   }),
   repository: one(repositories, {
-    fields: [repoLangs.repoId, repoLangs.repoType],
-    references: [repositories.id, repositories.type],
+    fields: [repoLangs.repoPK],
+    references: [repositories._pk],
   }),
 }));
 export interface RepoLangWLang extends RepoLanguage {
