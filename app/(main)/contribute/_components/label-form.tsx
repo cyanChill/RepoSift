@@ -4,10 +4,8 @@ import Link from "next/link";
 
 import { createLabel } from "@/server-actions/createLabel";
 
-import type { GenericObj } from "@/lib/types";
 import { LIMITS, PATTERNS } from "@/lib/utils/constants";
 import { throwSAErrors, toastSAErrors } from "@/lib/utils/error";
-import { formDataToObj } from "@/lib/utils/mutate";
 import { Input } from "@/components/form/input";
 import SuccessWindow from "./success-window";
 
@@ -16,9 +14,8 @@ export default function LabelForm() {
   const [isPending, startTransition] = useTransition();
 
   async function suggestLabel(formData: FormData) {
-    const cleanedData = formDataToObj(formData) as GenericObj;
     try {
-      const data = await createLabel(cleanedData);
+      const data = await createLabel(formData.get("label") as string);
       if (!data) throw new Error("Something unexpected occurred.");
       throwSAErrors(data.error);
       setIsComplete(true);

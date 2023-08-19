@@ -1,20 +1,20 @@
 "use server";
 import { db } from "@/db";
-import { labels, type Label } from "@/db/schema/main";
+import { labels } from "@/db/schema/main";
 
-import type { ErrorObj, GenericObj, SuccessObj } from "@/lib/types";
+import type { ErrorObj, SuccessObj } from "@/lib/types";
 import { containsSAErr, getZodMsg } from "@/lib/utils/error";
 import { toSafeId } from "@/lib/utils/mutate";
 import { checkAuthConstraint } from "./utils";
 import { contributeLabel } from "./schema";
 
 export async function createLabel(
-  formData: GenericObj,
+  _newLabel: string,
 ): Promise<ErrorObj | SuccessObj<null>> {
   /* Validate input data */
-  const schemaRes = contributeLabel.safeParse(formData);
+  const schemaRes = contributeLabel.safeParse(_newLabel);
   if (!schemaRes.success) return { error: getZodMsg(schemaRes.error) };
-  const { label } = schemaRes.data;
+  const label = schemaRes.data;
 
   const authRes = await checkAuthConstraint(
     12,
@@ -26,17 +26,11 @@ export async function createLabel(
     await db.insert(labels).values({
       name: toSafeId(label),
       display: label,
-      type: "regular",
       userId: authRes.data.id,
-    } as Label);
+    });
+
+    return { data: null };
   } catch (err) {
-    return { error: "Label already exists in database." };
+    return { error: "Failed to create label, it may already exists." };
   }
-
-  const labelInDB = await db.query.labels.findFirst({
-    where: (fields, { eq }) => eq(fields.name, toSafeId(label)),
-  });
-  if (!labelInDB) return { error: "Failed to created label." };
-
-  return { data: null };
 }

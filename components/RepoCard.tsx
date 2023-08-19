@@ -102,7 +102,11 @@ export default function RepoCard({ result, onClose }: Props) {
           <p className="mb-2 text-sm">
             <span className="font-medium underline">Maintain Link:</span>{" "}
             {result.maintainLink ? (
-              <a href={result.maintainLink} target="_blank">
+              <a
+                href={result.maintainLink}
+                target="_blank"
+                className="hover:underline"
+              >
                 {result.maintainLink}
               </a>
             ) : (

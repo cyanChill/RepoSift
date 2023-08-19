@@ -126,27 +126,25 @@ export const contributedRepo = z.object({
 });
 export type ContributedRepo = z.infer<typeof contributedRepo>;
 
-/** @description Schema for "Contribute Label" feature. */
-export const contributeLabel = z.object({
-  label: z
-    .string({
-      required_error: "A label is required.",
-      invalid_type_error: "A label must be a string.",
-    })
-    .trim()
-    .min(3, { message: "A label must be at least 3 characters long." })
-    .max(LIMITS.LABEL, {
-      message: `A label must be at most ${LIMITS.LABEL} characters long.`,
-    })
-    .transform(
-      regexTest({
-        regexBase: PATTERNS.LABEL,
-        label: "label",
-        errorMsg:
-          "A label must contain only letters, periods, hyphens, and spaces.",
-      }),
-    ),
-});
+/** @description Schema for "Contribute Label" & "Admin Update Label" feature. */
+export const contributeLabel = z
+  .string({
+    required_error: "A label is required.",
+    invalid_type_error: "A label must be a string.",
+  })
+  .trim()
+  .min(3, { message: "A label must be at least 3 characters long." })
+  .max(LIMITS.LABEL, {
+    message: `A label must be at most ${LIMITS.LABEL} characters long.`,
+  })
+  .transform(
+    regexTest({
+      regexBase: PATTERNS.LABEL,
+      label: "label",
+      errorMsg:
+        "A label must contain only letters, periods, hyphens, and spaces.",
+    }),
+  );
 
 /** @description Schema for "Update User Name" feature. */
 export const newName = z

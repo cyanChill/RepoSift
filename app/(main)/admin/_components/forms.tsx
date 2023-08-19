@@ -16,6 +16,7 @@ import {
 
 import { cn } from "@/lib/utils";
 import type { GenericObj } from "@/lib/types";
+import { LIMITS, PATTERNS } from "@/lib/utils/constants";
 import { throwSAErrors, toastSAErrors } from "@/lib/utils/error";
 import { formDataToObj } from "@/lib/utils/mutate";
 import { toURLQS } from "@/lib/utils/url";
@@ -179,7 +180,21 @@ export function ManageLabelForm({ label }: { label: LabelWithUser }) {
           name="label"
           label="Label"
           type="text"
+          minLength={3}
+          maxLength={LIMITS.LABEL}
+          pattern={PATTERNS.LABEL}
           defaultValue={label.display}
+          description={
+            <span>
+              Can only contain{" "}
+              <span className="font-semibold">
+                letters (A-Z), periods & hyphens (.-), spaces
+              </span>{" "}
+              and be{" "}
+              <span className="font-semibold">3-{LIMITS.LABEL} characters</span>{" "}
+              long.
+            </span>
+          }
           required
         />
         <p className="-mt-2 mb-4 self-end text-sm italic">

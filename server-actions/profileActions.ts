@@ -63,13 +63,6 @@ export async function updateHandle(
     return { error: "Your new handle is the same as your old one." };
   }
 
-  const handleUsed = await db.query.users.findFirst({
-    where: (fields, { eq }) => eq(fields.handleLower, handle),
-  });
-  if (handleUsed) {
-    return { error: "This handle is already used by someone else." };
-  }
-
   try {
     await db
       .update(users)
@@ -87,10 +80,7 @@ export async function updateHandle(
       },
     };
   } catch (err) {
-    console.log(err); // Incase the handle was used by someone else.
-    return {
-      error: "Something unexpected occurred when updating your handle.",
-    };
+    return { error: "This handle is already used by someone else." };
   }
 }
 

@@ -19,7 +19,7 @@ import { authOptions } from "@/lib/auth";
 import type { ErrorObj, GenericObj, SuccessObj } from "@/lib/types";
 import { containsSAErr, getZodMsg } from "@/lib/utils/error";
 import { toSafeId } from "@/lib/utils/mutate";
-import { updatedRepoInfo } from "./schema";
+import { contributeLabel, updatedRepoInfo } from "./schema";
 
 /**
  * @description Determines whether the user calling the server-action is
@@ -83,10 +83,13 @@ export async function updateUser(
 
 export async function updateLabel(
   labelName: string,
-  newName: string,
+  _newName: string,
 ): Promise<ErrorObj | SuccessObj<null>> {
   if (!labelName.trim()) return { error: "You must specify a label." };
-  if (!newName.trim()) return { error: "You must specify a new label name." };
+  /* Validate input data */
+  const schemaRes = contributeLabel.safeParse(_newName);
+  if (!schemaRes.success) return { error: getZodMsg(schemaRes.error) };
+  const newName = schemaRes.data;
 
   const authRes = await isAdmin();
   if (containsSAErr(authRes)) return authRes;
@@ -112,8 +115,9 @@ export async function updateLabel(
 
     return { data: null };
   } catch (err) {
-    console.log(err); // Debugging purposes
-    return { error: "Failed to update label." };
+    return {
+      error: "Failed to update label - the new label name may already exist.",
+    };
   }
 }
 

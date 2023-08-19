@@ -39,7 +39,7 @@ export default async function ReportPage({ params: { reportId } }: Props) {
               <BsPatchCheckFill /> Completed
             </p>
           )}
-          <p className="mb-8 text-sm md:mb-20">
+          <p className="mb-8 whitespace-pre-wrap text-sm md:mb-20">
             {JSON.parse(report.description)}
           </p>
 

@@ -22,18 +22,16 @@ export async function createReport(
   if (!session) return { error: "User is not authenticated." };
   const { user } = session;
 
-  const reportId = createId();
-  await db.insert(reports).values({
-    id: reportId,
-    title,
-    description: JSON.stringify(description),
-    userId: user.id,
-  });
+  try {
+    await db.insert(reports).values({
+      id: createId(),
+      title,
+      description: JSON.stringify(description),
+      userId: user.id,
+    });
 
-  const reportInDB = await db.query.reports.findFirst({
-    where: (fields, { eq }) => eq(fields.id, reportId),
-  });
-  if (!reportInDB) return { error: "Failed to submit report." };
-
-  return { data: null };
+    return { data: null };
+  } catch (err) {
+    return { error: "Failed to submit report." };
+  }
 }

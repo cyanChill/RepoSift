@@ -54,32 +54,44 @@ async function refreshGitHub(repoId: string): RefreshRepoReturn {
 
   const updtLangs = await getGitHubRepoLang(repository.languages_url);
   if (containsSAErr(updtLangs)) return updtLangs;
-  // Update "RepoLangs" on repository relations
-  //  1. Delete old "RepoLangs" relation
-  //  2. Fetch updated languages & insert into "Languages" table if they don't exist
-  //  3. Re-create the relations.
-  await db.delete(repoLangs).where(eq(repoLangs.repoPK, _repoPK));
-  for (const lang of updtLangs.data) {
-    try {
-      await db.insert(languages).values(lang);
-    } catch {}
-    await db.insert(repoLangs).values({ name: lang.name, repoPK: _repoPK });
+
+  try {
+    await db.transaction(async (tx) => {
+      // Delete old language relations
+      await tx.delete(repoLangs).where(eq(repoLangs.repoPK, _repoPK));
+      // Insert new languages if any
+      for (const lang of updtLangs.data) {
+        try {
+          await tx.insert(languages).values(lang);
+        } catch {}
+      }
+      // Insert new language relations
+      const newLangRels = updtLangs.data.map((lang) => ({
+        name: lang.name,
+        repoPK: _repoPK,
+      }));
+      await tx.insert(repoLangs).values(newLangRels);
+
+      // Update "Repository" values
+      const updtValues = {
+        name: repository.name,
+        description: repository.description,
+        stars: repository.stargazers_count,
+      };
+      await tx
+        .update(repositories)
+        .set({
+          ...(repository.owner?.login
+            ? { author: repository.owner?.login }
+            : {}),
+          ...updtValues,
+          lastUpdated: new Date(),
+        })
+        .where(eq(repositories._pk, _repoPK));
+    });
+
+    return { data: null };
+  } catch (err) {
+    return { error: "Failed to update repository." };
   }
-
-  // Update "Repository" values
-  const updtValues = {
-    name: repository.name,
-    description: repository.description,
-    stars: repository.stargazers_count,
-  };
-  await db
-    .update(repositories)
-    .set({
-      ...(repository.owner?.login ? { author: repository.owner?.login } : {}),
-      ...updtValues,
-      lastUpdated: new Date(),
-    })
-    .where(eq(repositories._pk, _repoPK));
-
-  return { data: null };
 }

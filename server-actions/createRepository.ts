@@ -90,36 +90,51 @@ async function indexGitHubRepo(
   const langs = await getGitHubRepoLang(repository.languages_url);
   if (containsSAErr(langs)) return langs;
 
-  const _repoPK = `${strId}|${provider}`;
-  // Insert repository
-  await db.insert(repositories).values({
-    _pk: _repoPK,
-    id: strId,
-    type: provider,
-    author: repository.owner?.login ?? author,
-    name: repository.name,
-    description: repository.description,
-    stars: repository.stargazers_count,
-    _primaryLabel: primary_label,
-    userId: suggesterId,
-    lastUpdated: new Date(),
-  });
-  const repo = await db.query.repositories.findFirst({
-    where: (fields, { eq }) => eq(fields._pk, _repoPK),
-  });
-  if (!repo) return { error: "Failed to index repository." };
+  try {
+    const _repoPK = `${strId}|${provider}`;
+    // Insert repository
+    await db.insert(repositories).values({
+      _pk: _repoPK,
+      id: strId,
+      type: provider,
+      author: repository.owner?.login ?? author,
+      name: repository.name,
+      description: repository.description,
+      stars: repository.stargazers_count,
+      _primaryLabel: primary_label,
+      userId: suggesterId,
+      lastUpdated: new Date(),
+    });
 
-  /* Insert languages into database & create RepoLangs relations */
-  for (const lang of langs.data) {
-    try {
-      await db.insert(languages).values(lang);
-    } catch {}
-    await db.insert(repoLangs).values({ name: lang.name, repoPK: _repoPK });
+    // Insert languages into database & create RepoLangs relations
+    if (langs.data.length > 0) {
+      // Can't mass-insert into database due to conflicts causing new
+      // values not to be inserted
+      for (const lang of langs.data) {
+        try {
+          await db.insert(languages).values(lang);
+        } catch {}
+      }
+
+      const repoLanguageRel = langs.data.map((lang) => ({
+        name: lang.name,
+        repoPK: _repoPK,
+      }));
+      await db.insert(repoLangs).values(repoLanguageRel);
+    }
+
+    // Create label relations.
+    if (labels.length > 0) {
+      const repoLabelRel = labels.map((lb) => ({
+        name: lb,
+        repoPK: _repoPK,
+      }));
+      await db.insert(repoLabels).values(repoLabelRel);
+    }
+
+    return { data: null };
+  } catch (err) {
+    console.log(err);
+    return { error: "Failed to index this GitHub repository." };
   }
-
-  // Create label relations.
-  const repoLabelRel = labels.map((lb) => ({ name: lb, repoPK: _repoPK }));
-  if (repoLabelRel.length > 0) await db.insert(repoLabels).values(repoLabelRel);
-
-  return { data: null };
 }

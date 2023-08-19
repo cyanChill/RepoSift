@@ -30,10 +30,7 @@ export const getFilters = cache(async () => {
   });
 
   const allLangs = await db
-    .select({
-      name: languages.display,
-      value: languages.name,
-    })
+    .select({ name: languages.display, value: languages.name })
     .from(languages);
 
   return { labels, languages: allLangs };
