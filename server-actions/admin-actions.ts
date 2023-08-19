@@ -171,12 +171,12 @@ export async function updateRepository(
   });
   if (!pLabelExist) return { error: "The primary label doesn't exist." };
   /* Validate all regular labels exists. */
-  for (const lb of labels) {
-    const labelExist = await db.query.labels.findFirst({
-      where: (fields, { and, eq }) =>
-        and(eq(fields.type, "regular"), eq(fields.name, lb)),
-    });
-    if (!labelExist) return { error: "The regular label doesn't exist." };
+  const lbInDB = await db.query.labels.findMany({
+    where: (fields, { and, eq }) =>
+      and(eq(fields.type, "regular"), inArray(fields.name, labels)),
+  });
+  if (lbInDB.length !== labels.length) {
+    return { error: "Not all regular labels are valid." };
   }
 
   try {
