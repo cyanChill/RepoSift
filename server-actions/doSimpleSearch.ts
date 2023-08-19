@@ -1,17 +1,16 @@
 "use server";
-
 import { ENV } from "@/lib/env-server";
 import type { ErrorObj, GenericObj, SuccessObj } from "@/lib/types";
 import { randInt } from "@/lib/utils";
 import { getZodMsg } from "@/lib/utils/error";
-import type { GitHubRepoType } from "@/lib/zod/schema";
-import { GitHubRepoSearchResult, SimpleSearchSchema } from "@/lib/zod/schema";
+import { GitHubRepoSearchResult, type GitHubRepoType } from "@/lib/zod/schema";
+import { sSFilters } from "./schema";
 
-export async function simpleSearch(
+export async function doSimpleSearch(
   formData: GenericObj,
 ): Promise<ErrorObj | GitHubSearchReturn> {
   /* Validate input data */
-  const schemaRes = SimpleSearchSchema.safeParse(formData);
+  const schemaRes = sSFilters.safeParse(formData);
   if (!schemaRes.success) return { error: getZodMsg(schemaRes.error) };
 
   const { provider, languages, maxStars } = schemaRes.data;

@@ -4,10 +4,11 @@ import { IoPricetags } from "react-icons/io5";
 import { SiBookstack } from "react-icons/si";
 
 import { authOptions } from "@/lib/auth";
+import { getFilters } from "@/server-actions/cached/getFilters";
+
 import type { PageProps } from "@/lib/types";
 import { getOldestAge } from "@/lib/utils/mutate";
 import { didFailMonthConstraint } from "@/lib/utils/validation";
-import { getFilters } from "@/server-actions/cached/get-filters";
 import BannedScreen from "@/components/BannedScreen";
 import ContributeSelector from "./_components/contribute-selector";
 import LabelForm from "./_components/label-form";

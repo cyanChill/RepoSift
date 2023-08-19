@@ -3,7 +3,7 @@ import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 
-import { createReport } from "@/server-actions/reports";
+import { createReport } from "@/server-actions/createReport";
 
 import type { GenericObj } from "@/lib/types";
 import { formDataToObj } from "@/lib/utils/mutate";

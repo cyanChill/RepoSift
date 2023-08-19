@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { Transition } from "@headlessui/react";
 
-import type { IndexedRepo } from "@/server-actions/cached/get-repos";
+import type { IndexedRepo } from "@/server-actions/types";
 import { useIsMobile } from "@/hooks/useBreakpoint";
 import { isNum } from "@/lib/utils/validation";
 import RepoCard from "@/components/RepoCard";

@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import type { Repository } from "@/db/schema/main";
-import { getFilters } from "@/server-actions/cached/get-filters";
+import { getFilters } from "@/server-actions/cached/getFilters";
 
 import type { PageProps } from "@/lib/types";
 import { firstStrParam } from "@/lib/utils/url";

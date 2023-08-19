@@ -1,5 +1,5 @@
-import { getFilters } from "@/server-actions/cached/get-filters";
-import { getIndexedRepos } from "@/server-actions/cached/get-repos";
+import { getFilters } from "@/server-actions/cached/getFilters";
+import { doIndexedSearch } from "@/server-actions/cached/doIndexedSearch";
 
 import type { PageProps } from "@/lib/types";
 import { containsSAErr } from "@/lib/utils/error";
@@ -23,7 +23,7 @@ export default async function IndexedSearchPage({ searchParams }: PageProps) {
     ...rest,
   });
 
-  const results = await getIndexedRepos(transformedSearchParams);
+  const results = await doIndexedSearch(transformedSearchParams);
 
   return (
     <main className="mx-auto w-full max-w-appContent p-3 py-5 md:py-20">

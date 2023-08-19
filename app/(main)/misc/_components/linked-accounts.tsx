@@ -6,7 +6,7 @@ import { GoLink, GoUnlink } from "react-icons/go";
 import { toast } from "react-hot-toast";
 
 import type { LinkedAccount } from "@/db/schema/next-auth";
-import { refreshLinkedAccs } from "@/server-actions/refresh-user";
+import { refreshLinkedAccs } from "@/server-actions/refreshUser";
 
 import { avaliableProviders } from "@/lib/utils/constants";
 import { throwSAErrors, toastSAErrors } from "@/lib/utils/error";

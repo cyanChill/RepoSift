@@ -8,20 +8,16 @@ import { authOptions } from "@/lib/auth";
 
 import { getZodMsg } from "@/lib/utils/error";
 import { isNotOneWeekOld } from "@/lib/utils/validation";
-import type { ErrorObj, GenericObj, SuccessObj } from "@/lib/types";
-import {
-  HandleFormSchema,
-  NameFormSchema,
-  PicFormSchema,
-} from "@/lib/zod/schema";
+import type { ErrorObj, SuccessObj } from "@/lib/types";
+import { newHandle, newImgSrc, newName } from "./schema";
 
 export async function updateName(
-  formData: GenericObj,
+  _newName: string,
 ): Promise<ErrorObj | SuccessObj<string>> {
   /* Validate input data */
-  const schemaRes = NameFormSchema.safeParse(formData);
+  const schemaRes = newName.safeParse(_newName);
   if (!schemaRes.success) return { error: getZodMsg(schemaRes.error) };
-  const { name } = schemaRes.data;
+  const name = schemaRes.data;
 
   const session = await getServerSession(authOptions);
   if (!session) return { error: "User is not authenticated." };
@@ -47,12 +43,12 @@ export async function updateName(
 }
 
 export async function updateHandle(
-  formData: GenericObj,
+  _newHandle: string,
 ): Promise<ErrorObj | SuccessObj<{ newHandle: string; message: string }>> {
   /* Validate input data */
-  const schemaRes = HandleFormSchema.safeParse(formData);
+  const schemaRes = newHandle.safeParse(_newHandle);
   if (!schemaRes.success) return { error: getZodMsg(schemaRes.error) };
-  const { handle } = schemaRes.data;
+  const handle = schemaRes.data;
 
   const session = await getServerSession(authOptions);
   if (!session) return { error: "User is not authenticated." };
@@ -98,19 +94,19 @@ export async function updateHandle(
   }
 }
 
-export async function updatePic(
-  formData: GenericObj,
+export async function updateImgSrc(
+  _newImgSrc: string,
 ): Promise<ErrorObj | SuccessObj<null>> {
   /* Validate input data */
-  const schemaRes = PicFormSchema.safeParse(formData);
+  const schemaRes = newImgSrc.safeParse(_newImgSrc);
   if (!schemaRes.success) return { error: getZodMsg(schemaRes.error) };
-  const { profile_pic } = schemaRes.data;
+  const profilePicSrc = schemaRes.data;
 
   const session = await getServerSession(authOptions);
   if (!session) return { error: "User is not authenticated." };
   const { user } = session;
 
-  if (user.imgSrc === profile_pic) {
+  if (user.imgSrc === profilePicSrc) {
     return {
       error: "Your new profile picture source is the same as your old one.",
     };
@@ -118,7 +114,7 @@ export async function updatePic(
 
   const avaliableSrcs = user.linkedAccounts.map((acc) => acc.type);
 
-  if (!avaliableSrcs.includes(profile_pic)) {
+  if (!avaliableSrcs.includes(profilePicSrc)) {
     return {
       error: "You don't have an account linked to that profile picture source.",
     };
@@ -126,7 +122,7 @@ export async function updatePic(
 
   await db
     .update(users)
-    .set({ imgSrc: profile_pic })
+    .set({ imgSrc: profilePicSrc })
     .where(eq(users.id, user.id));
 
   return { data: null };

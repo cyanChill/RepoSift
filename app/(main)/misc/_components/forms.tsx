@@ -7,16 +7,15 @@ import { TfiSave } from "react-icons/tfi";
 import { toast } from "react-hot-toast";
 
 import type { UserWithLinkedAccounts } from "@/db/schema/next-auth";
-
 import {
   updateHandle,
+  updateImgSrc,
   updateName,
-  updatePic,
-} from "@/server-actions/profile-actions";
-import type { GenericObj } from "@/lib/types";
+} from "@/server-actions/profileActions";
+
 import { LIMITS, PATTERNS, avaliableProviders } from "@/lib/utils/constants";
 import { throwSAErrors, toastSAErrors } from "@/lib/utils/error";
-import { cleanDate, formDataToObj } from "@/lib/utils/mutate";
+import { cleanDate } from "@/lib/utils/mutate";
 import { isNotOneWeekOld } from "@/lib/utils/validation";
 import type { AuthProviders } from "@/lib/zod/utils";
 import { Select } from "@/components/form/input";
@@ -41,9 +40,8 @@ export function NameForm({ user }: Props) {
   }
 
   async function onSubmit(formData: FormData) {
-    const cleanedData = formDataToObj(formData) as GenericObj;
     try {
-      const data = await updateName(cleanedData);
+      const data = await updateName(formData.get("name") as string);
       if (!data) throw new Error("Something unexpected occurred.");
       throwSAErrors(data.error);
       toast.success(data.data);
@@ -107,9 +105,8 @@ export function HandleForm({ user }: Props) {
   }
 
   async function onSubmit(formData: FormData) {
-    const cleanedData = formDataToObj(formData) as GenericObj;
     try {
-      const data = await updateHandle(cleanedData);
+      const data = await updateHandle(formData.get("handle") as string);
       if (!data) throw new Error("Something unexpected occurred.");
       throwSAErrors(data.error);
       await update({ handle: data.data.newHandle });
@@ -166,9 +163,8 @@ export function DisplayForm({ user }: Props) {
   const [isPending, startTransition] = useTransition();
 
   async function onSubmit(formData: FormData) {
-    const cleanedData = formDataToObj(formData) as GenericObj;
     try {
-      const data = await updatePic(cleanedData);
+      const data = await updateImgSrc(formData.get("profile_pic") as string);
       if (!data) throw new Error("Something unexpected occurred.");
       throwSAErrors(data.error);
       toast.success("Successfully updated profile picture.");

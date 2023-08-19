@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { VscLinkExternal, VscChevronRight } from "react-icons/vsc";
 
-import type { IndexedRepo } from "@/server-actions/cached/get-repos";
+import type { IndexedRepo } from "@/server-actions/types";
 import { cn } from "@/lib/utils";
 import { isNum } from "@/lib/utils/validation";
 

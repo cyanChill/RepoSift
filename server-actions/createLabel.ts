@@ -5,14 +5,14 @@ import { labels, type Label } from "@/db/schema/main";
 import type { ErrorObj, GenericObj, SuccessObj } from "@/lib/types";
 import { containsSAErr, getZodMsg } from "@/lib/utils/error";
 import { toSafeId } from "@/lib/utils/mutate";
-import { LabelFormSchema } from "@/lib/zod/schema";
 import { checkAuthConstraint } from "./utils";
+import { contributeLabel } from "./schema";
 
 export async function createLabel(
   formData: GenericObj,
-): Promise<ErrorObj | SuccessObj<Omit<Label, "userId">>> {
+): Promise<ErrorObj | SuccessObj<null>> {
   /* Validate input data */
-  const schemaRes = LabelFormSchema.safeParse(formData);
+  const schemaRes = contributeLabel.safeParse(formData);
   if (!schemaRes.success) return { error: getZodMsg(schemaRes.error) };
   const { label } = schemaRes.data;
 
@@ -35,9 +35,8 @@ export async function createLabel(
 
   const labelInDB = await db.query.labels.findFirst({
     where: (fields, { eq }) => eq(fields.name, toSafeId(label)),
-    columns: { userId: false },
   });
-  if (!labelInDB) return { error: "Failed to insert label." };
+  if (!labelInDB) return { error: "Failed to created label." };
 
-  return { data: labelInDB };
+  return { data: null };
 }

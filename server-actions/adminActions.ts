@@ -17,11 +17,9 @@ import type { UserWithLinkedAccounts } from "@/db/schema/next-auth";
 import { authOptions } from "@/lib/auth";
 
 import type { ErrorObj, GenericObj, SuccessObj } from "@/lib/types";
-import { providersVal } from "@/lib/utils/constants";
 import { containsSAErr, getZodMsg } from "@/lib/utils/error";
 import { toSafeId } from "@/lib/utils/mutate";
-import type { AuthProviders } from "@/lib/zod/utils";
-import { UpdateRepoSchema } from "@/lib/zod/schema";
+import { updatedRepoInfo } from "./schema";
 
 /**
  * @description Determines whether the user calling the server-action is
@@ -150,19 +148,18 @@ export async function deleteLabel(
 }
 
 export async function updateRepository(
-  repoId: string,
+  _repoPK: string,
   formData: GenericObj,
 ): Promise<ErrorObj | SuccessObj<null>> {
-  if (!repoId.trim()) return { error: "You must specify a repository id." };
+  if (!_repoPK.trim()) return { error: "You must specify the repository pk." };
   /* Validate input data */
-  const schemaRes = UpdateRepoSchema.safeParse(formData);
+  const schemaRes = updatedRepoInfo.safeParse(formData);
   if (!schemaRes.success) return { error: getZodMsg(schemaRes.error) };
+  const { primary_label, labels = [], maintainLink } = schemaRes.data;
 
   const authRes = await isAdmin();
   if (containsSAErr(authRes)) return authRes;
   const user = authRes.data;
-
-  const { provider, primary_label, labels = [], maintainLink } = schemaRes.data;
 
   /* Validate primary label exists. */
   const pLabelExist = await db.query.labels.findFirst({
@@ -180,7 +177,6 @@ export async function updateRepository(
   }
 
   try {
-    const _repoPK = `${repoId}|${provider}`;
     await db.transaction(async (tx) => {
       // Delete old labels
       await tx.delete(repoLabels).where(eq(repoLabels.repoPK, _repoPK));
@@ -211,20 +207,15 @@ export async function updateRepository(
 }
 
 export async function deleteRepository(
-  repoId: string,
-  repoType: AuthProviders,
+  _repoPK: string,
 ): Promise<ErrorObj | SuccessObj<null>> {
-  if (!repoId.trim()) return { error: "You must specify a repository id." };
-  if (!providersVal.includes(repoType)) {
-    return { error: "Invalid repository type." };
-  }
+  if (!_repoPK.trim()) return { error: "You must specify the repository pk." };
 
   const authRes = await isAdmin();
   if (containsSAErr(authRes)) return authRes;
   const user = authRes.data;
 
   try {
-    const _repoPK = `${repoId}|${repoType}`;
     await db.transaction(async (tx) => {
       await tx.delete(repoLabels).where(eq(repoLabels.repoPK, _repoPK));
       await tx.delete(repoLangs).where(eq(repoLangs.repoPK, _repoPK));

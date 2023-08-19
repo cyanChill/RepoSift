@@ -3,7 +3,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 
-import { completeReports, deleteReports } from "@/server-actions/admin-actions";
+import { completeReports, deleteReports } from "@/server-actions/adminActions";
 
 import { throwSAErrors, toastSAErrors } from "@/lib/utils/error";
 import { cleanDate } from "@/lib/utils/mutate";

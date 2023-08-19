@@ -2,13 +2,14 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 
-import { createLabel } from "@/server-actions/label-actions";
+import { createLabel } from "@/server-actions/createLabel";
+
 import type { GenericObj } from "@/lib/types";
 import { LIMITS, PATTERNS } from "@/lib/utils/constants";
 import { throwSAErrors, toastSAErrors } from "@/lib/utils/error";
 import { formDataToObj } from "@/lib/utils/mutate";
-import SuccessWindow from "./success-window";
 import { Input } from "@/components/form/input";
+import SuccessWindow from "./success-window";
 
 export default function LabelForm() {
   const [isComplete, setIsComplete] = useState(false);

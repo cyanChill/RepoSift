@@ -8,8 +8,8 @@ import { FaStar } from "react-icons/fa6";
 import { IoAlertSharp, IoRefreshSharp } from "react-icons/io5";
 import { toast } from "react-hot-toast";
 
-import type { IndexedRepo } from "@/server-actions/cached/get-repos";
-import { refreshRepository } from "@/server-actions/refresh-repo";
+import type { IndexedRepo } from "@/server-actions/types";
+import { refreshRepository } from "@/server-actions/refreshRepository";
 
 import useAuth from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";

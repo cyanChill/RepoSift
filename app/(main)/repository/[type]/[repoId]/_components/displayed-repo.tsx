@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 
-import type { IndexedRepo } from "@/server-actions/cached/get-repos";
+import type { IndexedRepo } from "@/server-actions/types";
 import RepoCard from "@/components/RepoCard";
 
 type Props = {

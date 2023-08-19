@@ -4,28 +4,26 @@ import type { SQL } from "drizzle-orm";
 
 import { db } from "@/db";
 import { repoLabels, repoLangs, repositories } from "@/db/schema/main";
-import type { Repository } from "@/db/schema/main";
 
 import type { ErrorObj, GenericObj, SuccessObj } from "@/lib/types";
 import { getZodMsg } from "@/lib/utils/error";
-import { IndexedSearchSchema } from "@/lib/zod/schema";
+import { iSFilters } from "../schema";
+import type { IndexedRepo } from "../types";
 
 export const revalidate = 900; // Revalidate data at most every 15 minutes
-
-export type IndexedRepo = Omit<Repository, "userId" | "_primaryLabel">;
 
 /**
  * @description Get repositories from database based on filters w/ pagination.
  * @returns An object.
  */
-export const getIndexedRepos = cache(async function (
+export const doIndexedSearch = cache(async function (
   formData: GenericObj,
 ): Promise<
   | ErrorObj
   | SuccessObj<{ items: IndexedRepo[]; currPage: number; hasNext: boolean }>
 > {
   /* Validate input data */
-  const schemaRes = IndexedSearchSchema.safeParse(formData);
+  const schemaRes = iSFilters.safeParse(formData);
   if (!schemaRes.success) return { error: getZodMsg(schemaRes.error) };
 
   const { languages = [], primary_label, labels = [] } = schemaRes.data;

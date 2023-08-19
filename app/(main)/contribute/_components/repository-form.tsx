@@ -2,16 +2,17 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 
-import { createRepository } from "@/server-actions/index-repo";
+import { createRepository } from "@/server-actions/createRepository";
+
 import type { GenericObj } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { LIMITS, PATTERNS, avaliableProviders } from "@/lib/utils/constants";
 import { throwSAErrors, toastSAErrors } from "@/lib/utils/error";
 import { formDataToObj } from "@/lib/utils/mutate";
-import SuccessWindow from "./success-window";
 import { Input, Select } from "@/components/form/input";
 import { MultiSearchSelect, SearchSelect } from "@/components/form/custom";
 import type { Option } from "@/components/form/utils";
+import SuccessWindow from "./success-window";
 
 type Props = {
   labels: { primary: Option[]; regular: Option[] };
@@ -71,7 +72,7 @@ export default function RepositoryForm({ labels }: Props) {
             <p
               className={cn(
                 "form-input mb-4 hidden h-10 self-end border-x-0 md:block",
-                { "bg-gray-200 text-opacity-75": isPending }
+                { "bg-gray-200 text-opacity-75": isPending },
               )}
             >
               /

@@ -1,7 +1,8 @@
 "use client";
 import { useState, useRef, useTransition } from "react";
 
-import { simpleSearch } from "@/server-actions/simple-search";
+import { doSimpleSearch } from "@/server-actions/doSimpleSearch";
+
 import type { Results } from "./types";
 import { throwSAErrors, toastSAErrors } from "@/lib/utils/error";
 import { formDataToObj, removeEmptyProperties } from "@/lib/utils/mutate";
@@ -16,7 +17,7 @@ export default function SSClientPage() {
   async function queueSearch(formData: FormData) {
     const cleanedData = removeEmptyProperties(formDataToObj(formData));
     try {
-      const data = await simpleSearch(cleanedData);
+      const data = await doSimpleSearch(cleanedData);
       if (!data) throw new Error("Something unexpected occurred.");
       throwSAErrors(data.error);
       setResults({

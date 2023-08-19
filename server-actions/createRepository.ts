@@ -12,14 +12,14 @@ import {
 import { getGitHubRepoData, getGitHubRepoLang } from "./providerSearch";
 import type { ErrorObj, GenericObj, SuccessObj } from "@/lib/types";
 import { containsSAErr, getZodMsg } from "@/lib/utils/error";
-import { RepoFormSchema, type RepoFormSchemaType } from "@/lib/zod/schema";
 import { checkAuthConstraint } from "./utils";
+import { contributedRepo, type ContributedRepo } from "./schema";
 
 export async function createRepository(
   formData: GenericObj,
 ): Promise<ErrorObj | IndexRepoReturn> {
   /* Validate input data */
-  const schemaRes = RepoFormSchema.safeParse(formData);
+  const schemaRes = contributedRepo.safeParse(formData);
   if (!schemaRes.success) return { error: getZodMsg(schemaRes.error) };
   const { author, name, provider, primary_label, labels = [] } = schemaRes.data;
 
@@ -70,7 +70,7 @@ export async function createRepository(
 type IndexRepoReturn = Promise<ErrorObj | SuccessObj<null>>;
 
 async function indexGitHubRepo(
-  props: RepoFormSchemaType,
+  props: ContributedRepo,
   suggesterId: string,
 ): IndexRepoReturn {
   const { author, name, provider, primary_label, labels = [] } = props;
@@ -105,7 +105,7 @@ async function indexGitHubRepo(
   const repo = await db.query.repositories.findFirst({
     where: (fields, { eq }) => eq(fields._pk, _repoPK),
   });
-  if (!repo) return { error: "Failed to insert repository." };
+  if (!repo) return { error: "Failed to index repository." };
 
   /* Insert languages into database & create RepoLangs relations */
   for (const lang of langs.data) {

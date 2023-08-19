@@ -3,8 +3,9 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 
+import { getStats } from "@/server-actions/cached/getStats";
+
 import { cn } from "@/lib/utils";
-import { getStats } from "@/server-actions/cached/get-stats";
 import Browser from "@/components/Browser";
 import MarqueeX from "@/components/MarqueeX";
 

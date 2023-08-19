@@ -12,7 +12,7 @@ import {
   updateLabel,
   updateRepository,
   updateUser,
-} from "@/server-actions/admin-actions";
+} from "@/server-actions/adminActions";
 
 import { cn } from "@/lib/utils";
 import type { GenericObj } from "@/lib/types";
@@ -244,11 +244,12 @@ export function ManageRepoForm({
   const [isPending, startTransition] = useTransition();
   const [confirmDelete, setConfirmDelete] = useState(false);
 
+  const _repoPK = `${repository.id}|${repository.type}`;
+
   async function onSubmit(formData: FormData) {
-    formData.append("provider", repository.type);
     const cleanedData = formDataToObj(formData) as GenericObj;
     try {
-      const data = await updateRepository(repository.id, cleanedData);
+      const data = await updateRepository(_repoPK, cleanedData);
       if (!data) throw new Error("Something unexpected occurred.");
       throwSAErrors(data.error);
       toast.success("Successfully updated repository.");
@@ -260,7 +261,7 @@ export function ManageRepoForm({
   async function onDelete() {
     if (!confirmDelete) return;
     try {
-      const data = await deleteRepository(repository.id, repository.type);
+      const data = await deleteRepository(_repoPK);
       if (!data) throw new Error("Something unexpected occurred.");
       throwSAErrors(data.error);
       toast.success("Successfully deleted repository.");
