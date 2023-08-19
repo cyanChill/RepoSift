@@ -9,19 +9,16 @@ import { LabelFormSchema } from "@/lib/zod/schema";
 import { checkAuthConstraint } from "./utils";
 
 export async function createLabel(
-  formData: GenericObj
+  formData: GenericObj,
 ): Promise<ErrorObj | SuccessObj<Omit<Label, "userId">>> {
   /* Validate input data */
   const schemaRes = LabelFormSchema.safeParse(formData);
-  if (!schemaRes.success) {
-    console.log(schemaRes.error.errors); // For debugging purposes
-    return { error: getZodMsg(schemaRes.error) };
-  }
+  if (!schemaRes.success) return { error: getZodMsg(schemaRes.error) };
   const { label } = schemaRes.data;
 
   const authRes = await checkAuthConstraint(
     12,
-    "User isn't old enough to suggest a label."
+    "User isn't old enough to suggest a label.",
   );
   if (containsSAErr(authRes)) return authRes;
 

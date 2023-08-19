@@ -36,7 +36,7 @@ export function DrizzleAdapter(
         TODO: When implementing account linking, logic needs to be updated
               to prevent a new "User" entry from being created.
       */
-      console.log("\n[createUser()] data:", data, "\n");
+      // console.log("\n[createUser()] data:", data, "\n");
 
       const id = createId();
       const uniqueHandle = `${data.username ?? ""}-${id}`;
@@ -74,7 +74,7 @@ export function DrizzleAdapter(
 
     // @ts-ignore: Returns our implementation of the User model.
     async getUser(id): UserFuncsReturnType {
-      console.log("\n[getUser()] id:", id, "\n");
+      // console.log("\n[getUser()] id:", id, "\n");
 
       const user = await db.query.users.findFirst({
         where: eq(users.id, id),
@@ -84,7 +84,7 @@ export function DrizzleAdapter(
     },
 
     getUserByEmail(email) {
-      console.log("\n[getUserByEmail()] email:", email, "\n");
+      // console.log("\n[getUserByEmail()] email:", email, "\n");
       /* We don't accept emails with our application */
       return null;
     },
@@ -95,12 +95,12 @@ export function DrizzleAdapter(
       providerAccountId,
       provider,
     }): UserFuncsReturnType {
-      console.log(
-        "\n[getUserByAccount()] providerAccountId, provider:",
-        providerAccountId,
-        provider,
-        "\n",
-      );
+      // console.log(
+      //   "\n[getUserByAccount()] providerAccountId, provider:",
+      //   providerAccountId,
+      //   provider,
+      //   "\n",
+      // );
 
       const account = await db.query.accounts.findFirst({
         where: and(
@@ -119,7 +119,7 @@ export function DrizzleAdapter(
 
     // @ts-ignore: Returns our implementation of the User model.
     async updateUser(userData): UserFuncsReturnType {
-      console.log("\n[updateUser()] userData:", userData, "\n");
+      // console.log("\n[updateUser()] userData:", userData, "\n");
 
       if (!userData.id) throw new Error("User not found!");
       /* FIXME: As of now, we'll handle user updates somewhere else. */
@@ -133,14 +133,14 @@ export function DrizzleAdapter(
 
     /* ❗ Unimplemented Method as of Next-Auth v4.22.1 ❗ */
     async deleteUser(userId) {
-      console.log("\n[deleteUser()] userId:", userId, "\n");
+      // console.log("\n[deleteUser()] userId:", userId, "\n");
       await db.delete(users).where(eq(users.id, userId));
       await db.delete(linkedAccounts).where(eq(linkedAccounts.userId, userId));
     },
 
     /* Run after "createUser()" runs. */
     async linkAccount(accountData) {
-      console.log("\n[linkAccount()] account:", accountData, "\n");
+      // console.log("\n[linkAccount()] account:", accountData, "\n");
 
       await db.insert(accounts).values({
         id: createId(),
@@ -159,12 +159,12 @@ export function DrizzleAdapter(
 
     /* ❗ Unimplemented Method as of Next-Auth v4.22.1 ❗ */
     async unlinkAccount({ providerAccountId, provider }) {
-      console.log(
-        "\n[unlinkAccount()] providerAccountId, provider:",
-        providerAccountId,
-        provider,
-        "\n",
-      );
+      // console.log(
+      //   "\n[unlinkAccount()] providerAccountId, provider:",
+      //   providerAccountId,
+      //   provider,
+      //   "\n",
+      // );
 
       await db
         .delete(accounts)
@@ -186,7 +186,7 @@ export function DrizzleAdapter(
 
     /* ✅ Runs when we log in on a new device. */
     async createSession(newSession) {
-      console.log("\n[createSession()] newSession:", newSession, "\n");
+      // console.log("\n[createSession()] newSession:", newSession, "\n");
 
       await db.insert(sessions).values({
         id: createId(),
@@ -207,7 +207,7 @@ export function DrizzleAdapter(
     async getSessionAndUser(
       sessionToken,
     ): Promise<{ session: Session; user: UserWithLinkedAccounts } | null> {
-      console.log("\n[getSessionAndUser()] sessionToken:", sessionToken, "\n");
+      // console.log("\n[getSessionAndUser()] sessionToken:", sessionToken, "\n");
 
       const session = await db.query.sessions.findFirst({
         where: eq(sessions.sessionToken, sessionToken),
@@ -223,7 +223,7 @@ export function DrizzleAdapter(
     },
 
     async updateSession(session) {
-      console.log("\n[updateSession()] session:", session, "\n");
+      // console.log("\n[updateSession()] session:", session, "\n");
 
       const { sessionToken } = session;
       await db
@@ -240,7 +240,7 @@ export function DrizzleAdapter(
 
     /* ✅ Runs when we log out. */
     async deleteSession(sessionToken) {
-      console.log("\n[deleteSession()] sessionToken:", sessionToken, "\n");
+      // console.log("\n[deleteSession()] sessionToken:", sessionToken, "\n");
       await db.delete(sessions).where(eq(sessions.sessionToken, sessionToken));
     },
   };

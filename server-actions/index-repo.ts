@@ -20,10 +20,7 @@ export async function createRepository(
 ): Promise<ErrorObj | IndexRepoReturn> {
   /* Validate input data */
   const schemaRes = RepoFormSchema.safeParse(formData);
-  if (!schemaRes.success) {
-    console.log(schemaRes.error.errors); // For debugging purposes
-    return { error: getZodMsg(schemaRes.error) };
-  }
+  if (!schemaRes.success) return { error: getZodMsg(schemaRes.error) };
   const { author, name, provider, primary_label, labels = [] } = schemaRes.data;
 
   const authRes = await checkAuthConstraint(

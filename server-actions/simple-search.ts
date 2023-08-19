@@ -8,14 +8,11 @@ import type { GitHubRepoType } from "@/lib/zod/schema";
 import { GitHubRepoSearchResult, SimpleSearchSchema } from "@/lib/zod/schema";
 
 export async function simpleSearch(
-  formData: GenericObj
+  formData: GenericObj,
 ): Promise<ErrorObj | GitHubSearchReturn> {
   /* Validate input data */
   const schemaRes = SimpleSearchSchema.safeParse(formData);
-  if (!schemaRes.success) {
-    console.log(schemaRes.error.errors); // For debugging purposes
-    return { error: getZodMsg(schemaRes.error) };
-  }
+  if (!schemaRes.success) return { error: getZodMsg(schemaRes.error) };
 
   const { provider, languages, maxStars } = schemaRes.data;
   let { minStars, limit } = schemaRes.data;
@@ -74,7 +71,6 @@ async function GitHubSearch({
     const dataParsed = GitHubRepoSearchResult.safeParse(data);
     if (!dataParsed.success) {
       console.log(data); // See what was returned instead
-      console.log(dataParsed.error.errors); // For debugging purposes
       return { error: "Received data of an unexpected form from GitHub." };
     }
 

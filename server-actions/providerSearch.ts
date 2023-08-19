@@ -38,7 +38,6 @@ export async function getGitHubRepoData(
     const dataParsed = GitHubRepo.safeParse(data);
     if (!dataParsed.success) {
       console.log(data); // See what was returned instead
-      console.log(dataParsed.error.errors); // For debugging purposes
       return { error: "Received data of an unexpected form from GitHub." };
     }
     return { data: dataParsed.data };
