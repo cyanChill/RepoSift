@@ -26,7 +26,7 @@ export default function Results({ results }: Props) {
       <section className="w-full min-w-0">
         {results.map((result, idx) => (
           <ResultsListItem
-            key={result.id}
+            key={result._pk}
             selectedIdx={selectedIdx}
             currIdx={idx}
             onClick={() => setSelectedIdx(idx)}

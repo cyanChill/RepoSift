@@ -42,7 +42,7 @@ export default function DataTabs({ labels, repositories }: Props) {
           )}
           {repositories.map((repo) => (
             <Link
-              key={`${repo.type}-${repo.id}`}
+              key={repo._pk}
               href={`/repository/${repo.type}/${repo.id}`}
               className="flex items-center gap-1 border-b-3 border-black p-2 transition last:border-b-0 hover:bg-gray-100"
             >

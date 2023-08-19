@@ -31,6 +31,7 @@ export default async function ProfilePage({ params }: Props) {
       contributedLabels: { columns: { type: false, userId: false } },
       contributedRepos: {
         columns: {
+          _pk: true,
           id: true,
           type: true,
           author: true,

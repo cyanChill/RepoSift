@@ -23,8 +23,7 @@ export async function refreshRepository(
   }
 
   const repoExist = await db.query.repositories.findFirst({
-    where: (fields, { and, eq }) =>
-      and(eq(fields.id, repoId), eq(fields.type, repoType)),
+    where: (fields, { eq }) => eq(fields._pk, `${repoId}|${repoType}`),
   });
   if (!repoExist) {
     return { error: "The repository you're trying to refresh doesn't exist." };
@@ -82,7 +81,7 @@ async function refreshGitHub(repoId: string): RefreshRepoReturn {
       ...updtValues,
       lastUpdated: new Date(),
     })
-    .where(and(eq(repositories.id, repoId), eq(repositories.type, "github")));
+    .where(eq(repositories._pk, `${repoId}|github`));
 
   return { data: null };
 }

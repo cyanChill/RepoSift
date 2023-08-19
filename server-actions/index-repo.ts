@@ -74,7 +74,7 @@ async function indexGitHubRepo(
   props: RepoFormSchemaType,
   suggesterId: string,
 ): IndexRepoReturn {
-  const { author, name, provider, primary_label, labels } = props;
+  const { author, name, provider, primary_label, labels = [] } = props;
 
   const searchResult = await getGitHubRepoData({
     type: "new",
@@ -89,8 +89,10 @@ async function indexGitHubRepo(
   const langs = await getGitHubRepoLang(repository.languages_url);
   if (containsSAErr(langs)) return langs;
 
+  const _repoPK = `${strId}|${provider}`;
   // Insert repository
   await db.insert(repositories).values({
+    _pk: _repoPK,
     id: strId,
     type: provider,
     author: repository.owner?.login ?? author,
@@ -102,8 +104,7 @@ async function indexGitHubRepo(
     lastUpdated: new Date(),
   });
   const repo = await db.query.repositories.findFirst({
-    where: (fields, { and, eq }) =>
-      and(eq(fields.id, strId), eq(fields.type, provider)),
+    where: (fields, { eq }) => eq(fields._pk, _repoPK),
   });
   if (!repo) return { error: "Failed to insert repository." };
 
@@ -118,9 +119,7 @@ async function indexGitHubRepo(
   }
 
   // Create label relations.
-  const repoLabelRel =
-    labels?.map((lb) => ({ name: lb, repoId: strId, repoType: provider })) ??
-    [];
+  const repoLabelRel = labels.map((lb) => ({ name: lb, repoPK: _repoPK }));
   if (repoLabelRel.length > 0) await db.insert(repoLabels).values(repoLabelRel);
 
   return { data: null };

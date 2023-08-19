@@ -12,8 +12,7 @@ export async function generateMetadata({ params: { type, repoId } }: Props) {
   if (!providersVal.includes(type)) {
   } else {
     const repo = await db.query.repositories.findFirst({
-      where: (fields, { and, eq }) =>
-        and(eq(fields.id, repoId), eq(fields.type, type)),
+      where: (fields, { eq }) => eq(fields._pk, `${repoId}|${type}`),
       columns: { name: true, author: true },
     });
     if (repo) pageTitle = `| ${repo.author}/${repo.name}`;
@@ -30,8 +29,7 @@ export default async function RepositoryPage({
   }
 
   const repo = await db.query.repositories.findFirst({
-    where: (fields, { and, eq }) =>
-      and(eq(fields.id, repoId), eq(fields.type, type)),
+    where: (fields, { eq }) => eq(fields._pk, `${repoId}|${type}`),
     columns: { _primaryLabel: false, userId: false },
     with: {
       labels: { with: { label: true } },

@@ -39,24 +39,19 @@ export const labelRelations = relations(labels, ({ one, many }) => ({
 export type LabelWithUser = Label & { user: User };
 
 /* Information about repository we'll store in our database */
-export const repositories = mysqlTable(
-  "repositories",
-  {
-    id: varchar("id", { length: 256 }).notNull(),
-    type: mysqlEnum("type", ["github", "gitlab", "bitbucket"]).notNull(),
-    author: varchar("author", { length: 256 }).notNull(),
-    name: varchar("name", { length: 256 }).notNull(),
-    description: varchar("description", { length: 256 }),
-    stars: int("stars").default(0),
-    maintainLink: text("maintainLink"),
-    _primaryLabel: varchar("_primary_label", { length: 128 }).notNull(),
-    userId: varchar("userId", { length: 256 }).notNull(), // Suggester
-    lastUpdated: timestamp("lastUpdated").notNull(),
-  },
-  (table) => ({
-    pk: primaryKey(table.id, table.type),
-  }),
-);
+export const repositories = mysqlTable("repositories", {
+  _pk: varchar("_pk", { length: 512 }).primaryKey().notNull(), // "{id}|{type}"
+  id: varchar("id", { length: 256 }).notNull(),
+  type: mysqlEnum("type", ["github", "gitlab", "bitbucket"]).notNull(),
+  author: varchar("author", { length: 256 }).notNull(),
+  name: varchar("name", { length: 256 }).notNull(),
+  description: varchar("description", { length: 256 }),
+  stars: int("stars").default(0),
+  maintainLink: text("maintainLink"),
+  _primaryLabel: varchar("_primary_label", { length: 128 }).notNull(),
+  userId: varchar("userId", { length: 256 }).notNull(), // Suggester
+  lastUpdated: timestamp("lastUpdated").notNull(),
+});
 export type BaseRepositoryType = InferModel<typeof repositories>;
 export const repositoryRelations = relations(repositories, ({ one, many }) => ({
   user: one(users, { fields: [repositories.userId], references: [users.id] }),
@@ -84,13 +79,10 @@ export const repoLabels = mysqlTable(
   "repoLabels",
   {
     name: varchar("name", { length: 128 }).notNull(),
-    repoId: varchar("repoId", { length: 256 }).notNull(),
-    repoType: mysqlEnum("type", ["github", "gitlab", "bitbucket"])
-      .default("github")
-      .notNull(),
+    repoPK: varchar("repoPK", { length: 512 }).notNull(),
   },
   (table) => ({
-    pk: primaryKey(table.name, table.repoId, table.repoType),
+    pk: primaryKey(table.name, table.repoPK),
   }),
 );
 export type RepoLabel = InferModel<typeof repoLabels>;
@@ -100,8 +92,8 @@ export const repoLabelRelations = relations(repoLabels, ({ one }) => ({
     references: [labels.name],
   }),
   repository: one(repositories, {
-    fields: [repoLabels.repoId, repoLabels.repoType],
-    references: [repositories.id, repositories.type],
+    fields: [repoLabels.repoPK],
+    references: [repositories._pk],
   }),
 }));
 export interface RepoLabelWLabel extends RepoLabel {

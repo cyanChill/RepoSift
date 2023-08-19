@@ -180,16 +180,12 @@ export async function updateRepository(
   }
 
   try {
+    const _repoPK = `${repoId}|${provider}`;
     await db.transaction(async (tx) => {
       // Delete old labels
-      await tx
-        .delete(repoLabels)
-        .where(
-          and(eq(repoLabels.repoId, repoId), eq(repoLabels.repoType, provider)),
-        );
+      await tx.delete(repoLabels).where(eq(repoLabels.repoPK, _repoPK));
       // Insert new labels
-      const newLbRels =
-        labels?.map((lb) => ({ name: lb, repoId, repoType: provider })) ?? [];
+      const newLbRels = labels.map((lb) => ({ name: lb, repoPK: _repoPK }));
       if (newLbRels.length > 0) await tx.insert(repoLabels).values(newLbRels);
       // Update repository
       await tx
@@ -198,13 +194,11 @@ export async function updateRepository(
           _primaryLabel: primary_label,
           ...(maintainLink ? { maintainLink } : {}),
         })
-        .where(
-          and(eq(repositories.id, repoId), eq(repositories.type, provider)),
-        );
+        .where(eq(repositories._pk, _repoPK));
       // Log the person who enacted this action
       await tx.insert(logs).values({
         id: createId(),
-        action: `Updated repository. - ${provider} (${repoId})`,
+        action: `Updated repository. - ${_repoPK}`,
         userId: user.id,
       });
     });
@@ -230,26 +224,19 @@ export async function deleteRepository(
   const user = authRes.data;
 
   try {
+    const _repoPK = `${repoId}|${repoType}`;
     await db.transaction(async (tx) => {
-      await tx
-        .delete(repoLabels)
-        .where(
-          and(eq(repoLabels.repoId, repoId), eq(repoLabels.repoType, repoType)),
-        );
+      await tx.delete(repoLabels).where(eq(repoLabels.repoPK, _repoPK));
       await tx
         .delete(repoLangs)
         .where(
           and(eq(repoLangs.repoId, repoId), eq(repoLangs.repoType, repoType)),
         );
-      await tx
-        .delete(repositories)
-        .where(
-          and(eq(repositories.id, repoId), eq(repositories.type, repoType)),
-        );
+      await tx.delete(repositories).where(eq(repositories._pk, _repoPK));
       // Log the person who enacted this action
       await tx.insert(logs).values({
         id: createId(),
-        action: `Deleted repository. - ${repoType} (${repoId})`,
+        action: `Deleted repository. - ${_repoPK}`,
         userId: user.id,
       });
     });
