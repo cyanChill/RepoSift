@@ -1,5 +1,5 @@
 "use client";
-import { useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import type { CSSProperties } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -27,6 +27,7 @@ type Props = {
 export default function RepoCard({ result, onClose }: Props) {
   const router = useRouter();
   const { isAuth } = useAuth();
+  const [hydrDate, setHydrDate] = useState("");
   const [isPending, startTransition] = useTransition();
 
   // If repository data has been recently refreshed
@@ -44,6 +45,10 @@ export default function RepoCard({ result, onClose }: Props) {
       toastSAErrors(err);
     }
   };
+
+  useEffect(() => {
+    setHydrDate(cleanDate(result.lastUpdated));
+  }, [result.lastUpdated]);
 
   const shadowStyle = {
     "--bs-offset-x": "2px",
@@ -139,7 +144,7 @@ export default function RepoCard({ result, onClose }: Props) {
               <p className={cn(baseLabelClass, "border-l-2 bg-violet-300")}>
                 Last Updated
               </p>
-              <p className={baseLabelClass}>{cleanDate(result.lastUpdated)}</p>
+              <p className={baseLabelClass}>{hydrDate}</p>
             </div>
           </div>
           {/* Actions */}

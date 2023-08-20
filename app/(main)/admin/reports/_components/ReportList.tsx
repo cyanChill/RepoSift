@@ -1,5 +1,5 @@
 "use client";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 
@@ -126,6 +126,11 @@ type ReportRowProps = {
 
 const ReportRow = ({ report, toggleSelected }: ReportRowProps) => {
   const [expand, setExpand] = useState(false);
+  const [hydrDate, setHydrDate] = useState("");
+
+  useEffect(() => {
+    setHydrDate(cleanDate(report.createdAt));
+  }, [report.createdAt]);
 
   const jsonDesc = JSON.parse(report.description) as string;
   const minDesc =
@@ -133,7 +138,7 @@ const ReportRow = ({ report, toggleSelected }: ReportRowProps) => {
 
   return (
     <tr key={report.id} className="border-b-2 border-black last:border-b-0">
-      <td className="p-2 align-top text-sm">{cleanDate(report.createdAt)}</td>
+      <td className="p-2 align-top text-sm">{hydrDate}</td>
       <td className="p-2 align-top">
         <p className="font-medium">{report.title}</p>
         <p className="whitespace-pre-wrap text-sm">
