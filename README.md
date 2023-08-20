@@ -69,6 +69,10 @@ A short summary of what RepoSift aims to provide is giving developers a platform
 [![MySQL][MySQL]][MySQL-url]
 [![DrizzleORM][DrizzleORM]][DrizzleORM-url]
 
+### Demo
+
+https://github.com/cyanChill/RepoSift/assets/83375816/7e65132c-d9c8-4351-8e61-d6aa293ba389
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
