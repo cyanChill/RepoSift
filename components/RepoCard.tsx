@@ -14,9 +14,10 @@ import { refreshRepository } from "@/server-actions/refreshRepository";
 import useAuth from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 import { throwSAErrors, toastSAErrors } from "@/lib/utils/error";
+import { cleanDate } from "@/lib/utils/mutate";
+import { toURLQS } from "@/lib/utils/url";
 import { isNotOneWeekOld } from "@/lib/utils/validation";
 import { getProviderIcon, getRepoLink } from "@/app/(main)/_components/utils";
-import { toURLQS } from "@/lib/utils/url";
 
 type Props = {
   result: IndexedRepo;
@@ -138,9 +139,7 @@ export default function RepoCard({ result, onClose }: Props) {
               <p className={cn(baseLabelClass, "border-l-2 bg-violet-300")}>
                 Last Updated
               </p>
-              <p className={baseLabelClass}>
-                {new Date(result.lastUpdated).toLocaleString()}
-              </p>
+              <p className={baseLabelClass}>{cleanDate(result.lastUpdated)}</p>
             </div>
           </div>
           {/* Actions */}

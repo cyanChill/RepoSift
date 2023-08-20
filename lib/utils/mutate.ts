@@ -84,5 +84,5 @@ export function arrayTransform(str: string): string[] {
  * @returns A string
  */
 export const cleanDate = (date: Date) => {
-  return format(new Date(date), "MMMM dd, yyyy kk:mm:ss");
+  return format(date, "MMMM dd, yyyy kk:mm:ss");
 };
