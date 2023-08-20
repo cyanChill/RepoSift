@@ -95,7 +95,7 @@ npm install npm@latest -g
    git clone https://github.com/cyanChill/RepoSift.git
    ```
 3. Then install the dependencies by running `npm i`.
-4. Create an `.env` file, populated with the values specified in the [`.env.example`](https://github.com/cyanChill/RepoSift/blob/main/.env.example) file.
+4. Create an `.env` file, populated with the values specified in the [`.env.example`](.env.example) file.
 
 ### Setting Up the Database
 
@@ -188,7 +188,7 @@ Don't forget to give the project a star! Thanks again!
 
 ## License
 
-Distributed under the MIT License. See `license.md` for more information.
+Distributed under the MIT License. See [`LICENSE`](LICENSE) for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
