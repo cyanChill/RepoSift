@@ -50,7 +50,7 @@
 
 RepoSift is an updated version of [GitInspire](https://github.com/cyanChill/GitInspire), aimed to allow for more expandability (ie: Adding support for GitLab and Bitbucket, instead of staying with just GitHub). In addition, this has been rewritten to take more advantage of the features of Next.js.
 
-> Previously, we had our backend written in Python using Flask. The problem was with the cold starts and constant need to migrate the database due to using Render's free Postgres database, which only lasts for 90 days.
+> Previously, we had our backend written in Python using Flask. The problem was with the cold starts and constant need to migrate the database due to using Render's free PostgreSQL database, which only lasts for 90 days.
 
 A short summary of what RepoSift aims to provide is giving developers a platform to come up with ideas more easily through:
 
