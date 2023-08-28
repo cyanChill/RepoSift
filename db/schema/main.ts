@@ -1,5 +1,5 @@
 /* https://github.com/drizzle-team/drizzle-orm/tree/main/drizzle-orm/src/mysql-core */
-import { relations, sql, type InferModel } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   primaryKey,
   int,
@@ -11,17 +11,17 @@ import {
   boolean,
 } from "drizzle-orm/mysql-core";
 
-import { users, type User } from "./next-auth";
+import { users, type SelectUser } from "./next-auth";
 
 /* Programming languages [Automatically Inserted] */
 export const languages = mysqlTable("languages", {
   name: varchar("name", { length: 128 }).primaryKey().notNull(),
   display: varchar("display", { length: 128 }).notNull(),
 });
-export type Language = InferModel<typeof languages>;
 export const languageRelations = relations(languages, ({ many }) => ({
   repoLanguages: many(repoLangs),
 }));
+export type SelectLanguage = typeof languages.$inferSelect;
 
 /* Labels used to index repositories better */
 export const labels = mysqlTable("labels", {
@@ -30,13 +30,15 @@ export const labels = mysqlTable("labels", {
   type: mysqlEnum("type", ["primary", "regular"]).default("regular").notNull(),
   userId: varchar("userId", { length: 256 }).notNull(), // Suggester
 });
-export type Label = InferModel<typeof labels>;
 export const labelRelations = relations(labels, ({ one, many }) => ({
   user: one(users, { fields: [labels.userId], references: [users.id] }),
   repositories: many(repositories), // As a primary label
   repoLabels: many(repoLabels), // As "regular" labels
 }));
-export type LabelWithUser = Label & { user: User };
+export type SelectLabel = typeof labels.$inferSelect;
+export interface LabelWUser extends SelectLabel {
+  user: SelectUser;
+}
 
 /* Information about repository we'll store in our database */
 export const repositories = mysqlTable("repositories", {
@@ -52,7 +54,6 @@ export const repositories = mysqlTable("repositories", {
   userId: varchar("userId", { length: 256 }).notNull(), // Suggester
   lastUpdated: timestamp("lastUpdated").notNull(),
 });
-export type BaseRepositoryType = InferModel<typeof repositories>;
 export const repositoryRelations = relations(repositories, ({ one, many }) => ({
   user: one(users, { fields: [repositories.userId], references: [users.id] }),
   primaryLabel: one(labels, {
@@ -62,12 +63,13 @@ export const repositoryRelations = relations(repositories, ({ one, many }) => ({
   labels: many(repoLabels),
   languages: many(repoLangs),
 }));
-export type Repository = BaseRepositoryType & {
-  user: User;
-  primaryLabel: Label;
+export type SelectBaseRepository = typeof repositories.$inferSelect;
+export interface Repository extends SelectBaseRepository {
+  user: SelectUser;
+  primaryLabel: SelectLabel;
   labels: RepoLabelWLabel[];
   languages: RepoLangWLang[];
-};
+}
 
 /*
   -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -85,7 +87,6 @@ export const repoLabels = mysqlTable(
     pk: primaryKey(table.name, table.repoPK),
   }),
 );
-export type RepoLabel = InferModel<typeof repoLabels>;
 export const repoLabelRelations = relations(repoLabels, ({ one }) => ({
   label: one(labels, {
     fields: [repoLabels.name],
@@ -96,8 +97,9 @@ export const repoLabelRelations = relations(repoLabels, ({ one }) => ({
     references: [repositories._pk],
   }),
 }));
-export interface RepoLabelWLabel extends RepoLabel {
-  label?: Label;
+export type SelectRepoLabel = typeof repoLabels.$inferSelect;
+export interface RepoLabelWLabel extends SelectRepoLabel {
+  label?: SelectLabel;
 }
 
 /* Languages automatically assigned to repositories on creation */
@@ -111,7 +113,6 @@ export const repoLangs = mysqlTable(
     pk: primaryKey(table.name, table.repoPK),
   }),
 );
-export type RepoLanguage = InferModel<typeof repoLangs>;
 export const repoLangRelations = relations(repoLangs, ({ one }) => ({
   language: one(languages, {
     fields: [repoLangs.name],
@@ -122,8 +123,9 @@ export const repoLangRelations = relations(repoLangs, ({ one }) => ({
     references: [repositories._pk],
   }),
 }));
-export interface RepoLangWLang extends RepoLanguage {
-  language?: Language;
+export type SelectRepoLanguage = typeof repoLangs.$inferSelect;
+export interface RepoLangWLang extends SelectRepoLanguage {
+  language?: SelectLanguage;
 }
 
 /*
@@ -144,8 +146,6 @@ export const reports = mysqlTable("reports", {
 export const reportRelations = relations(reports, ({ one }) => ({
   user: one(users, { fields: [reports.userId], references: [users.id] }),
 }));
-export type Report = InferModel<typeof reports>;
-export type ReportWithUser = Report & { user: User };
 
 export const logs = mysqlTable("logs", {
   id: varchar("id", { length: 256 }).primaryKey().notNull(),
@@ -160,4 +160,3 @@ export const logRelation = relations(logs, ({ one }) => ({
   user: one(users, { fields: [logs.userId], references: [users.id] }),
   report: one(reports, { fields: [logs.reportId], references: [reports.id] }),
 }));
-export type Log = InferModel<typeof logs>;

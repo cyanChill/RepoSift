@@ -6,7 +6,7 @@ import { addDays } from "date-fns";
 import { TfiSave } from "react-icons/tfi";
 import { toast } from "react-hot-toast";
 
-import type { UserWithLinkedAccounts } from "@/db/schema/next-auth";
+import type { UserWLinkedAccs } from "@/db/schema/next-auth";
 import {
   updateHandle,
   updateImgSrc,
@@ -21,7 +21,7 @@ import type { AuthProviders } from "@/lib/zod/utils";
 import { Select } from "@/components/form/input";
 
 type Props = {
-  user: UserWithLinkedAccounts;
+  user: UserWLinkedAccs;
 };
 
 export function NameForm({ user }: Props) {

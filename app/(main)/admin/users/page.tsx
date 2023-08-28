@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 import { db } from "@/db";
-import type { UserWithLinkedAccounts } from "@/db/schema/next-auth";
+import type { UserWLinkedAccs } from "@/db/schema/next-auth";
 
 import type { PageProps } from "@/lib/types";
 import { firstStrParam } from "@/lib/utils/url";
@@ -15,7 +15,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
   const { handle: unsafeHandle } = searchParams;
   const handle = firstStrParam(unsafeHandle);
 
-  let user: UserWithLinkedAccounts | undefined;
+  let user: UserWLinkedAccs | undefined;
   let profileImg: string | undefined;
   if (handle) {
     user = await db.query.users.findFirst({

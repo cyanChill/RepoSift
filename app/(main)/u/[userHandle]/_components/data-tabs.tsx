@@ -3,14 +3,14 @@ import Link from "next/link";
 import { Tab } from "@headlessui/react";
 import { VscLinkExternal } from "react-icons/vsc";
 
-import type { Label, BaseRepositoryType } from "@/db/schema/main";
+import type { SelectLabel, SelectBaseRepository } from "@/db/schema/main";
 import { cn } from "@/lib/utils";
 import { getProviderIcon } from "@/app/(main)/_components/utils";
 
 type Props = {
-  labels: Omit<Label, "type" | "userId">[];
+  labels: Omit<SelectLabel, "type" | "userId">[];
   repositories: Omit<
-    BaseRepositoryType,
+    SelectBaseRepository,
     "stars" | "maintainLink" | "_primaryLabel" | "userId" | "lastUpdated"
   >[];
 };

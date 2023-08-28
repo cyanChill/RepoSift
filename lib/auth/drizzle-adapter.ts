@@ -10,7 +10,7 @@ import {
   accounts,
   sessions,
 } from "@/db/schema/next-auth";
-import type { UserWithLinkedAccounts, Session } from "@/db/schema/next-auth";
+import type { UserWLinkedAccs, SelectSession } from "@/db/schema/next-auth";
 import type { AuthProviders } from "../zod/utils";
 
 /*
@@ -18,7 +18,7 @@ import type { AuthProviders } from "../zod/utils";
          custom user.
 */
 
-type UserFuncsReturnType = Promise<UserWithLinkedAccounts | null>;
+type UserFuncsReturnType = Promise<UserWLinkedAccs | null>;
 
 export function DrizzleAdapter(
   db: PlanetScaleDatabase<DrizzleSchema>,
@@ -27,7 +27,7 @@ export function DrizzleAdapter(
     /* Runs when we "getUserByAccount()" fails to return something. */
     // @ts-ignore: Returns our implementation of the User model which
     //             intentially looks different compared to the input.
-    async createUser(data): Promise<UserWithLinkedAccounts> {
+    async createUser(data): Promise<UserWLinkedAccs> {
       /*
         Using a transaction as we want to prevent people from creating
         an account that's been linked to someone else's account.
@@ -204,9 +204,10 @@ export function DrizzleAdapter(
 
     /* ✅ Runs whenever we open the tab with our site. */
     // @ts-ignore: Returns our implementation of the User model.
-    async getSessionAndUser(
-      sessionToken,
-    ): Promise<{ session: Session; user: UserWithLinkedAccounts } | null> {
+    async getSessionAndUser(sessionToken): Promise<{
+      session: SelectSession;
+      user: UserWLinkedAccs;
+    } | null> {
       // console.log("\n[getSessionAndUser()] sessionToken:", sessionToken, "\n");
 
       const session = await db.query.sessions.findFirst({

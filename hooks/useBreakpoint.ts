@@ -22,7 +22,7 @@ function subscribe(callback: () => void) {
  */
 const useBreakpoint = (
   breakpoint: number,
-  operator: BreakpointOperators = "lt"
+  operator: BreakpointOperators = "lt",
 ) => {
   const getSnapshot = useCallback(() => {
     switch (operator) {
@@ -44,7 +44,7 @@ const useBreakpoint = (
   return useSyncExternalStore(
     subscribe, // React won't resubscribe for as long as you pass the same function
     getSnapshot, // How to get the value on the client
-    () => false // How to get the value on the server
+    () => false, // How to get the value on the server
   );
 };
 

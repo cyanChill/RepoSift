@@ -9,7 +9,7 @@
     "lint": "next lint",
     "db:generate": "drizzle-kit generate:mysql",
     "db:push": "drizzle-kit push:mysql --config=drizzle.config.ts",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio --host 127.0.0.1"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.16",

@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 
-import type { LinkedAccount } from "@/db/schema/next-auth";
+import type { SelectLinkedAcc } from "@/db/schema/next-auth";
 
 import { isFalsyNotZero } from "./validation";
 import type { GenericObj } from "../types";
@@ -28,8 +28,8 @@ export function removeEmptyProperties(data: GenericObj) {
  * @description Go through the "LinkedAccount" property on a "User" object and returns the oldest date.
  * @returns A date or date string.
  */
-export function getOldestAge(linkedAccs: LinkedAccount[]) {
-  return linkedAccs.reduce((accum, curr: LinkedAccount) => {
+export function getOldestAge(linkedAccs: SelectLinkedAcc[]) {
+  return linkedAccs.reduce((accum, curr: SelectLinkedAcc) => {
     return accum < curr.createdAt ? accum : curr.createdAt;
   }, linkedAccs[0].createdAt);
 }

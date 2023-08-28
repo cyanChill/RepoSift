@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import type { LabelWithUser } from "@/db/schema/main";
+import type { LabelWUser } from "@/db/schema/main";
 
 import type { PageProps } from "@/lib/types";
 import { firstStrParam } from "@/lib/utils/url";
@@ -13,7 +13,7 @@ export default async function AdminLabelsPage({ searchParams }: PageProps) {
   const { label: unsafeLabel } = searchParams;
   const rawLabel = firstStrParam(unsafeLabel);
 
-  let label: LabelWithUser | undefined;
+  let label: LabelWUser | undefined;
   if (rawLabel) {
     label = await db.query.labels.findFirst({
       where: (fields, { and, eq, or }) =>
