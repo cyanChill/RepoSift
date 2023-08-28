@@ -37,7 +37,8 @@ export const doIndexedSearch = cache(async function (
   /* Basic Filters */
   if (types && types.length > 0) cons.push(inArray(repositories.type, types));
   if (minStars) cons.push(gte(repositories.stars, minStars));
-  if (maxStars ?? maxStars === 0) cons.push(lte(repositories.stars, maxStars));
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  if (maxStars || maxStars === 0) cons.push(lte(repositories.stars, maxStars));
   if (primary_label) cons.push(eq(repositories._primaryLabel, primary_label));
 
   /* Relational Table Filters */

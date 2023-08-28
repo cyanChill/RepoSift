@@ -4,8 +4,8 @@ import { useRouter } from "next/navigation";
 import { LuFolderSearch } from "react-icons/lu";
 import { toast } from "react-hot-toast";
 
-import type { UserWithLinkedAccounts } from "@/db/schema/next-auth";
-import type { LabelWithUser, Repository } from "@/db/schema/main";
+import type { UserWLinkedAccs } from "@/db/schema/next-auth";
+import type { LabelWUser, Repository } from "@/db/schema/main";
 import {
   deleteLabel,
   deleteRepository,
@@ -91,7 +91,7 @@ const ROLEOPTS = [
  *  account's role (between "user" and "banned") along with giving a ban
  *  reason.
  */
-export function ManageUserForm({ user }: { user: UserWithLinkedAccounts }) {
+export function ManageUserForm({ user }: { user: UserWLinkedAccs }) {
   const [isPending, startTransition] = useTransition();
 
   async function onSubmit(formData: FormData) {
@@ -142,7 +142,7 @@ export function ManageUserForm({ user }: { user: UserWithLinkedAccounts }) {
  * @description Gives the ability to update the name of a "regular"
  *  label and delete a "regular" label.
  */
-export function ManageLabelForm({ label }: { label: LabelWithUser }) {
+export function ManageLabelForm({ label }: { label: LabelWUser }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [confirmDelete, setConfirmDelete] = useState(false);

@@ -13,7 +13,7 @@ import { useRef, useEffect, useCallback } from "react";
  */
 function useExitOutRef<T extends HTMLElement>(
   callback: () => void,
-  escInRef = true
+  escInRef = true,
 ) {
   const ref = useRef<T>(null);
   const savedCb = useRef(callback);
@@ -29,7 +29,7 @@ function useExitOutRef<T extends HTMLElement>(
       if (escInRef && (!node || !node.contains(e.target as Element))) return;
       if (e.key === "Escape") savedCb.current();
     },
-    [escInRef]
+    [escInRef],
   );
 
   useEffect(() => {

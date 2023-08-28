@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { and, eq } from "drizzle-orm";
 
 import { db } from "@/db";
-import { linkedAccounts, type LinkedAccount } from "@/db/schema/next-auth";
+import { linkedAccounts, type SelectLinkedAcc } from "@/db/schema/next-auth";
 import { authOptions } from "@/lib/auth";
 
 import { ENV } from "@/lib/env-server";
@@ -39,7 +39,7 @@ export async function refreshLinkedAccs(): Promise<
 }
 
 async function refreshGitHubAcc(
-  acc: LinkedAccount,
+  acc: SelectLinkedAcc,
 ): Promise<ErrorObj | SuccessObj<null>> {
   if (isNotOneWeekOld(acc.lastUpdated)) return { data: null };
 

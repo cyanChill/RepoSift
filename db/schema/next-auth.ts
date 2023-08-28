@@ -1,5 +1,5 @@
 /* https://github.com/drizzle-team/drizzle-orm/tree/main/drizzle-orm/src/mysql-core */
-import { relations, sql, type InferModel } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   primaryKey,
   int,
@@ -13,7 +13,6 @@ import {
 } from "drizzle-orm/mysql-core";
 
 import { labels, repositories } from "./main";
-import type { Label, Repository } from "./main";
 
 /*
   -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -45,7 +44,6 @@ export const users = mysqlTable(
     ),
   }),
 );
-export type User = InferModel<typeof users>;
 export const userRelations = relations(users, ({ many }) => ({
   linkedAccounts: many(linkedAccounts),
   accounts: many(accounts),
@@ -53,11 +51,10 @@ export const userRelations = relations(users, ({ many }) => ({
   contributedLabels: many(labels),
   contributedRepos: many(repositories),
 }));
-export type UserWithLinkedAccounts = User & { linkedAccounts: LinkedAccount[] };
-export type UserWithContributions = UserWithLinkedAccounts & {
-  contributedLabels: Label[];
-  contributedRepos: Repository[];
-};
+export type SelectUser = typeof users.$inferSelect;
+export interface UserWLinkedAccs extends SelectUser {
+  linkedAccounts: SelectLinkedAcc[];
+}
 
 // A "LinkedAccount" entry should be created right after we create a "User" entry.
 export const linkedAccounts = mysqlTable(
@@ -78,10 +75,10 @@ export const linkedAccounts = mysqlTable(
     userIdIndex: index("linkedAccounts__userId__idx").on(table.userId),
   }),
 );
-export type LinkedAccount = InferModel<typeof linkedAccounts>;
 export const linkedAccountRelations = relations(linkedAccounts, ({ one }) => ({
   user: one(users, { fields: [linkedAccounts.userId], references: [users.id] }),
 }));
+export type SelectLinkedAcc = typeof linkedAccounts.$inferSelect;
 
 export const accounts = mysqlTable(
   "accounts",
@@ -105,7 +102,6 @@ export const accounts = mysqlTable(
     userIdIndex: index("accounts__userId__idx").on(table.userId),
   }),
 );
-export type Account = InferModel<typeof accounts>;
 export const accountRelations = relations(accounts, ({ one }) => ({
   user: one(users, { fields: [accounts.userId], references: [users.id] }),
 }));
@@ -125,7 +121,7 @@ export const sessions = mysqlTable(
     userIdIndex: index("sessions__userId_idx").on(table.userId),
   }),
 );
-export type Session = InferModel<typeof sessions>;
 export const sessionRelations = relations(sessions, ({ one }) => ({
   user: one(users, { fields: [sessions.userId], references: [users.id] }),
 }));
+export type SelectSession = typeof sessions.$inferSelect;

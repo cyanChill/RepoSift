@@ -13,7 +13,7 @@ import {
   repositories,
 } from "@/db/schema/main";
 import { users } from "@/db/schema/next-auth";
-import type { UserWithLinkedAccounts } from "@/db/schema/next-auth";
+import type { UserWLinkedAccs } from "@/db/schema/next-auth";
 import { authOptions } from "@/lib/auth";
 
 import type { ErrorObj, GenericObj, SuccessObj } from "@/lib/types";
@@ -25,9 +25,7 @@ import { contributeLabel, updatedRepoInfo } from "./schema";
  * @description Determines whether the user calling the server-action is
  *  an "admin" or "owner", if true, return the session user object.
  */
-async function isAdmin(): Promise<
-  ErrorObj | SuccessObj<UserWithLinkedAccounts>
-> {
+async function isAdmin(): Promise<ErrorObj | SuccessObj<UserWLinkedAccs>> {
   const session = await getServerSession(authOptions);
   if (!session) return { error: "User is not authenticated." };
   if (!["admin", "owner"].includes(session.user.role)) {

@@ -1,5 +1,5 @@
 "use client";
-import { type PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 import { signIn } from "next-auth/react";
 import { FaGithub } from "react-icons/fa6";
 

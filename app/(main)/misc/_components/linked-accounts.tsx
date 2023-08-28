@@ -5,14 +5,14 @@ import Image from "next/image";
 import { GoLink, GoUnlink } from "react-icons/go";
 import { toast } from "react-hot-toast";
 
-import type { LinkedAccount } from "@/db/schema/next-auth";
+import type { SelectLinkedAcc } from "@/db/schema/next-auth";
 import { refreshLinkedAccs } from "@/server-actions/refreshUser";
 
 import { avaliableProviders } from "@/lib/utils/constants";
 import { throwSAErrors, toastSAErrors } from "@/lib/utils/error";
 import type { AuthProviders } from "@/lib/zod/utils";
 
-export function LinkedAccWidget({ account }: { account: LinkedAccount }) {
+export function LinkedAccWidget({ account }: { account: SelectLinkedAcc }) {
   const getProvider = (val: AuthProviders) => {
     const res = avaliableProviders.find((prov) => prov.value === val);
     if (res) return res.name;

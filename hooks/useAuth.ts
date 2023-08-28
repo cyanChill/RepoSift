@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
 
-import type { UserWithLinkedAccounts } from "@/db/schema/next-auth";
+import type { UserWLinkedAccs } from "@/db/schema/next-auth";
 
 type useAuthReturn =
   | { isLoading: true; isAuth: false }
@@ -8,7 +8,7 @@ type useAuthReturn =
   | {
       isLoading: false;
       isAuth: true;
-      user: UserWithLinkedAccounts;
+      user: UserWLinkedAccs;
       isAdmin: boolean;
       isBanned: boolean;
     };

@@ -18,7 +18,7 @@ const useFormReset = (callback: () => void, formId: string) => {
       const target = e.target as Element;
       if (target.id === formId) savedCb.current();
     },
-    [formId]
+    [formId],
   );
 
   useEffect(() => {

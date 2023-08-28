@@ -1,6 +1,6 @@
 import NextAuth, { type DefaultSession } from "next-auth";
 
-import type { UserWithLinkedAccounts } from "@/db/schema/next-auth";
+import type { UserWLinkedAccs } from "@/db/schema/next-auth";
 
 // https://next-auth.js.org/getting-started/typescript#module-augmentation
 declare module "next-auth" {
@@ -28,6 +28,6 @@ declare module "next-auth" {
      * Data fron the "users" table populated with data from its relation with
      * the "linkedAccounts" table.
      */
-    user: UserWithLinkedAccounts;
+    user: UserWLinkedAccs;
   }
 }

@@ -1,4 +1,4 @@
-import type { Language } from "@/db/schema/main";
+import type { SelectLanguage } from "@/db/schema/main";
 
 import { ENV } from "@/lib/env-server";
 import type { ErrorObj, GenericObj, SuccessObj } from "@/lib/types";
@@ -53,7 +53,7 @@ export async function getGitHubRepoData(
  */
 export async function getGitHubRepoLang(
   url: string,
-): Promise<ErrorObj | SuccessObj<Language[]>> {
+): Promise<ErrorObj | SuccessObj<SelectLanguage[]>> {
   try {
     const res = await fetch(url, {
       headers: {

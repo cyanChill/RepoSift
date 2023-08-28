@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth";
 
-import type { UserWithLinkedAccounts } from "@/db/schema/next-auth";
+import type { UserWLinkedAccs } from "@/db/schema/next-auth";
 
 import { authOptions } from "@/lib/auth";
 import { didFailMonthConstraint } from "@/lib/utils/validation";
@@ -15,8 +15,8 @@ import type { ErrorObj, SuccessObj } from "@/lib/types";
  */
 export async function checkAuthConstraint(
   minAccAge = 0,
-  errMsg: string
-): Promise<ErrorObj | SuccessObj<UserWithLinkedAccounts>> {
+  errMsg: string,
+): Promise<ErrorObj | SuccessObj<UserWLinkedAccs>> {
   // Validate user is authenticated
   const session = await getServerSession(authOptions);
   if (!session) return { error: "User is not authenticated." };
