@@ -85,11 +85,7 @@ https://github.com/cyanChill/RepoSift/assets/83375816/7e65132c-d9c8-4351-8e61-d6
 
 ### Prerequisites
 
-For this project, you're required to have `npm` installed.
-
-```sh
-npm install npm@latest -g
-```
+For this project, you're required to have `pnpm` installed. You can following the guide at `pnpm`: https://pnpm.io/installation.
 
 ### Installation
 
@@ -98,12 +94,12 @@ npm install npm@latest -g
    ```sh
    git clone https://github.com/cyanChill/RepoSift.git
    ```
-3. Then install the dependencies by running `npm i`.
+3. Then install the dependencies by running `pnpm i`.
 4. Create an `.env` file, populated with the values specified in the [`.env.example`](.env.example) file.
 
 ### Setting Up the Database
 
-For this application, I've used PlanetScale as my database provider of choice. [Click this](https://planetscale.com/docs/tutorials/planetscale-quick-start-guide) for a brief guide on creating a database with PlanetScale. Once we created a database in PlanetScale, we want to push the schema defined in this repository to your database by running `npm run db:push`.
+For this application, I've used PlanetScale as my database provider of choice. [Click this](https://planetscale.com/docs/tutorials/planetscale-quick-start-guide) for a brief guide on creating a database with PlanetScale. Once we created a database in PlanetScale, we want to push the schema defined in this repository to your database by running `pnpm run db:push`.
 
 - This runs `npx drizzle-kit push:mysql --config=drizzle.config.ts`.
 
@@ -111,7 +107,7 @@ For this application, I've used PlanetScale as my database provider of choice. [
 
 #### Extras
 
-If we want to make any changes to the schema defined in the repository, you can validate the SQL commands needed to update the schema by running `npm run db:generate`. This provides us with the SQL queries that reflect the changes made to the database.
+If we want to make any changes to the schema defined in the repository, you can validate the SQL commands needed to update the schema by running `pnpm run db:generate`. This provides us with the SQL queries that reflect the changes made to the database.
 
 - This runs `npx drizzle-kit generate:mysql`.
 - We rerun this command whenever we make changes to our schema.
@@ -121,13 +117,13 @@ If we want to make any changes to the schema defined in the repository, you can 
 
 Drizzle provides the option to view and manipulate our database in the browser using [**Drizzle Studio**](https://orm.drizzle.team/drizzle-studio/overview).
 
-- Just run `npm run db:studio` and open up the link in the console (ie: `http://127.0.0.1:4983`).
+- Just run `pnpm run db:studio` and open up the link in the console (ie: `http://127.0.0.1:4983`).
 
 ### Running the Front End
 
-To run the front-end code (in development mode), run `npm run dev` while in the `client` directory.
+To run the front-end code (in development mode), run `pnpm run dev` while in the `client` directory.
 
-- For production, you need to build the code using `npm run build` and then do `npm run start` to run off that build.
+- For production, you need to build the code using `pnpm run build` and then do `pnpm run start` to run off that build.
 - A suggestion for hosting this front-end application is [Vercel](https://vercel.com/).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
