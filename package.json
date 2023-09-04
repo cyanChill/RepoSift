@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.7.16",
-    "@paralleldrive/cuid2": "^2.2.1",
+    "@paralleldrive/cuid2": "^2.2.2",
     "@planetscale/database": "^1.11.0",
     "@vercel/analytics": "^1.0.1",
     "clsx": "^2.0.0",
