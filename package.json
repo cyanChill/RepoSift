@@ -13,10 +13,10 @@
     "db:studio": "drizzle-kit studio --host 127.0.0.1"
   },
   "dependencies": {
-    "@headlessui/react": "^1.7.16",
+    "@headlessui/react": "^1.7.17",
     "@paralleldrive/cuid2": "^2.2.2",
     "@planetscale/database": "^1.11.0",
-    "@vercel/analytics": "^1.0.1",
+    "@vercel/analytics": "^1.0.2",
     "clsx": "^2.0.0",
     "date-fns": "^2.30.0",
     "dotenv": "^16.3.1",
@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "@types/eslint": "^8.44.2",
-    "@types/node": "^20.5.0",
+    "@types/node": "^20.6.2",
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.7.0",
@@ -43,9 +43,9 @@
     "autoprefixer": "^10.4.15",
     "drizzle-kit": "^0.19.13",
     "eslint": "^8.49.0",
-    "eslint-config-next": "^13.4.13",
+    "eslint-config-next": "^13.4.19",
     "postcss": "^8.4.29",
-    "prettier": "^3.0.1",
+    "prettier": "^3.0.3",
     "prettier-plugin-tailwindcss": "^0.4.1",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.2.2"
