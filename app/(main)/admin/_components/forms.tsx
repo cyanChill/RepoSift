@@ -15,10 +15,9 @@ import {
 } from "@/server-actions/adminActions";
 
 import { cn } from "@/lib/utils";
-import type { GenericObj } from "@/lib/types";
 import { LIMITS, PATTERNS } from "@/lib/utils/constants";
 import { throwSAErrors, toastSAErrors } from "@/lib/utils/error";
-import { formDataToObj } from "@/lib/utils/mutate";
+import { formDataToObj, removeEmptyProperties } from "@/lib/utils/mutate";
 import { toURLQS } from "@/lib/utils/url";
 import { Input, Select } from "@/components/form/input";
 import type { Option } from "@/components/form/utils";
@@ -262,7 +261,7 @@ export function ManageRepoForm({
   const _repoPK = `${repository.id}|${repository.type}`;
 
   async function onSubmit(formData: FormData) {
-    const cleanedData = formDataToObj(formData) as GenericObj;
+    const cleanedData = removeEmptyProperties(formDataToObj(formData));
     try {
       const data = await updateRepository(_repoPK, cleanedData);
       if (!data) throw new Error("Something unexpected occurred.");
