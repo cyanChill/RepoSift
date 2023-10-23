@@ -35,18 +35,18 @@
   },
   "devDependencies": {
     "@types/eslint": "^8.44.6",
-    "@types/node": "^20.8.6",
+    "@types/node": "^20.8.7",
     "@types/react": "^18.2.31",
-    "@types/react-dom": "^18.2.13",
-    "@typescript-eslint/eslint-plugin": "^6.8.0",
-    "@typescript-eslint/parser": "^6.7.5",
+    "@types/react-dom": "^18.2.14",
+    "@typescript-eslint/eslint-plugin": "^6.9.0",
+    "@typescript-eslint/parser": "^6.9.0",
     "autoprefixer": "^10.4.16",
     "drizzle-kit": "^0.19.13",
     "eslint": "^8.52.0",
     "eslint-config-next": "^13.5.6",
     "postcss": "^8.4.31",
     "prettier": "^3.0.3",
-    "prettier-plugin-tailwindcss": "^0.5.5",
+    "prettier-plugin-tailwindcss": "^0.5.6",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.2.2"
   }
