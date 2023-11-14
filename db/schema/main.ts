@@ -84,7 +84,7 @@ export const repoLabels = mysqlTable(
     repoPK: varchar("repoPK", { length: 512 }).notNull(),
   },
   (table) => ({
-    pk: primaryKey(table.name, table.repoPK),
+    pk: primaryKey({ columns: [table.name, table.repoPK] }),
   }),
 );
 export const repoLabelRelations = relations(repoLabels, ({ one }) => ({
@@ -110,7 +110,7 @@ export const repoLangs = mysqlTable(
     repoPK: varchar("repoPK", { length: 512 }).notNull(),
   },
   (table) => ({
-    pk: primaryKey(table.name, table.repoPK),
+    pk: primaryKey({ columns: [table.name, table.repoPK] }),
   }),
 );
 export const repoLangRelations = relations(repoLangs, ({ one }) => ({

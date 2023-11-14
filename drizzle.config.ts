@@ -1,4 +1,4 @@
-import type { Config } from "drizzle-kit";
+import { defineConfig } from "drizzle-kit";
 import "dotenv/config";
 
 /*
@@ -9,11 +9,11 @@ if (!process.env.DATABASE_URL) {
   throw new Error("DATABASE_URL is missing");
 }
 
-export default {
+export default defineConfig({
   schema: "./db/schema/*",
   out: "./db/migrations-folder",
   driver: "mysql2",
   dbCredentials: {
-    connectionString: process.env.DATABASE_URL,
+    uri: process.env.DATABASE_URL,
   },
-} satisfies Config;
+});

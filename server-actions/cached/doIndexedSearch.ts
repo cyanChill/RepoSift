@@ -119,6 +119,7 @@ export const doIndexedSearch = cache(async function (
     },
     limit: LIMIT + 1,
     offset: (page <= 0 ? 0 : page - 1) * LIMIT,
+    orderBy: (fields, { desc }) => desc(fields.lastUpdated),
   });
 
   return {

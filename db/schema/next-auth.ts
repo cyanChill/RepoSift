@@ -71,7 +71,7 @@ export const linkedAccounts = mysqlTable(
     userId: varchar("userId", { length: 256 }).notNull(),
   },
   (table) => ({
-    pk: primaryKey(table.id, table.type),
+    pk: primaryKey({ columns: [table.id, table.type] }),
     userIdIndex: index("linkedAccounts__userId__idx").on(table.userId),
   }),
 );
