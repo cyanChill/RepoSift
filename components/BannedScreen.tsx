@@ -10,7 +10,7 @@ export default function BannedScreen({
       <Browser.Header className="bg-red-300 px-4">
         <Browser.TrafficLights size={16} withAction={false} />
         <Browser.SearchBar className="flex h-8 items-center text-base">
-          {}
+          {" "}
         </Browser.SearchBar>
       </Browser.Header>
       <Browser.Content className="p-2 md:p-4">
