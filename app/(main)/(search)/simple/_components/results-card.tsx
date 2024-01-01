@@ -103,7 +103,7 @@ export default function ResultsCard({
             </p>
           </>
         )}
-        {!!results && results.error && (
+        {!!results && (results.error || results.items.length === 0) && (
           <>
             <p className="mb-1 font-medium md:mb-2 md:text-2xl">
               Repositories Not Found
@@ -115,6 +115,7 @@ export default function ResultsCard({
         )}
         {!!results &&
           !results.error &&
+          results.items.length > 0 &&
           (() => {
             const currRepo = results.items[currIdx];
             return (
