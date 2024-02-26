@@ -20,7 +20,7 @@
     "clsx": "^2.1.0",
     "date-fns": "^3.3.1",
     "dotenv": "^16.4.4",
-    "drizzle-orm": "^0.29.3",
+    "drizzle-orm": "^0.29.4",
     "mysql2": "^3.9.1",
     "next": "14.1.0",
     "next-auth": "^4.24.6",
