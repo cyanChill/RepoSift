@@ -31,11 +31,11 @@ export default async function AdminRepositoriesPage({
   let repo: Omit<Repository, "languages" | "user"> | undefined;
   if (repoType && repoAuthor && repoName) {
     repo = await db.query.repositories.findFirst({
-      where: (fields, { and, eq, sql }) =>
+      where: (fields, { and, sql }) =>
         and(
-          sql`${fields.type} = ${repoType}`,
-          eq(fields.author, repoAuthor),
-          eq(fields.name, repoName),
+          sql`${fields.type} = ${repoType.toLowerCase()}`,
+          sql`lower(${fields.author}) = ${repoAuthor.toLowerCase()}`,
+          sql`lower(${fields.name}) = ${repoName.toLowerCase()}`,
         ),
       with: { primaryLabel: true, labels: { with: { label: true } } },
     });

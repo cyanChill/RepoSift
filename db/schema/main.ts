@@ -1,20 +1,20 @@
-/* https://github.com/drizzle-team/drizzle-orm/tree/main/drizzle-orm/src/mysql-core */
+/* https://github.com/drizzle-team/drizzle-orm/tree/main/drizzle-orm/src/pg-core */
 import { relations, sql } from "drizzle-orm";
 import {
   primaryKey,
-  int,
+  integer,
   text,
   varchar,
   timestamp,
-  mysqlEnum,
-  mysqlTable,
+  pgEnum,
+  pgTable,
   boolean,
-} from "drizzle-orm/mysql-core";
+} from "drizzle-orm/pg-core";
 
 import { users, type SelectUser } from "./next-auth";
 
 /* Programming languages [Automatically Inserted] */
-export const languages = mysqlTable("languages", {
+export const languages = pgTable("languages", {
   name: varchar("name", { length: 128 }).primaryKey().notNull(),
   display: varchar("display", { length: 128 }).notNull(),
 });
@@ -23,11 +23,13 @@ export const languageRelations = relations(languages, ({ many }) => ({
 }));
 export type SelectLanguage = typeof languages.$inferSelect;
 
+export const labelTypeEnum = pgEnum("labelType", ["primary", "regular"]);
+
 /* Labels used to index repositories better */
-export const labels = mysqlTable("labels", {
+export const labels = pgTable("labels", {
   name: varchar("name", { length: 128 }).primaryKey().notNull(),
   display: varchar("display", { length: 128 }).notNull(),
-  type: mysqlEnum("type", ["primary", "regular"]).default("regular").notNull(),
+  type: labelTypeEnum("type").default("regular").notNull(),
   userId: varchar("userId", { length: 256 }).notNull(), // Suggester
 });
 export const labelRelations = relations(labels, ({ one, many }) => ({
@@ -40,15 +42,21 @@ export interface LabelWUser extends SelectLabel {
   user: SelectUser;
 }
 
+export const providerTypeEnum = pgEnum("providerType", [
+  "github",
+  "gitlab",
+  "bitbucket",
+]);
+
 /* Information about repository we'll store in our database */
-export const repositories = mysqlTable("repositories", {
+export const repositories = pgTable("repositories", {
   _pk: varchar("_pk", { length: 512 }).primaryKey().notNull(), // "{id}|{type}"
   id: varchar("id", { length: 256 }).notNull(),
-  type: mysqlEnum("type", ["github", "gitlab", "bitbucket"]).notNull(),
+  type: providerTypeEnum("type").notNull(),
   author: varchar("author", { length: 256 }).notNull(),
   name: varchar("name", { length: 256 }).notNull(),
   description: varchar("description", { length: 256 }),
-  stars: int("stars").default(0),
+  stars: integer("stars").default(0),
   maintainLink: text("maintainLink"),
   _primaryLabel: varchar("_primary_label", { length: 128 }).notNull(),
   userId: varchar("userId", { length: 256 }).notNull(), // Suggester
@@ -77,7 +85,7 @@ export interface Repository extends SelectBaseRepository {
   -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 */
 /* Labels assigned to repositories */
-export const repoLabels = mysqlTable(
+export const repoLabels = pgTable(
   "repoLabels",
   {
     name: varchar("name", { length: 128 }).notNull(),
@@ -103,7 +111,7 @@ export interface RepoLabelWLabel extends SelectRepoLabel {
 }
 
 /* Languages automatically assigned to repositories on creation */
-export const repoLangs = mysqlTable(
+export const repoLangs = pgTable(
   "repoLangs",
   {
     name: varchar("name", { length: 128 }).notNull(),
@@ -133,7 +141,7 @@ export interface RepoLangWLang extends SelectRepoLanguage {
                             Reports & Logs
   -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 */
-export const reports = mysqlTable("reports", {
+export const reports = pgTable("reports", {
   id: varchar("id", { length: 256 }).primaryKey().notNull(),
   title: varchar("title", { length: 100 }).notNull(),
   description: text("description").notNull(),
@@ -147,7 +155,7 @@ export const reportRelations = relations(reports, ({ one }) => ({
   user: one(users, { fields: [reports.userId], references: [users.id] }),
 }));
 
-export const logs = mysqlTable("logs", {
+export const logs = pgTable("logs", {
   id: varchar("id", { length: 256 }).primaryKey().notNull(),
   action: text("action").notNull(),
   reportId: varchar("reportId", { length: 256 }),

@@ -19,7 +19,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
   let profileImg: string | undefined;
   if (handle) {
     user = await db.query.users.findFirst({
-      where: (fields, { eq }) => eq(fields.handleLower, handle),
+      where: (fields, { eq }) => eq(fields.handleLower, handle.toLowerCase()),
       with: { linkedAccounts: true },
     });
   }
