@@ -12,8 +12,8 @@ if (!process.env.DATABASE_URL) {
 export default defineConfig({
   schema: "./db/schema/*",
   out: "./db/migrations-folder",
-  driver: "mysql2",
+  driver: "pg",
   dbCredentials: {
-    uri: process.env.DATABASE_URL,
+    connectionString: process.env.DATABASE_URL,
   },
 });

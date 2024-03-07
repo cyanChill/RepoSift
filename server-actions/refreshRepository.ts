@@ -60,17 +60,11 @@ async function refreshGitHub(repoId: string): RefreshRepoReturn {
       // Delete old language relations
       await tx.delete(repoLangs).where(eq(repoLangs.repoPK, _repoPK));
       // Insert new languages if any
-      for (const lang of updtLangs.data) {
-        try {
-          await tx.insert(languages).values(lang);
-        } catch {}
-      }
+      await tx.insert(languages).values(updtLangs.data).onConflictDoNothing();
       // Insert new language relations
-      const newLangRels = updtLangs.data.map((lang) => ({
-        name: lang.name,
-        repoPK: _repoPK,
-      }));
-      await tx.insert(repoLangs).values(newLangRels);
+      await tx
+        .insert(repoLangs)
+        .values(updtLangs.data.map(({ name }) => ({ name, repoPK: _repoPK })));
 
       // Update "Repository" values
       const updtValues = {

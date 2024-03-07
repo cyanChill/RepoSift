@@ -1,6 +1,6 @@
 import { createId } from "@paralleldrive/cuid2";
 import { and, eq } from "drizzle-orm";
-import type { PlanetScaleDatabase } from "drizzle-orm/planetscale-serverless";
+import type { NeonDatabase } from "drizzle-orm/neon-serverless";
 import type { Adapter } from "next-auth/adapters";
 
 import type { DrizzleSchema } from "@/db";
@@ -20,9 +20,7 @@ import type { AuthProviders } from "../zod/utils";
 
 type UserFuncsReturnType = Promise<UserWLinkedAccs | null>;
 
-export function DrizzleAdapter(
-  db: PlanetScaleDatabase<DrizzleSchema>,
-): Adapter {
+export function DrizzleAdapter(db: NeonDatabase<DrizzleSchema>): Adapter {
   return {
     /* Runs when we "getUserByAccount()" fails to return something. */
     // @ts-ignore: Returns our implementation of the User model which

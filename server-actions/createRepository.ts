@@ -31,11 +31,11 @@ export async function createRepository(
 
   /* Validate repository doesn't already exist in our database. */
   const repoExist = await db.query.repositories.findFirst({
-    where: (fields, { and, eq }) =>
+    where: (fields, { and, eq, sql }) =>
       and(
         eq(fields.type, provider),
-        eq(fields.author, author),
-        eq(fields.name, name),
+        sql`lower(${fields.author}) = ${author.toLowerCase()}`,
+        sql`lower(${fields.name}) = ${name.toLowerCase()}`,
       ),
   });
   if (repoExist) return { error: "That repository has already been indexed." };
@@ -108,28 +108,18 @@ async function indexGitHubRepo(
 
     // Insert languages into database & create RepoLangs relations
     if (langs.data.length > 0) {
-      // Can't mass-insert into database due to conflicts causing new
-      // values not to be inserted
-      for (const lang of langs.data) {
-        try {
-          await db.insert(languages).values(lang);
-        } catch {}
-      }
+      await db.insert(languages).values(langs.data).onConflictDoNothing();
 
-      const repoLanguageRel = langs.data.map((lang) => ({
-        name: lang.name,
-        repoPK: _repoPK,
-      }));
-      await db.insert(repoLangs).values(repoLanguageRel);
+      await db
+        .insert(repoLangs)
+        .values(langs.data.map(({ name }) => ({ name, repoPK: _repoPK })));
     }
 
     // Create label relations.
     if (labels.length > 0) {
-      const repoLabelRel = labels.map((lb) => ({
-        name: lb,
-        repoPK: _repoPK,
-      }));
-      await db.insert(repoLabels).values(repoLabelRel);
+      await db
+        .insert(repoLabels)
+        .values(labels.map((name) => ({ name, repoPK: _repoPK })));
     }
 
     return { data: null };

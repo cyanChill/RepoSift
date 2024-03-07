@@ -1,35 +1,41 @@
-/* https://github.com/drizzle-team/drizzle-orm/tree/main/drizzle-orm/src/mysql-core */
+/* https://github.com/drizzle-team/drizzle-orm/tree/main/drizzle-orm/src/pg-core */
 import { relations, sql } from "drizzle-orm";
 import {
   primaryKey,
-  int,
+  integer,
   text,
   varchar,
   timestamp,
-  mysqlEnum,
-  mysqlTable,
+  pgEnum,
+  pgTable,
   index,
   uniqueIndex,
-} from "drizzle-orm/mysql-core";
+} from "drizzle-orm/pg-core";
 
-import { labels, repositories } from "./main";
+import { labels, repositories, providerTypeEnum } from "./main";
 
 /*
   -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
                               Next-Auth Tables
   -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 */
-export const users = mysqlTable(
+export const userRoleEnum = pgEnum("userRole", [
+  "user",
+  "banned",
+  "bot",
+  "admin",
+  "owner",
+]);
+
+export const users = pgTable(
   "users",
   {
     id: varchar("id", { length: 256 }).primaryKey().notNull(),
     name: varchar("name", { length: 128 }).default("RepoSift User").notNull(),
     handle: varchar("handle", { length: 256 }).notNull(),
     handleLower: varchar("handleLower", { length: 256 }).unique().notNull(),
-    role: mysqlEnum("role", ["user", "banned", "bot", "admin", "owner"])
-      .default("user")
-      .notNull(),
-    imgSrc: mysqlEnum("imgSrc", ["github", "gitlab", "bitbucket"]).notNull(),
+    role: userRoleEnum("role").default("user").notNull(),
+    imgSrc: providerTypeEnum("imgSrc").notNull(),
     banReason: text("banReason"),
     nameUpdatedAt: timestamp("nameUpdatedAt")
       .default(new Date("2023-07-01T01:00:00.000Z"))
@@ -57,11 +63,11 @@ export interface UserWLinkedAccs extends SelectUser {
 }
 
 // A "LinkedAccount" entry should be created right after we create a "User" entry.
-export const linkedAccounts = mysqlTable(
+export const linkedAccounts = pgTable(
   "linkedAccounts",
   {
     id: varchar("id", { length: 256 }).notNull(),
-    type: mysqlEnum("type", ["github", "gitlab", "bitbucket"]).notNull(),
+    type: providerTypeEnum("type").notNull(),
     username: varchar("username", { length: 256 }).notNull(),
     image: varchar("image", { length: 256 }),
     createdAt: timestamp("createdAt").notNull(),
@@ -80,7 +86,7 @@ export const linkedAccountRelations = relations(linkedAccounts, ({ one }) => ({
 }));
 export type SelectLinkedAcc = typeof linkedAccounts.$inferSelect;
 
-export const accounts = mysqlTable(
+export const accounts = pgTable(
   "accounts",
   {
     id: varchar("id", { length: 256 }).primaryKey().notNull(),
@@ -92,7 +98,7 @@ export const accounts = mysqlTable(
     token_type: varchar("token_type", { length: 256 }),
     scope: varchar("scope", { length: 256 }),
     refresh_token: text("refresh_token"),
-    expires_at: int("expires_at"),
+    expires_at: integer("expires_at"),
     id_token: text("id_token"),
   },
   (table) => ({
@@ -106,7 +112,7 @@ export const accountRelations = relations(accounts, ({ one }) => ({
   user: one(users, { fields: [accounts.userId], references: [users.id] }),
 }));
 
-export const sessions = mysqlTable(
+export const sessions = pgTable(
   "sessions",
   {
     id: varchar("id", { length: 256 }).primaryKey().notNull(),
