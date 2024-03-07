@@ -65,8 +65,8 @@ A short summary of what RepoSift aims to provide is giving developers a platform
 [![Tailwind CSS][Tailwind]][Tailwind-url]
 [![Headless UI][Headless UI]][Headless UI-url]
 [![Vercel][Vercel]][Vercel-url]
-[![PlanetScale][PlanetScale]][PlanetScale-url]
-[![MySQL][MySQL]][MySQL-url]
+[![Neon][Neon]][Neon-url]
+[![PostgreSQL][PostgreSQL]][PostgreSQL-url]
 [![DrizzleORM][DrizzleORM]][DrizzleORM-url]
 
 ### Demo
@@ -99,9 +99,9 @@ For this project, you're required to have `pnpm` installed. You can following th
 
 ### Setting Up the Database
 
-For this application, I've used PlanetScale as my database provider of choice. [Click this](https://planetscale.com/docs/tutorials/planetscale-quick-start-guide) for a brief guide on creating a database with PlanetScale. Once we created a database in PlanetScale, we want to push the schema defined in this repository to your database by running `pnpm db:push`.
+For this application, I've used Neon as my database provider of choice. [Click this](https://neon.tech/docs/get-started-with-neon/signing-up) for a brief guide on creating a database with Neon. Once we created a database in Neon, we want to push the schema defined in this repository to your database by running `pnpm db:push`.
 
-- This runs `npx drizzle-kit push:mysql --config=drizzle.config.ts`.
+- This runs `npx drizzle-kit push:pg --config=drizzle.config.ts`.
 
 > **Ref:** https://orm.drizzle.team/kit-docs/overview
 
@@ -109,7 +109,7 @@ For this application, I've used PlanetScale as my database provider of choice. [
 
 If we want to make any changes to the schema defined in the repository, you can validate the SQL commands needed to update the schema by running `pnpm db:generate`. This provides us with the SQL queries that reflect the changes made to the database.
 
-- This runs `npx drizzle-kit generate:mysql`.
+- This runs `npx drizzle-kit generate:pg`.
 - We rerun this command whenever we make changes to our schema.
 - This will be generated in a `/migrations-folder` in the root directory of our application (**this folder shouldn't exist the first time we run this command**).
 
@@ -217,14 +217,14 @@ Distributed under the MIT License. See [`LICENSE`](LICENSE) for more information
 [DrizzleORM-url]: https://orm.drizzle.team/
 [Headless UI]: https://img.shields.io/badge/headless_ui-222222?style=for-the-badge&logo=Headless+UI&logoColor=66E3FF
 [Headless UI-url]: https://headlessui.com/
-[MySQL]: https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=MySQL&logoColor=FFFFFF
-[MySQL-url]: https://www.mysql.com/
+[Neon]: https://img.shields.io/badge/neon-1A1A1A?style=for-the-badge&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAMAAADW3miqAAABAlBMVEVHcExC7Jgn6Lli9lVj9lVi91Rj9lUZ5ccu5rBj9lVj9lUO489d811i9lYh58Av6bJi9lVj9lVV7Gsc5sRE75Y266o/7Z0j57ti9lUZ5cdj9lVg9lYT5ctj9lVi9lYs3qsE4dZi9lVi9lVj9lVj9lVj9lVI6Ylj9lUl6Lky2JwF4dU77KM+6JVj9lU67aM77aMF4dUF4dUL4tFj9lU27Klj9lVf81xj9lUJ4tMZ5cYV5ckd5sMf5sEF4dYi574S5Mwm6LsP48427Kos6bUN49Aw6rAo6LhB7plE75VH75JI7Iw+7Z477aNJ54Up47RK434s3apc8mAr4K4025ot2aVHcEzZp53MAAAAVnRSTlMAGdsT2xmGGhpx/Nwzz9vbW+7729vY2BEM27gD2/fk2/khUKPeZduQXOBxcPd78q2tzvKt+aiG////////////////////////////////////////AJjc4DUAAAG6SURBVDjLhdNpd8FQEAbgIbZEolTtqrUX3WmvpWhjJ1TL//8tnbmUROLk/ZjznMm9M3MBIFZ9ue02m83h8Kvfb7dbrU7n46PX+1ytftf3iigAxvt827UyYzTrzY9Uz2Kd5+7OfJ0aRNvND2N1Aaq8zlBvkHyOqdCWI0mEFzKvfn8ak0iEw+FAIODEXNxgKhVETAE68+ud1xDfIXIG0TXQv/xeOBO3CxEDOo89wjOn7RBdyxbR1e0Rdidhh6iDJ0gWPUHBgKjLYQMKYm+kZNaAcBIGlC3Qd5aP6xBNK6BHRW6Y9KBHOFEDEneIhXJHRFO3RMwlHxAtj9NnhVhSOCDcHjO65qqc2iPaMDN6Uzgt/iPcQjPy8EVimeAOoRlcmBEU+R8LIY7G44ElSpUPF0A0sEYgJI8IzcgSgew6otHoDIJcaD8hQKNGrBE8SBwpiNSzKJ7nQwwCGjXisEYgeJRCMpeCBqLHO8cx7zqEzE17FVFVTXuMRqNXlFKpdElINK56raFp2mKxmEym09l8vlwSCslGFHsiQ2Q6m6H5vuTjP3k1vqd9mRkV+kYk5QXT24rVovf/hpAixk/EH1BwjhYJWJ8XAAAAAElFTkSuQmCC
+[Neon-url]: https://neon.tech/
 [Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=FFFFFF
 [Next.js-url]: https://nextjs.org/
 [NextAuth.js]: https://img.shields.io/badge/nextauth.js-000000?style=for-the-badge&logo=data:image/png;base64,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
 [NextAuth.js-url]: https://next-auth.js.org/
-[PlanetScale]: https://img.shields.io/badge/planetscale-000000?style=for-the-badge&logo=PlanetScale&logoColor=FFFFFF
-[PlanetScale-url]: https://planetscale.com/
+[PostgreSQL]: https://img.shields.io/badge/postgresql-4169E1?style=for-the-badge&logo=PostgreSQL&logoColor=FFFFFF
+[PostgreSQL-url]: https://www.postgresql.org/
 [Tailwind]: https://img.shields.io/badge/tailwind_css-222222?style=for-the-badge&logo=tailwindcss&logoColor=06B6D4
 [Tailwind-url]: https://tailwindcss.com/
 [TypeScript]: https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=FFFFFF
