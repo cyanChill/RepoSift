@@ -25,7 +25,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
   }
 
   if (user) {
-    const imgAcc = user.linkedAccounts.find((acc) => acc.type === user!.imgSrc);
+    const imgAcc = user.linkedAccounts.find((acc) => acc.type === user.imgSrc);
     if (imgAcc) profileImg = imgAcc.image ?? undefined;
   }
 
