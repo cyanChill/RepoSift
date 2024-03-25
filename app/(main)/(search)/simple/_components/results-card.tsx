@@ -68,8 +68,8 @@ export default function ResultsCard({
     <Browser className="h-full max-h-72 min-h-[12.5rem] bg-white">
       <Browser.Header
         className={cn("px-4", {
-          "bg-turquoise-200": !results || !results.error,
-          "bg-red-300": !!results && results.error,
+          "bg-turquoise-200": !results?.error,
+          "bg-red-300": results?.error,
         })}
       >
         <Browser.TrafficLights
