@@ -9,8 +9,8 @@ dependencies:
     specifier: ^1.7.18
     version: 1.7.18(react-dom@18.2.0)(react@18.2.0)
   '@neondatabase/serverless':
-    specifier: ^0.9.0
-    version: 0.9.0
+    specifier: ^0.9.1
+    version: 0.9.1
   '@paralleldrive/cuid2':
     specifier: ^2.2.2
     version: 2.2.2
@@ -28,7 +28,7 @@ dependencies:
     version: 16.4.5
   drizzle-orm:
     specifier: ^0.30.7
-    version: 0.30.7(@neondatabase/serverless@0.9.0)(@types/pg@8.11.4)(@types/react@18.2.74)(pg@8.11.5)(react@18.2.0)
+    version: 0.30.7(@neondatabase/serverless@0.9.1)(@types/pg@8.11.4)(@types/react@18.2.74)(pg@8.11.5)(react@18.2.0)
   next:
     specifier: 14.1.4
     version: 14.1.4(react-dom@18.2.0)(react@18.2.0)
@@ -864,8 +864,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
-  /@neondatabase/serverless@0.9.0:
-    resolution: {integrity: sha512-mmJnUAzlzvxNSZuuhI6kgJjH+JgFdBMYUWxihtq/nj0Tjt+Y5UU3W+SvRFoucnd5NObYkuLYQzk+zV5DGFKGJg==}
+  /@neondatabase/serverless@0.9.1:
+    resolution: {integrity: sha512-Xi+tVIXuaeB24BHzhr0W/4vcbb9WwIaB6yK0RsMIteLtzNB86+am6EDFovd3rYCYM1ea7rWcwte2dLOrzW7eqA==}
     dependencies:
       '@types/pg': 8.6.6
     dev: false
@@ -1877,7 +1877,7 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.30.7(@neondatabase/serverless@0.9.0)(@types/pg@8.11.4)(@types/react@18.2.74)(pg@8.11.5)(react@18.2.0):
+  /drizzle-orm@0.30.7(@neondatabase/serverless@0.9.1)(@types/pg@8.11.4)(@types/react@18.2.74)(pg@8.11.5)(react@18.2.0):
     resolution: {integrity: sha512-9qefSZQlu2fO2qv24piHyWFWcxcOY15//0v4j8qomMqaxzipNoG+fUBrQ7Ftk7PY7APRbRdn/nkEXWxiI4a8mw==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -1957,7 +1957,7 @@ packages:
       sqlite3:
         optional: true
     dependencies:
-      '@neondatabase/serverless': 0.9.0
+      '@neondatabase/serverless': 0.9.1
       '@types/pg': 8.11.4
       '@types/react': 18.2.74
       pg: 8.11.5
