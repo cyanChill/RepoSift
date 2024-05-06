@@ -28,7 +28,7 @@ dependencies:
     version: 16.4.5
   drizzle-orm:
     specifier: ^0.30.9
-    version: 0.30.9(@neondatabase/serverless@0.9.1)(@types/pg@8.11.5)(@types/react@18.3.1)(pg@8.11.5)(react@18.3.1)
+    version: 0.30.9(@neondatabase/serverless@0.9.1)(@types/pg@8.11.6)(@types/react@18.3.1)(pg@8.11.5)(react@18.3.1)
   next:
     specifier: 14.2.3
     version: 14.2.3(react-dom@18.3.1)(react@18.3.1)
@@ -71,8 +71,8 @@ devDependencies:
     specifier: ^20.12.7
     version: 20.12.7
   '@types/pg':
-    specifier: ^8.11.5
-    version: 8.11.5
+    specifier: ^8.11.6
+    version: 8.11.6
   '@types/react':
     specifier: ^18.3.1
     version: 18.3.1
@@ -1062,8 +1062,8 @@ packages:
     dependencies:
       undici-types: 5.26.5
 
-  /@types/pg@8.11.5:
-    resolution: {integrity: sha512-2xMjVviMxneZHDHX5p5S6tsRRs7TpDHeeK7kTTMe/kAC/mRRNjWHjZg0rkiY+e17jXSZV3zJYDxXV8Cy72/Vuw==}
+  /@types/pg@8.11.6:
+    resolution: {integrity: sha512-/2WmmBXHLsfRqzfHW7BNZ8SbYzE8OSk7i3WjFYvfgRHj7S1xj+16Je5fUKv3lVdVzk/zn9TXOqf+avFCFIE0yQ==}
     dependencies:
       '@types/node': 20.12.7
       pg-protocol: 1.6.1
@@ -1889,7 +1889,7 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.30.9(@neondatabase/serverless@0.9.1)(@types/pg@8.11.5)(@types/react@18.3.1)(pg@8.11.5)(react@18.3.1):
+  /drizzle-orm@0.30.9(@neondatabase/serverless@0.9.1)(@types/pg@8.11.6)(@types/react@18.3.1)(pg@8.11.5)(react@18.3.1):
     resolution: {integrity: sha512-VOiCFsexErmgqvNCOmbzmqDCZzZsHoz6SkWAjTFxsTr1AllKDbDJ2+GgedLXsXMDgpg/ljDG1zItIFeZtiO2LA==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -1970,7 +1970,7 @@ packages:
         optional: true
     dependencies:
       '@neondatabase/serverless': 0.9.1
-      '@types/pg': 8.11.5
+      '@types/pg': 8.11.6
       '@types/react': 18.3.1
       pg: 8.11.5
       react: 18.3.1
