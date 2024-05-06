@@ -1,5 +1,13 @@
 import { useState, useRef, Fragment } from "react";
-import { Combobox, Transition } from "@headlessui/react";
+import {
+  Combobox,
+  ComboboxButton,
+  ComboboxInput,
+  ComboboxOption,
+  ComboboxOptions,
+  Label,
+  Transition,
+} from "@headlessui/react";
 import { FaCheck, FaChevronDown } from "react-icons/fa6";
 import { toast } from "react-hot-toast";
 
@@ -184,56 +192,52 @@ export const SearchSelect = ({
       as="div"
       className={cn("relative mb-4 w-full", { "max-w-max": !flow })}
       value={selectedOpt}
-      onChange={setSelectedOpt}
-      // @ts-ignore: Boolean value is acceptable
-      nullable={optional}
+      onChange={(newValue) => setSelectedOpt((prev) => newValue ?? prev)}
     >
       <FormValue name={name} value={selectedOpt ? selectedOpt.value : ""} />
 
-      <Combobox.Label className="form-label">{label}</Combobox.Label>
+      <Label className="form-label">{label}</Label>
       <fieldset className="form-input flex w-full items-center gap-2 text-start">
-        <Combobox.Input
+        <ComboboxInput
           onChange={(e) => setQuery(e.target.value)}
           displayValue={(opt: Option) => opt?.name}
           className="w-full outline-none"
         />
-        <Combobox.Button>
+        <ComboboxButton>
           <FaChevronDown className="pointer-events-none" />
-        </Combobox.Button>
+        </ComboboxButton>
       </fieldset>
 
       <Transition
-        as={Fragment}
         leave="transition ease-in duration-150"
         leaveFrom="opacity-100"
         leaveTo="opacity-0"
         afterLeave={() => setQuery("")}
       >
-        <Combobox.Options className="absolute bottom-0 left-0 z-10 max-h-40 w-full translate-y-full overflow-auto border-2 border-black bg-white">
+        <ComboboxOptions className="absolute bottom-0 left-0 z-10 max-h-40 w-full translate-y-full overflow-auto border-2 border-black bg-white">
           {filteredOptions.map((opt) => (
-            <Combobox.Option
-              as={Fragment}
+            <ComboboxOption
               key={opt.value}
               value={opt}
               disabled={opt.disabled}
+              className={cn(
+                "relative cursor-default px-2 py-1 pl-10",
+                "data-[focus]:bg-indigo-600 data-[focus]:text-white",
+                "data-[selected]:font-medium",
+                "data-[disabled]:text-gray-300",
+              )}
             >
-              {({ active, selected, disabled }) => (
-                <li
-                  className={cn("relative cursor-default px-2 py-1 pl-10", {
-                    "bg-indigo-600 text-white": active,
-                    "font-medium": selected,
-                    "text-gray-300": disabled,
-                  })}
-                >
+              {({ selected }) => (
+                <>
                   {opt.name}
                   {selected && (
                     <FaCheck className="absolute left-0 top-1/2 h-6 w-6 -translate-y-1/2 pl-3" />
                   )}
-                </li>
+                </>
               )}
-            </Combobox.Option>
+            </ComboboxOption>
           ))}
-        </Combobox.Options>
+        </ComboboxOptions>
       </Transition>
     </Combobox>
   );
@@ -294,7 +298,7 @@ export const MultiSearchSelect = ({
       />
 
       <Combobox as="div" onChange={toggleOption} className="relative">
-        <Combobox.Label className="form-label">
+        <Label className="form-label">
           {label}{" "}
           <span className="ml-2 font-normal">
             (max {max}){" "}
@@ -304,41 +308,40 @@ export const MultiSearchSelect = ({
               </>
             )}
           </span>
-        </Combobox.Label>
+        </Label>
         <fieldset className="form-input flex w-full items-center gap-2 text-start">
-          <Combobox.Input
+          <ComboboxInput
             onChange={(e) => setQuery(e.target.value)}
             className="w-full outline-none"
           />
-          <Combobox.Button>
+          <ComboboxButton>
             <FaChevronDown className="pointer-events-none" />
-          </Combobox.Button>
+          </ComboboxButton>
         </fieldset>
 
         <Transition
-          as={Fragment}
           leave="transition ease-in duration-150"
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
           afterLeave={() => setQuery("")}
         >
-          <Combobox.Options className="absolute bottom-0 left-0 z-10 max-h-40 w-full translate-y-full overflow-auto border-2 border-black bg-white">
+          <ComboboxOptions className="absolute bottom-0 left-0 z-10 max-h-40 w-full translate-y-full overflow-auto border-2 border-black bg-white">
             {filteredOptions.map((opt) => (
-              <Combobox.Option
+              <ComboboxOption
                 as={Fragment}
                 key={opt.value}
                 value={opt}
                 disabled={opt.disabled}
               >
-                {({ active, disabled }) => {
+                {({ focus, disabled }) => {
                   const selected = vals.find(
                     (selOpt) => selOpt.value === opt.value,
                   );
 
                   return (
-                    <li
+                    <div
                       className={cn("relative cursor-default px-2 py-1 pl-10", {
-                        "bg-indigo-600 text-white": active,
+                        "bg-indigo-600 text-white": focus,
                         "font-medium": selected,
                         "text-gray-300": disabled,
                       })}
@@ -347,12 +350,12 @@ export const MultiSearchSelect = ({
                       {selected && (
                         <FaCheck className="absolute left-0 top-1/2 h-6 w-6 -translate-y-1/2 pl-3" />
                       )}
-                    </li>
+                    </div>
                   );
                 }}
-              </Combobox.Option>
+              </ComboboxOption>
             ))}
-          </Combobox.Options>
+          </ComboboxOptions>
         </Transition>
       </Combobox>
 

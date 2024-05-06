@@ -1,5 +1,12 @@
-import { Fragment, useState } from "react";
-import { Listbox, Transition } from "@headlessui/react";
+import { useState } from "react";
+import {
+  Label,
+  Listbox,
+  ListboxButton,
+  ListboxOption,
+  ListboxOptions,
+  Transition,
+} from "@headlessui/react";
 import { FaChevronDown } from "react-icons/fa6";
 
 import { FormValue, type Option } from "./utils";
@@ -63,41 +70,35 @@ export const Select = ({
     >
       <FormValue name={name} value={selectedOpt.value} />
 
-      <Listbox.Label className="form-label">{label}</Listbox.Label>
-      <Listbox.Button className="form-input flex w-full items-center justify-between gap-2 text-start">
+      <Label className="form-label">{label}</Label>
+      <ListboxButton className="form-input flex w-full items-center justify-between gap-2 text-start">
         {selectedOpt.name}
         <FaChevronDown />
-      </Listbox.Button>
+      </ListboxButton>
 
       <div className="w-full">
         <Transition
-          as={Fragment}
           leave="transition ease-in duration-150"
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <Listbox.Options className="absolute bottom-0 left-0 z-10 max-h-40 w-full translate-y-full overflow-auto border-2 border-black bg-white">
+          <ListboxOptions className="absolute bottom-0 left-0 z-10 max-h-40 w-full translate-y-full overflow-auto border-2 border-black bg-white">
             {options.map((opt) => (
-              <Listbox.Option
-                as={Fragment}
+              <ListboxOption
                 key={opt.name}
                 value={opt}
                 disabled={opt.disabled}
-              >
-                {({ active, selected, disabled }) => (
-                  <li
-                    className={cn("cursor-default px-2 py-1", {
-                      "bg-indigo-600 text-white": active,
-                      "font-medium": selected,
-                      "text-gray-300": disabled,
-                    })}
-                  >
-                    {opt.name}
-                  </li>
+                className={cn(
+                  "cursor-default px-2 py-1",
+                  "data-[focus]:bg-indigo-600 data-[focus]:text-white",
+                  "data-[selected]:font-medium",
+                  "data-[disabled]:text-gray-300",
                 )}
-              </Listbox.Option>
+              >
+                {opt.name}
+              </ListboxOption>
             ))}
-          </Listbox.Options>
+          </ListboxOptions>
         </Transition>
       </div>
     </Listbox>

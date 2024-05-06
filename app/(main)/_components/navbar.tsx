@@ -3,8 +3,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { useState, useEffect, Fragment } from "react";
-import { Menu, Transition } from "@headlessui/react";
+import { useState, useEffect } from "react";
+import {
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
+  Transition,
+} from "@headlessui/react";
 import { AiFillCaretDown } from "react-icons/ai";
 
 import useAuth from "@/hooks/useAuth";
@@ -128,11 +134,10 @@ const SearchBtn = () => {
     </div>
   ) : (
     <Menu as="div" className="relative py-3">
-      <Menu.Button className="inline-flex items-center">
+      <MenuButton className="inline-flex items-center">
         Search <AiFillCaretDown />
-      </Menu.Button>
+      </MenuButton>
       <Transition
-        as={Fragment}
         enter="transition ease-out duration-100"
         enterFrom="transform opacity-0 scale-95"
         enterTo="transform opacity-100 scale-100"
@@ -140,32 +145,18 @@ const SearchBtn = () => {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute bottom-0 right-0 origin-top translate-y-full border-3 border-black bg-white px-6 py-2">
-          <Menu.Item>
-            {({ active }) => (
-              <Link
-                href="/simple"
-                className={`link-underline inline-block ${
-                  active ? "link-underline-active" : ""
-                }`}
-              >
-                Simple
-              </Link>
-            )}
-          </Menu.Item>
-          <Menu.Item>
-            {({ active }) => (
-              <Link
-                href="/indexed"
-                className={`link-underline inline-block ${
-                  active ? "link-underline-active" : ""
-                }`}
-              >
-                Indexed
-              </Link>
-            )}
-          </Menu.Item>
-        </Menu.Items>
+        <MenuItems className="absolute bottom-0 right-0 origin-top translate-y-full border-3 border-black bg-white px-6 py-2">
+          <MenuItem>
+            <Link href="/simple" className="hocus-underline inline-block">
+              Simple
+            </Link>
+          </MenuItem>
+          <MenuItem>
+            <Link href="/indexed" className="hocus-underline inline-block">
+              Indexed
+            </Link>
+          </MenuItem>
+        </MenuItems>
       </Transition>
     </Menu>
   );

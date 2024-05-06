@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { Tab } from "@headlessui/react";
+import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { VscLinkExternal } from "react-icons/vsc";
 
 import type { SelectLabel, SelectBaseRepository } from "@/db/schema/main";
@@ -17,8 +17,8 @@ type Props = {
 
 export default function DataTabs({ labels, repositories }: Props) {
   return (
-    <Tab.Group as="section" className="w-full min-w-0 justify-self-start">
-      <Tab.List className="card mb-2 flex w-min gap-1 rounded-md p-1 py-0.5 font-medium">
+    <TabGroup as="section" className="w-full min-w-0 justify-self-start">
+      <TabList className="card mb-2 flex w-min gap-1 rounded-md p-1 py-0.5 font-medium">
         {["Repositories", "Labels"].map((tab) => (
           <Tab
             key={tab}
@@ -31,10 +31,10 @@ export default function DataTabs({ labels, repositories }: Props) {
             {tab}
           </Tab>
         ))}
-      </Tab.List>
-      <Tab.Panels className="card w-full p-0">
+      </TabList>
+      <TabPanels className="card w-full p-0">
         {/* Repositories Tab Panel */}
-        <Tab.Panel>
+        <TabPanel>
           {repositories.length === 0 && (
             <p className="p-2 font-medium">
               No repositories have been indexed.
@@ -61,9 +61,9 @@ export default function DataTabs({ labels, repositories }: Props) {
               <VscLinkExternal className="h-6 w-6" />
             </Link>
           ))}
-        </Tab.Panel>
+        </TabPanel>
         {/* Labels Tab Panel */}
-        <Tab.Panel className="p-2 text-sm font-medium">
+        <TabPanel className="p-2 text-sm font-medium">
           {labels.length === 0 && (
             <p className="text-base">No labels have been suggested.</p>
           )}
@@ -77,8 +77,8 @@ export default function DataTabs({ labels, repositories }: Props) {
               </p>
             ))}
           </div>
-        </Tab.Panel>
-      </Tab.Panels>
-    </Tab.Group>
+        </TabPanel>
+      </TabPanels>
+    </TabGroup>
   );
 }

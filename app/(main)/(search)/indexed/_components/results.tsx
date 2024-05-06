@@ -45,6 +45,7 @@ export default function Results({ results }: Props) {
       </section>
       {/* Backdrop Blur */}
       <Transition
+        as="div"
         show={isNum(selectedIdx) && isMobile}
         enter="transition ease-out duration-200"
         enterFrom="transform opacity-0"
