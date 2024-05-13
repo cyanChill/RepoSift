@@ -13,7 +13,7 @@
     "db:studio": "drizzle-kit studio --host 127.0.0.1"
   },
   "dependencies": {
-    "@headlessui/react": "^2.0.1",
+    "@headlessui/react": "^2.0.3",
     "@neondatabase/serverless": "^0.9.1",
     "@paralleldrive/cuid2": "^2.2.2",
     "@vercel/analytics": "^1.2.2",
