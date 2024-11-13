@@ -91,9 +91,7 @@ export const repoLabels = pgTable(
     name: varchar("name", { length: 128 }).notNull(),
     repoPK: varchar("repoPK", { length: 512 }).notNull(),
   },
-  (table) => ({
-    pk: primaryKey({ columns: [table.name, table.repoPK] }),
-  }),
+  (table) => [primaryKey({ columns: [table.name, table.repoPK] })],
 );
 export const repoLabelRelations = relations(repoLabels, ({ one }) => ({
   label: one(labels, {
@@ -117,9 +115,7 @@ export const repoLangs = pgTable(
     name: varchar("name", { length: 128 }).notNull(),
     repoPK: varchar("repoPK", { length: 512 }).notNull(),
   },
-  (table) => ({
-    pk: primaryKey({ columns: [table.name, table.repoPK] }),
-  }),
+  (table) => [primaryKey({ columns: [table.name, table.repoPK] })],
 );
 export const repoLangRelations = relations(repoLangs, ({ one }) => ({
   language: one(languages, {

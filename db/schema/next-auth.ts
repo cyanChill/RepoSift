@@ -44,11 +44,7 @@ export const users = pgTable(
       .default(new Date("2023-07-01T01:00:00.000Z"))
       .notNull(),
   },
-  (table) => ({
-    handleLowerIndex: uniqueIndex("users__handleLower__idx").on(
-      table.handleLower,
-    ),
-  }),
+  (table) => [uniqueIndex("users__handleLower__idx").on(table.handleLower)],
 );
 export const userRelations = relations(users, ({ many }) => ({
   linkedAccounts: many(linkedAccounts),
@@ -76,10 +72,10 @@ export const linkedAccounts = pgTable(
       .notNull(),
     userId: varchar("userId", { length: 256 }).notNull(),
   },
-  (table) => ({
-    pk: primaryKey({ columns: [table.id, table.type] }),
-    userIdIndex: index("linkedAccounts__userId__idx").on(table.userId),
-  }),
+  (table) => [
+    primaryKey({ columns: [table.id, table.type] }),
+    index("linkedAccounts__userId__idx").on(table.userId),
+  ],
 );
 export const linkedAccountRelations = relations(linkedAccounts, ({ one }) => ({
   user: one(users, { fields: [linkedAccounts.userId], references: [users.id] }),
@@ -101,12 +97,13 @@ export const accounts = pgTable(
     expires_at: integer("expires_at"),
     id_token: text("id_token"),
   },
-  (table) => ({
-    providerProviderAccountIdIndex: uniqueIndex(
-      "accounts__provider__providerAccountId__idx",
-    ).on(table.provider, table.providerAccountId),
-    userIdIndex: index("accounts__userId__idx").on(table.userId),
-  }),
+  (table) => [
+    uniqueIndex("accounts__provider__providerAccountId__idx").on(
+      table.provider,
+      table.providerAccountId,
+    ),
+    index("accounts__userId__idx").on(table.userId),
+  ],
 );
 export const accountRelations = relations(accounts, ({ one }) => ({
   user: one(users, { fields: [accounts.userId], references: [users.id] }),
@@ -120,12 +117,10 @@ export const sessions = pgTable(
     sessionToken: varchar("sessionToken", { length: 256 }).notNull(),
     userId: varchar("userId", { length: 256 }).notNull(),
   },
-  (table) => ({
-    sessionTokenIndex: uniqueIndex("sessions__sessionToken__idx").on(
-      table.sessionToken,
-    ),
-    userIdIndex: index("sessions__userId_idx").on(table.userId),
-  }),
+  (table) => [
+    uniqueIndex("sessions__sessionToken__idx").on(table.sessionToken),
+    index("sessions__userId_idx").on(table.userId),
+  ],
 );
 export const sessionRelations = relations(sessions, ({ one }) => ({
   user: one(users, { fields: [sessions.userId], references: [users.id] }),
